@@ -16,6 +16,8 @@ import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.event.entity.player.AttackEntityEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
+import java.math.RoundingMode
+import java.text.DecimalFormat
 import kotlin.concurrent.thread
 
 /**
@@ -223,9 +225,14 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                 val wins = getStat(statKeys["wins"]!!)?.asInt ?: 0
                 val losses = getStat(statKeys["losses"]!!)?.asInt ?: 0
                 val ws = getStat(statKeys["ws"]!!)?.asInt ?: 0
-                val wlr = wins / (if (losses == 0) 1 else losses)
 
-                ChatUtils.info("$player ${EnumChatFormatting.GOLD} >> ${EnumChatFormatting.GOLD}Wins: ${EnumChatFormatting.GREEN}$wins ${EnumChatFormatting.GOLD} WLR: ${EnumChatFormatting.GREEN} $wlr ${EnumChatFormatting.GOLD}WS: ${EnumChatFormatting.GREEN} $ws")
+                val df = DecimalFormat("#.##")
+                df.roundingMode = RoundingMode.DOWN
+
+                val wlr = wins.toDouble() / (if (losses == 0) 1.0 else losses.toDouble())
+
+
+                ChatUtils.info("$player ${EnumChatFormatting.GOLD} >> ${EnumChatFormatting.GOLD}Wins: ${EnumChatFormatting.GREEN}$wins ${EnumChatFormatting.GOLD}WLR: ${EnumChatFormatting.GREEN}${df.format(wlr)} ${EnumChatFormatting.GOLD}WS: ${EnumChatFormatting.GREEN}$ws")
 
                 var dodge = false
 
