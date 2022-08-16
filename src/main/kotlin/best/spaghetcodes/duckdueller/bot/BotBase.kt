@@ -234,6 +234,12 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
     private fun gameStart() {
         if (toggled()) {
+            if (DuckDueller.config?.sendStartMessage == true) {
+                TimeUtils.setTimeout(fun () {
+                    ChatUtils.sendAsPlayer(DuckDueller.config?.startMessage ?: "glhf!")
+                }, DuckDueller.config?.startMessageDelay ?: 100)
+            }
+
             val quickRefreshTimer = TimeUtils.setInterval(this::bakery, 200, 50)
             TimeUtils.setTimeout(fun () {
                 quickRefreshTimer?.cancel()
