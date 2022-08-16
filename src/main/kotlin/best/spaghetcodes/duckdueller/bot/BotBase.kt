@@ -185,19 +185,22 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     private fun handleStats(stats: JsonObject, player: String) {
         if (toggled() && stats.get("success").asBoolean) {
             if (statKeys.containsKey("wins") && statKeys.containsKey("losses") && statKeys.containsKey("ws")) {
-                fun getStat(key: String): JsonObject {
+                fun getStat(key: String): JsonObject? {
                     var tmpObj = stats
 
                     for (p in key.split(".")) {
-                        tmpObj = tmpObj.get(p).asJsonObject
+                        if (tmpObj.has(p))
+                            tmpObj = tmpObj.get(p).asJsonObject
+                        else
+                            return null
                     }
 
                     return tmpObj
                 }
 
-                val wins = getStat(statKeys["wins"]!!).asInt
-                val losses = getStat(statKeys["losses"]!!).asInt
-                val ws = getStat(statKeys["ws"]!!).asInt
+                val wins = getStat(statKeys["wins"]!!)?.asInt ?: 0
+                val losses = getStat(statKeys["losses"]!!)?.asInt ?: 0
+                val ws = getStat(statKeys["ws"]!!)?.asInt ?: 0
                 val wlr = wins / (if (losses == 0) 1 else losses)
 
                 ChatUtils.info("$player ${EnumChatFormatting.GOLD} >> ${EnumChatFormatting.GOLD}Wins: ${EnumChatFormatting.GREEN}$wins ${EnumChatFormatting.GOLD} WLR: ${EnumChatFormatting.GREEN} $wlr ${EnumChatFormatting.GOLD}WS: ${EnumChatFormatting.GREEN} $ws")
