@@ -1,6 +1,7 @@
 package best.spaghetcodes.duckdueller.bot
 
 import best.spaghetcodes.duckdueller.DuckDueller
+import best.spaghetcodes.duckdueller.core.KeyBindings
 import best.spaghetcodes.duckdueller.events.packet.PacketEvent
 import best.spaghetcodes.duckdueller.utils.ChatUtils
 import best.spaghetcodes.duckdueller.utils.HttpUtils
@@ -13,6 +14,7 @@ import net.minecraft.network.play.server.S3EPacketTeams
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.event.entity.player.AttackEntityEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import kotlin.concurrent.thread
 
 /**
@@ -137,6 +139,21 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     fun onAttackEntityEvent(ev: AttackEntityEvent) {
         if (toggled() && ev.entity == mc.thePlayer) {
             attackedID = ev.target.entityId
+        }
+    }
+
+    @SubscribeEvent
+    fun onClientTick(ev: ClientTickEvent) {
+        if (toggled) {
+            onTick()
+        }
+
+        if (KeyBindings.toggleBotKeyBinding.isPressed) {
+            toggle()
+            ChatUtils.info("Duck Dueller has been toggled ${if (toggled()) "${EnumChatFormatting.GREEN}on" else "${EnumChatFormatting.RED}off"}")
+            if (toggled()) {
+                joinGame()
+            }
         }
     }
 
