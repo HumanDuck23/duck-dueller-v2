@@ -172,6 +172,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
             val unformatted = ev.message.unformattedText
 
             if (unformatted.contains("The game starts in 2 seconds!")) {
+                println(playersSent.joinToString(", "))
                 var found = false
                 if (playersSent.contains(mc.thePlayer.displayNameString)) {
                     if (playersSent.size > 1) {
@@ -240,9 +241,11 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     private fun bakery() {
         if (StateManager.state == StateManager.States.PLAYING) {
             val entity = EntityUtils.getOpponentEntity()
-            if (entity != null && !calledFoundOpponent) {
+            if (entity != null) {
                 opponent = entity
-                onFoundOpponent()
+                if (!calledFoundOpponent) {
+                    onFoundOpponent()
+                }
             }
         }
     }
