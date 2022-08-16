@@ -175,6 +175,28 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
     )
     val startMessageDelay = 100
 
+    @Property(
+        type = PropertyType.NUMBER,
+        name = "Auto Requeue Delay",
+        description = "How long to wait after a game before re-queueing",
+        category = "Auto Requeue",
+        min = 500,
+        max = 5000,
+        increment = 50
+    )
+    val autoRqDelay = 2500
+
+    @Property(
+        type = PropertyType.SLIDER,
+        name = "Requeue After No Game",
+        description = "How long to wait before re-queueing if no game starts",
+        category = "Auto Requeue",
+        min = 15000,
+        max = 60000,
+        increment = 1000
+    )
+    val rqNoGame = 30000
+
     init {
         addDependency("webhookURL", "sendWebhookMessages")
 
