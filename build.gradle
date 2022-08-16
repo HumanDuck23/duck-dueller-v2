@@ -27,9 +27,9 @@ apply plugin: "net.minecraftforge.gradle.forge"
 apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: "org.spongepowered.mixin"
 
-group = 'dev.debuggings'
+group = 'best.spaghetcodes'
 version = '1.0'
-archivesBaseName = 'examplemod'
+archivesBaseName = 'DuckDueller'
 
 compileJava.options.encoding = 'UTF-8'
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
