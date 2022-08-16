@@ -1,5 +1,6 @@
 package best.spaghetcodes.duckdueller
 
+import best.spaghetcodes.duckdueller.bot.StateManager
 import best.spaghetcodes.duckdueller.commands.ConfigCommand
 import best.spaghetcodes.duckdueller.core.Config
 import best.spaghetcodes.duckdueller.events.packet.PacketListener
@@ -35,5 +36,6 @@ class DuckDueller {
         ConfigCommand().register()
 
         MinecraftForge.EVENT_BUS.register(PacketListener())
+        MinecraftForge.EVENT_BUS.register(StateManager)
     }
 }
