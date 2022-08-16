@@ -7,6 +7,7 @@ import best.spaghetcodes.duckdueller.utils.ChatUtils
 import best.spaghetcodes.duckdueller.utils.HttpUtils
 import best.spaghetcodes.duckdueller.utils.RandomUtils
 import best.spaghetcodes.duckdueller.utils.TimeUtils
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import net.minecraft.client.Minecraft
 import net.minecraft.network.play.server.S19PacketEntityStatus
@@ -202,17 +203,18 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     private fun handleStats(stats: JsonObject, player: String) {
         if (toggled() && stats.get("success").asBoolean) {
             if (statKeys.containsKey("wins") && statKeys.containsKey("losses") && statKeys.containsKey("ws")) {
-                fun getStat(key: String): JsonObject? {
+                fun getStat(key: String): JsonElement? {
                     var tmpObj = stats
 
                     for (p in key.split(".")) {
-                        if (tmpObj.has(p))
+                        if (tmpObj.has(p) && tmpObj.get(p).isJsonObject)
                             tmpObj = tmpObj.get(p).asJsonObject
+                        else if (tmpObj.has(p))
+                            return tmpObj.get(p)
                         else
                             return null
                     }
-
-                    return tmpObj
+                    return null
                 }
 
                 val wins = getStat(statKeys["wins"]!!)?.asInt ?: 0
