@@ -117,8 +117,72 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
     )
     val maxDistanceAttack = 10
 
+    /*
+        Auto GG
+     */
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Enable AutoGG",
+        description = "Send a gg message after every game",
+        category = "AutoGG",
+    )
+    val sendAutoGG = true
+
+    @Property(
+        type = PropertyType.TEXT,
+        name = "AutoGG Message",
+        description = "AutoGG message the bot sends after every game",
+        category = "AutoGG",
+    )
+    val ggMessage = "gg"
+
+    @Property(
+        type = PropertyType.NUMBER,
+        name = "AutoGG Delay",
+        description = "How long to wait after the game before sending the message",
+        category = "AutoGG",
+        min = 50,
+        max = 1000,
+        increment = 50
+    )
+    val ggDelay = 100
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Game Start Message",
+        description = "Send a message as soon as the game starts",
+        category = "AutoGG",
+    )
+    val sendStartMessage = false
+
+    @Property(
+        type = PropertyType.TEXT,
+        name = "Start Message",
+        description = "Message to send at the beginning of the game",
+        category = "AutoGG",
+    )
+    val startMessage = "GL HF!"
+
+    @Property(
+        type = PropertyType.NUMBER,
+        name = "Start Message Delay",
+        description = "How long to wait before sending the start message",
+        category = "AutoGG",
+        min = 50,
+        max = 1000,
+        increment = 50
+    )
+    val startMessageDelay = 100
+
     init {
         addDependency("webhookURL", "sendWebhookMessages")
+
+        addDependency("ggMessage", "sendAutoGG")
+        addDependency("ggDelay", "sendAutoGG")
+
+        addDependency("startMessage", "sendStartMessage")
+        addDependency("startMessageDelay", "sendStartMessage")
 
         initialize()
     }
