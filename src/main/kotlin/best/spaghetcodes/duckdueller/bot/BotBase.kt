@@ -13,5 +13,8 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
     private var toggled = false
     fun toggled() = toggled
+    fun toggle() {
+        toggled = !toggled
+    }
 
 }
