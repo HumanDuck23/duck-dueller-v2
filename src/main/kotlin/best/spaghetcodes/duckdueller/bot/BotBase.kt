@@ -188,6 +188,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                 if (!found && DuckDueller.config?.dodgeNoStats == true) {
                     ChatUtils.info("No stats found, dodging...")
                     leaveGame()
+                    TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(4000, 6000))
                 }
             }
 
@@ -352,6 +353,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                 if (dodge) {
                     beforeLeave()
                     leaveGame()
+                    TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(4000, 6000))
                 }
             }
         } else if (toggled()) {
