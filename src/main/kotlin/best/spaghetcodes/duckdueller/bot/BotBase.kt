@@ -213,13 +213,15 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                     } else {
                         playerCache[player] = uuid // cache this player
                         if (!playersSent.contains(player)) { // don't send the same player twice
-                            playersSent.add(player)
                             if (mc.thePlayer != null) {
                                 if (player == mc.thePlayer.displayNameString) { // if the player is the bot
                                     onJoinGame()
                                 } else {
                                     val stats = HttpUtils.getPlayerStats(uuid) ?: return@thread
-                                    handleStats(stats, player)
+                                    if (!playersSent.contains(player)) {
+                                        playersSent.add(player)
+                                        handleStats(stats, player)
+                                    }
                                 }
                             } else {
                                 val stats = HttpUtils.getPlayerStats(uuid) ?: return@thread
