@@ -1,9 +1,7 @@
 {
     "compatibilityLevel": "JAVA_8",
-    "package": "dev.debuggings.examplemod.mixins",
+    "package": "best.spaghetcodes.duckdueller.mixins",
     "refmap": "mixins.examplemod.refmap.json",
-    "mixins": [
-        "MixinMinecraft"
-    ],
+    "mixins": [],
     "verbose": true
 }
