@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.network.play.server.S19PacketEntityStatus
 import net.minecraft.network.play.server.S3EPacketTeams
 import net.minecraft.util.EnumChatFormatting
+import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.event.entity.player.AttackEntityEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
@@ -156,6 +157,35 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
             ChatUtils.info("Duck Dueller has been toggled ${if (toggled()) "${EnumChatFormatting.GREEN}on" else "${EnumChatFormatting.RED}off"}")
             if (toggled()) {
                 joinGame()
+            }
+        }
+    }
+
+    @SubscribeEvent
+    fun onChat(ev: ClientChatReceivedEvent) {
+        if (toggled() && mc.thePlayer != null) {
+            val unformatted = ev.message.unformattedText
+
+            if (unformatted.contains("The game starts in 2 seconds!")) {
+                var found = false
+                if (playersSent.contains(mc.thePlayer.displayNameString)) {
+                    if (playersSent.size > 1) {
+                        found = true
+                    }
+                } else {
+                    if (playersSent.size > 0) {
+                        found = true
+                    }
+                }
+
+                if (!found && DuckDueller.config?.dodgeNoStats == true) {
+                    ChatUtils.info("No stats found, dodging...")
+                    leaveGame()
+                }
+            }
+
+            if (unformatted.contains("Are you sure? Type /lobby again")) {
+                leaveGame()
             }
         }
     }
