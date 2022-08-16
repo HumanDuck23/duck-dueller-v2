@@ -275,10 +275,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                                     onJoinGame()
                                 } else {
                                     val stats = HttpUtils.getPlayerStats(uuid) ?: return@thread
-                                    if (!playersSent.contains(player)) {
-                                        playersSent.add(player)
-                                        handleStats(stats, player)
-                                    }
+                                    handleStats(stats, player)
                                 }
                             } else {
                                 val stats = HttpUtils.getPlayerStats(uuid) ?: return@thread
@@ -309,6 +306,13 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                             return null
                     }
                     return null
+                }
+
+
+                if (!playersSent.contains(player)) {
+                    playersSent.add(player)
+                } else {
+                    return
                 }
 
                 val wins = getStat(statKeys["wins"]!!)?.asInt ?: 0
