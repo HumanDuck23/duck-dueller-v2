@@ -46,6 +46,8 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     private var opponentTimer: Timer? = null
     private var calledFoundOpponent = false
 
+    fun opponent() = opponent
+
     /********
      * Methods to override
      ********/
