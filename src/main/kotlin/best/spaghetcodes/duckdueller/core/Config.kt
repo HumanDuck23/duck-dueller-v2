@@ -71,7 +71,7 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
         max = 18,
         increment = 1
     )
-    val maxCPS = 10
+    val maxCPS = 14
 
     @Property(
         type = PropertyType.NUMBER,
@@ -85,15 +85,14 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
     val lookSpeed = 10
 
     @Property(
-        type = PropertyType.NUMBER,
+        type = PropertyType.DECIMAL_SLIDER,
         name = "Look Randomization",
         description = "How much randomization should happen when looking (higher number = more jittery aim)",
         category = "Combat",
-        min = 5,
-        max = 15,
-        increment = 1
+        minF = 0f,
+        maxF = 2f,
     )
-    val lookRand = 10
+    val lookRand = 1f
 
     @Property(
         type = PropertyType.NUMBER,
@@ -113,7 +112,7 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
         category = "Combat",
         min = 5,
         max = 15,
-        increment = 150
+        increment = 1
     )
     val maxDistanceAttack = 10
 
