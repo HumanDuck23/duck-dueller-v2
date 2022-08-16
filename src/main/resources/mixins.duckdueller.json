@@ -1,7 +1,7 @@
 {
     "compatibilityLevel": "JAVA_8",
     "package": "best.spaghetcodes.duckdueller.mixins",
-    "refmap": "mixins.examplemod.refmap.json",
+    "refmap": "mixins.duckdueller.refmap.json",
     "mixins": [],
     "verbose": true
 }
