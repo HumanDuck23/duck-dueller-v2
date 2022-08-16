@@ -1,10 +1,13 @@
 package best.spaghetcodes.duckdueller.bot
 
 import best.spaghetcodes.duckdueller.events.packet.PacketEvent
+import best.spaghetcodes.duckdueller.utils.HttpUtils
+import com.google.gson.JsonObject
 import net.minecraft.client.Minecraft
 import net.minecraft.network.play.server.S19PacketEntityStatus
 import net.minecraftforge.event.entity.player.AttackEntityEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import kotlin.concurrent.thread
 
 /**
  * Base class for all bots
@@ -24,6 +27,9 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     private var attackedID = -1
 
     private var statKeys: Map<String, String> = mapOf("wins" to "", "losses" to "", "ws" to "")
+
+    private var playerCache: HashMap<String, String> = hashMapOf()
+    private var playersSent: ArrayList<String> = arrayListOf()
 
     /********
      * Methods to override
@@ -114,5 +120,49 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
             attackedID = ev.target.entityId
         }
     }
+
+    /********
+     * Private Methods
+     ********/
+
+    /**
+     * Called for each player that joins
+     */
+    private fun handlePlayer(player: String) {
+        thread { // move into new thread to avoid blocking the main thread
+            if (StateManager.state == StateManager.States.GAME) { // make sure we're in-game, to not spam the api
+                if (player.length > 2) { // hypixel sends a bunch of fake 1-2 char entities
+                    var uuid: String? = null
+                    if (playerCache.containsKey(player)) { // check if the player is in the cache
+                        uuid = playerCache[player]
+                    } else {
+                        uuid = HttpUtils.usernameToUUID(player)
+                    }
+
+                    if (uuid == null) { // nicked or fake player
+                        //TODO: Check the list of players the bot has lost to
+                    } else {
+                        playerCache[player] = uuid // cache this player
+                        if (!playersSent.contains(player)) { // don't send the same player twice
+                            playersSent.add(player)
+                            if (mc.thePlayer != null) {
+                                if (uuid == mc.thePlayer.uniqueID.toString()) { // if the player is the bot
+                                    onJoinGame()
+                                } else {
+                                    val stats = HttpUtils.getPlayerStats(uuid) ?: return@thread
+                                    handleStats(stats)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Handle the response from the hypixel api
+     */
+    private fun handleStats(stats: JsonObject) {}
 
 }
