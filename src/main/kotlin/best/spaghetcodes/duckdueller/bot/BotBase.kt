@@ -3,13 +3,11 @@ package best.spaghetcodes.duckdueller.bot
 import best.spaghetcodes.duckdueller.DuckDueller
 import best.spaghetcodes.duckdueller.core.KeyBindings
 import best.spaghetcodes.duckdueller.events.packet.PacketEvent
-import best.spaghetcodes.duckdueller.utils.ChatUtils
-import best.spaghetcodes.duckdueller.utils.HttpUtils
-import best.spaghetcodes.duckdueller.utils.RandomUtils
-import best.spaghetcodes.duckdueller.utils.TimeUtils
+import best.spaghetcodes.duckdueller.utils.*
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import net.minecraft.client.Minecraft
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.network.play.server.S19PacketEntityStatus
 import net.minecraft.network.play.server.S3EPacketTeams
 import net.minecraft.util.EnumChatFormatting
@@ -19,6 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.util.Timer
 import kotlin.concurrent.thread
 
 /**
@@ -42,6 +41,10 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
     private var playerCache: HashMap<String, String> = hashMapOf()
     private var playersSent: ArrayList<String> = arrayListOf()
+
+    private var opponent: EntityPlayer? = null
+    private var opponentTimer: Timer? = null
+    private var calledFoundOpponent = false
 
     /********
      * Methods to override
@@ -189,11 +192,11 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
             }
 
             if (unformatted.contains("Opponent:")) {
-                onGameStart()
+                gameStart()
             }
 
             if (unformatted.contains("Accuracy")) {
-                onGameEnd()
+                gameEnd()
             }
         }
     }
@@ -201,6 +204,46 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     /********
      * Private Methods
      ********/
+
+    private fun gameStart() {
+        if (toggled()) {
+            val quickRefreshTimer = TimeUtils.setInterval(this::bakery, 200, 50)
+            TimeUtils.setTimeout(fun () {
+                quickRefreshTimer?.cancel()
+                opponentTimer = TimeUtils.setInterval(this::bakery, 0, 5000)
+            }, quickRefresh)
+
+            onGameStart()
+        }
+    }
+
+    private fun gameEnd() {
+        if (toggled()) {
+            onGameEnd()
+            playersSent = arrayListOf()
+            calledFoundOpponent = true
+            opponentTimer?.cancel()
+            opponent = null
+
+            if (DuckDueller.config?.sendAutoGG == true) {
+                TimeUtils.setTimeout(fun () {
+                    ChatUtils.sendAsPlayer(DuckDueller.config?.ggMessage ?: "gg")
+                }, DuckDueller.config?.ggDelay ?: 100)
+
+                TimeUtils.setTimeout(this::joinGame, DuckDueller.config?.autoRqDelay ?: 2000)
+            }
+        }
+    }
+
+    private fun bakery() {
+        if (StateManager.state == StateManager.States.PLAYING) {
+            val entity = EntityUtils.getOpponentEntity()
+            if (entity != null && !calledFoundOpponent) {
+                opponent = entity
+                onFoundOpponent()
+            }
+        }
+    }
 
     /**
      * Called for each player that joins
