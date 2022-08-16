@@ -43,11 +43,11 @@ minecraft {
     makeObfSourceJar = false
 
     clientRunArgs += "--tweakClass org.spongepowered.asm.launch.MixinTweaker"
-    clientRunArgs += "--mixin mixins.examplemod.json"
+    clientRunArgs += "--mixin mixins.duckdueller.json"
 }
 
 mixin {
-    add sourceSets.main, "mixins.examplemod.refmap.json"
+    add sourceSets.main, "mixins.duckdueller.refmap.json"
 }
 
 sourceSets {
@@ -92,7 +92,7 @@ shadowJar {
 
     manifest.attributes(
             "TweakClass": "gg.essential.loader.stage0.EssentialSetupTweaker",
-            "MixinConfigs": "mixins.examplemod.json"
+            "MixinConfigs": "mixins.duckdueller.json"
     )
 }
 
