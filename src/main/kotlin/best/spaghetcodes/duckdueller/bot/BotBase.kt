@@ -183,12 +183,12 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                         if (!playersSent.contains(player)) { // don't send the same player twice
                             playersSent.add(player)
                             if (mc.thePlayer != null) {
-                                if (uuid == mc.thePlayer.uniqueID.toString()) { // if the player is the bot
+                                if (player == mc.thePlayer.displayNameString) { // if the player is the bot
                                     onJoinGame()
-                                } else {
-                                    val stats = HttpUtils.getPlayerStats(uuid) ?: return@thread
-                                    handleStats(stats, player)
                                 }
+                            } else {
+                                val stats = HttpUtils.getPlayerStats(uuid) ?: return@thread
+                                handleStats(stats, player)
                             }
                         }
                     }
