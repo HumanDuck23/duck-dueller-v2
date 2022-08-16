@@ -72,10 +72,12 @@ object Mouse {
 
             // this could be the whole ac method, BUT the cps should jitter between min and max
             val cpsTimer = TimeUtils.setInterval(fun () {
-                val minDelay = 1000 / cps / 3
-                val maxDelay = minDelay * 2
-                val delay = RandomUtils.randomIntInRange(minDelay, maxDelay)
-                TimeUtils.setTimeout(this::leftClick, delay)
+                if (leftAC) {
+                    val minDelay = 1000 / cps / 3
+                    val maxDelay = minDelay * 2
+                    val delay = RandomUtils.randomIntInRange(minDelay, maxDelay)
+                    TimeUtils.setTimeout(this::leftClick, delay)
+                }
             }, 0, 1000/cps)
 
             TimeUtils.setTimeout(fun () {
