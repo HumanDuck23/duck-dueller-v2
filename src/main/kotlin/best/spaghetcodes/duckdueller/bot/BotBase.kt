@@ -47,6 +47,9 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     private var opponentTimer: Timer? = null
     private var calledFoundOpponent = false
 
+    protected var combo = 0
+    protected var opponentCombo = 0
+
     fun opponent() = opponent
 
     /********
@@ -124,8 +127,12 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                             if (entity.entityId == attackedID) {
                                 attackedID = -1
                                 onAttack()
+                                combo++
+                                opponentCombo = 0
                             } else if (mc.thePlayer != null && entity.entityId == mc.thePlayer.entityId) {
                                 onAttacked()
+                                combo = 0
+                                opponentCombo++
                             }
                         }
                     }
@@ -206,6 +213,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
         }
     }
 
+    @SubscribeEvent
     fun onJoinWorld(ev: EntityJoinWorldEvent) {
         if (DuckDueller.mc.thePlayer != null && ev.entity == DuckDueller.mc.thePlayer) {
             if (toggled()) {
