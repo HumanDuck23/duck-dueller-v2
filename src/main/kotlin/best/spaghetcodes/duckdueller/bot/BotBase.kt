@@ -244,6 +244,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
             if (entity != null) {
                 opponent = entity
                 if (!calledFoundOpponent) {
+                    calledFoundOpponent = true
                     onFoundOpponent()
                 }
             }
