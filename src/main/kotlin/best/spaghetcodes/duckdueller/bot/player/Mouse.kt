@@ -1,9 +1,13 @@
 package best.spaghetcodes.duckdueller.bot.player
 
 import best.spaghetcodes.duckdueller.DuckDueller
+import best.spaghetcodes.duckdueller.utils.EntityUtils
 import best.spaghetcodes.duckdueller.utils.RandomUtils
 import best.spaghetcodes.duckdueller.utils.TimeUtils
 import net.minecraft.client.settings.KeyBinding
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent
+import kotlin.math.abs
 
 object Mouse {
 
@@ -92,6 +96,29 @@ object Mouse {
         if (DuckDueller.bot?.toggled() == true) {
             rClickDown = false
             KeyBinding.setKeyBindState(DuckDueller.mc.gameSettings.keyBindUseItem.keyCode, false)
+        }
+    }
+
+    @SubscribeEvent
+    fun onTick(ev: TickEvent.ClientTickEvent) {
+        if (DuckDueller.mc.thePlayer != null && DuckDueller.bot?.toggled() == true && tracking && DuckDueller.bot?.opponent() != null) {
+            val rotations = EntityUtils.getRotations(DuckDueller.mc.thePlayer, DuckDueller.bot?.opponent(), false)
+
+            if (rotations != null) {
+                val lookRand = (DuckDueller.config?.lookRand ?: 0).toDouble()
+                var da = ((rotations[0] - DuckDueller.mc.thePlayer.rotationYaw) + RandomUtils.randomDoubleInRange(-lookRand, lookRand)).toFloat()
+                val maxRot = (DuckDueller.config?.lookSpeed ?: 10).toFloat()
+                if (abs(da) > maxRot) {
+                    da = if (da > 0) {
+                        maxRot
+                    } else {
+                        -maxRot
+                    }
+                }
+
+                DuckDueller.mc.thePlayer.rotationYaw += da
+                DuckDueller.mc.thePlayer.rotationPitch = rotations[1] // pitch is perfect screw you
+            }
         }
     }
 
