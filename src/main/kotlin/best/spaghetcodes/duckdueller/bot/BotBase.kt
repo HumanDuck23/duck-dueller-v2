@@ -2,9 +2,11 @@ package best.spaghetcodes.duckdueller.bot
 
 import best.spaghetcodes.duckdueller.events.packet.PacketEvent
 import best.spaghetcodes.duckdueller.utils.HttpUtils
+import best.spaghetcodes.duckdueller.utils.TimeUtils
 import com.google.gson.JsonObject
 import net.minecraft.client.Minecraft
 import net.minecraft.network.play.server.S19PacketEntityStatus
+import net.minecraft.network.play.server.S3EPacketTeams
 import net.minecraftforge.event.entity.player.AttackEntityEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import kotlin.concurrent.thread
@@ -109,6 +111,17 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                             } else if (mc.thePlayer != null && entity.entityId == mc.thePlayer.entityId) {
                                 onAttacked()
                             }
+                        }
+                    }
+                }
+                is S3EPacketTeams -> { // use this for stat checking
+                    val packet = ev.getPacket() as S3EPacketTeams
+                    if (packet.action == 3 && packet.name == "§7§k") {
+                        val players = packet.players
+                        for (player in players) {
+                            TimeUtils.setTimeout(fun () { // timeout to allow ingame state to update
+                                handlePlayer(player)
+                            }, 1500)
                         }
                     }
                 }
