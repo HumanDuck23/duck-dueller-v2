@@ -3,6 +3,7 @@ package best.spaghetcodes.duckdueller
 import best.spaghetcodes.duckdueller.bot.StateManager
 import best.spaghetcodes.duckdueller.commands.ConfigCommand
 import best.spaghetcodes.duckdueller.core.Config
+import best.spaghetcodes.duckdueller.core.KeyBindings
 import best.spaghetcodes.duckdueller.events.packet.PacketListener
 import com.google.gson.Gson
 import net.minecraft.client.Minecraft
@@ -34,6 +35,7 @@ class DuckDueller {
         config?.preload()
 
         ConfigCommand().register()
+        KeyBindings.register()
 
         MinecraftForge.EVENT_BUS.register(PacketListener())
         MinecraftForge.EVENT_BUS.register(StateManager)
