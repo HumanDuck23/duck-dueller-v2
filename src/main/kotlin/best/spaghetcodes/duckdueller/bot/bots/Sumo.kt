@@ -30,6 +30,7 @@ class Sumo : BotBase("/play duels_sumo_duel") {
         TimeUtils.setTimeout(fun () {
             Movement.clearAll()
             Mouse.stopLeftAC()
+            Combat.stopRandomStrafe()
         }, RandomUtils.randomIntInRange(100, 300))
     }
 
