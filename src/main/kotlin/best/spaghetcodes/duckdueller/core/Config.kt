@@ -9,6 +9,10 @@ import java.io.File
 
 class Config : Vigilant(File(DuckDueller.configLocation)) {
 
+    /*
+        GENERAL
+     */
+
     @Property(
         type = PropertyType.SELECTOR,
         name = "Current Bot",
