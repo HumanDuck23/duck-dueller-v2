@@ -1,0 +1,18 @@
+[
+    {
+        "modid": "examplemod",
+        "name": "ExampleMod",
+        "description": "Template Mod",
+        "version": "${version}",
+        "mcversion": "${mcversion}",
+        "url": "",
+        "updateUrl": "",
+        "authorList": [
+            "Debuggings"
+        ],
+        "credits": "",
+        "logoFile": "",
+        "screenshots": [],
+        "dependencies": []
+    }
+]
