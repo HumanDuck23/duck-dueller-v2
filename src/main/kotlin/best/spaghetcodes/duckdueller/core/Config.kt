@@ -1,13 +1,13 @@
-package dev.debuggings.examplemod.core
+package best.spaghetcodes.duckdueller.core
 
-import dev.debuggings.examplemod.ExampleMod
+import best.spaghetcodes.duckdueller.DuckDueller
 import gg.essential.vigilance.Vigilant
 import gg.essential.vigilance.data.Property
 import gg.essential.vigilance.data.PropertyType
 
 import java.io.File
 
-class Config : Vigilant(File(ExampleMod.configLocation)) {
+class Config : Vigilant(File(DuckDueller.configLocation)) {
 
     @Property(
         type = PropertyType.SWITCH,

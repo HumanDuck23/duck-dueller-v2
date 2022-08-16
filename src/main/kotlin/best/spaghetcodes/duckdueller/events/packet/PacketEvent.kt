@@ -1,4 +1,4 @@
-package dev.debuggings.examplemod.events.packet
+package best.spaghetcodes.duckdueller.events.packet
 
 import net.minecraft.network.Packet
 import net.minecraftforge.fml.common.eventhandler.Cancelable

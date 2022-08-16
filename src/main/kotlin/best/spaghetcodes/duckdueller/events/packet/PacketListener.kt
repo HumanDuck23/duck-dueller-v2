@@ -1,4 +1,4 @@
-package dev.debuggings.examplemod.events.packet
+package best.spaghetcodes.duckdueller.events.packet
 
 import io.netty.channel.ChannelDuplexHandler
 import io.netty.channel.ChannelHandlerContext
@@ -48,7 +48,7 @@ class PacketListener : ChannelDuplexHandler() {
     fun joinEvent(event: FMLNetworkEvent.ClientConnectedToServerEvent) {
         event.manager.channel().pipeline().addBefore(
             "packet_handler",
-            "examplemod_packet_handler",
+            "duckdueller_packet_handler",
             PacketListener()
         )
     }
