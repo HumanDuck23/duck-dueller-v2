@@ -3,6 +3,7 @@ package best.spaghetcodes.duckdueller
 import best.spaghetcodes.duckdueller.bot.BotBase
 import best.spaghetcodes.duckdueller.bot.StateManager
 import best.spaghetcodes.duckdueller.bot.bots.Sumo
+import best.spaghetcodes.duckdueller.bot.player.Mouse
 import best.spaghetcodes.duckdueller.commands.ConfigCommand
 import best.spaghetcodes.duckdueller.core.Config
 import best.spaghetcodes.duckdueller.core.KeyBindings
@@ -42,6 +43,7 @@ class DuckDueller {
 
         MinecraftForge.EVENT_BUS.register(PacketListener())
         MinecraftForge.EVENT_BUS.register(StateManager)
+        MinecraftForge.EVENT_BUS.register(Mouse)
 
         swapBot(Sumo())
     }
