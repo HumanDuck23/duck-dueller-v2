@@ -175,6 +175,10 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
     )
     val startMessageDelay = 100
 
+    /*
+        Auto Requeue
+     */
+
     @Property(
         type = PropertyType.NUMBER,
         name = "Auto Requeue Delay",
