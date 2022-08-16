@@ -224,7 +224,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
         }
     }
 
-    fun leaveGame() {
+    private fun leaveGame() {
         TimeUtils.setTimeout(fun () {
             ChatUtils.sendAsPlayer("/l")
         }, RandomUtils.randomIntInRange(100, 300))
