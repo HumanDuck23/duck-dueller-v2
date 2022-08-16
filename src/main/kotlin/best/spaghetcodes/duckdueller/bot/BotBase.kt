@@ -12,6 +12,7 @@ import net.minecraft.network.play.server.S19PacketEntityStatus
 import net.minecraft.network.play.server.S3EPacketTeams
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.ClientChatReceivedEvent
+import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.event.entity.player.AttackEntityEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
@@ -204,6 +205,14 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
         }
     }
 
+    fun onJoinWorld(ev: EntityJoinWorldEvent) {
+        if (DuckDueller.mc.thePlayer != null && ev.entity == DuckDueller.mc.thePlayer) {
+            if (toggled()) {
+                playersSent.clear()
+            }
+        }
+    }
+
     /********
      * Private Methods
      ********/
@@ -223,7 +232,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     private fun gameEnd() {
         if (toggled()) {
             onGameEnd()
-            playersSent = arrayListOf()
+            playersSent.clear()
             calledFoundOpponent = true
             opponentTimer?.cancel()
             opponent = null
