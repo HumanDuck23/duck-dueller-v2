@@ -230,4 +230,10 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
         }, RandomUtils.randomIntInRange(100, 300))
     }
 
+    private fun joinGame() {
+        TimeUtils.setTimeout(fun () {
+            ChatUtils.sendAsPlayer(queueCommand)
+        }, RandomUtils.randomIntInRange(100, 300))
+    }
+
 }
