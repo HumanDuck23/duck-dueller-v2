@@ -23,6 +23,8 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
     private var attackedID = -1
 
+    private var statKeys: Map<String, String> = mapOf("wins" to "", "losses" to "", "ws" to "")
+
     /********
      * Methods to override
      ********/
@@ -73,6 +75,14 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
      * Called every tick
      */
     protected open fun onTick() {}
+
+    /********
+     * Protected Methods
+     ********/
+
+    protected fun setStatKeys(keys: Map<String, String>) {
+        statKeys = keys
+    }
 
     /********
      * Base Methods
