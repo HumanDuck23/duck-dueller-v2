@@ -12,6 +12,7 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
     @Property(
         type = PropertyType.SELECTOR,
         name = "Current Bot",
+        description = "The bot you want to use",
         category = "General",
         options = ["Sumo", "Boxing", "Classic"]
     )
@@ -37,6 +38,7 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
     @Property(
         type = PropertyType.TEXT,
         name = "Discord Webhook URL",
+        description = "The webhook URL to send messages to.",
         category = "General",
     )
     val webhookURL = ""
