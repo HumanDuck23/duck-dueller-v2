@@ -10,23 +10,39 @@ import java.io.File
 class Config : Vigilant(File(DuckDueller.configLocation)) {
 
     @Property(
-        type = PropertyType.SWITCH,
-        name = "Toggle Swag Mod",
-        description = "Example Switch",
-        category = "General"
+        type = PropertyType.SELECTOR,
+        name = "Current Bot",
+        category = "General",
+        options = ["Sumo", "Boxing", "Classic"]
     )
-    var toggleSwag = false
+    val currentBot = 0
 
     @Property(
         type = PropertyType.TEXT,
-        name = "Swag Text",
-        description = "Example Text",
-        category = "General"
+        name = "API Key",
+        description = "This account's API key, can also be set using \"/api new\".",
+        placeholder = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        category = "General",
     )
-    var swagText = ":sunglasses:"
+    val apiKey = ""
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Send Webhook Messages",
+        description = "Whether or not the bot should send a discord webhook message after each game.",
+        category = "General",
+    )
+    val sendWebhookMessages = false
+
+    @Property(
+        type = PropertyType.TEXT,
+        name = "Discord Webhook URL",
+        category = "General",
+    )
+    val webhookURL = ""
 
     init {
-        addDependency("swagText", "toggleSwag")
+        addDependency("webhookURL", "sendWebhookMessages")
 
         initialize()
     }
