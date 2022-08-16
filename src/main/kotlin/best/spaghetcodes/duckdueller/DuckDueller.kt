@@ -1,6 +1,8 @@
 package best.spaghetcodes.duckdueller
 
+import best.spaghetcodes.duckdueller.bot.BotBase
 import best.spaghetcodes.duckdueller.bot.StateManager
+import best.spaghetcodes.duckdueller.bot.bots.Sumo
 import best.spaghetcodes.duckdueller.commands.ConfigCommand
 import best.spaghetcodes.duckdueller.core.Config
 import best.spaghetcodes.duckdueller.core.KeyBindings
@@ -27,6 +29,7 @@ class DuckDueller {
         val mc: Minecraft = Minecraft.getMinecraft()
         val gson = Gson()
         var config: Config? = null
+        var bot: BotBase? = null
     }
 
     @Mod.EventHandler
@@ -39,5 +42,13 @@ class DuckDueller {
 
         MinecraftForge.EVENT_BUS.register(PacketListener())
         MinecraftForge.EVENT_BUS.register(StateManager)
+
+        swapBot(Sumo())
+    }
+
+    fun swapBot(b: BotBase) {
+        if (bot != null) MinecraftForge.EVENT_BUS.unregister(bot) // make sure to unregister the current bot
+        bot = b
+        MinecraftForge.EVENT_BUS.register(bot) // register the new bot
     }
 }
