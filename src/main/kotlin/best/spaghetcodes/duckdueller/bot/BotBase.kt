@@ -97,16 +97,18 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     @SubscribeEvent
     fun onPacket(ev: PacketEvent) {
         if (toggled) {
-            if (ev.getPacket() is S19PacketEntityStatus) { // use the status packet for attack events
-                val packet = ev.getPacket() as S19PacketEntityStatus
-                if (packet.opCode.toInt() == 2) { // damage
-                    val entity = packet.getEntity(mc.theWorld)
-                    if (entity != null) {
-                        if (entity.entityId == attackedID) {
-                            attackedID = -1
-                            onAttack()
-                        } else if (mc.thePlayer != null && entity.entityId == mc.thePlayer.entityId) {
-                            onAttacked()
+            when (ev.getPacket()) {
+                is S19PacketEntityStatus -> { // use the status packet for attack events
+                    val packet = ev.getPacket() as S19PacketEntityStatus
+                    if (packet.opCode.toInt() == 2) { // damage
+                        val entity = packet.getEntity(mc.theWorld)
+                        if (entity != null) {
+                            if (entity.entityId == attackedID) {
+                                attackedID = -1
+                                onAttack()
+                            } else if (mc.thePlayer != null && entity.entityId == mc.thePlayer.entityId) {
+                                onAttacked()
+                            }
                         }
                     }
                 }
