@@ -201,6 +201,65 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
     )
     val rqNoGame = 30000
 
+    /*
+        Queue Dodging
+     */
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Enable Queue Dodging",
+        description = "Whether or not the bot should dodge people based on stats",
+        category = "Queue Dodging",
+    )
+    val enableDodging = true
+
+    @Property(
+        type = PropertyType.SLIDER,
+        name = "Dodge Wins",
+        description = "How many wins a player can have before being dodged",
+        category = "Queue Dodging",
+        min = 500,
+        max = 20000
+    )
+    val dodgeWins = 4000
+
+    @Property(
+        type = PropertyType.NUMBER,
+        name = "Dodge WS",
+        description = "How large a player's winstreak can be before being dodged",
+        category = "Queue Dodging",
+        min = 10,
+        max = 100,
+        increment = 5
+    )
+    val dodgeWS = 15
+
+    @Property(
+        type = PropertyType.NUMBER,
+        name = "Dodge W/L",
+        description = "How large a player's w/l ratio can be before being dodged",
+        category = "Queue Dodging",
+        min = 3,
+        max = 15,
+    )
+    val dodgeWLR = 3
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Dodge Lost To",
+        description = "Whether or not the bot should dodge people it already lost against",
+        category = "Queue Dodging",
+    )
+    val dodgeLostTo = true
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Dodge No Stats",
+        description = "Whether or not the bot should dodge when no stats are found (nicked player or hypixel error)",
+        category = "Queue Dodging",
+    )
+    val dodgeNoStats = true
+
     init {
         addDependency("webhookURL", "sendWebhookMessages")
 
@@ -209,6 +268,12 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
 
         addDependency("startMessage", "sendStartMessage")
         addDependency("startMessageDelay", "sendStartMessage")
+
+        addDependency("dodgeWins", "enableDodging")
+        addDependency("dodgeWS", "enableDodging")
+        addDependency("dodgeWLR", "enableDodging")
+        addDependency("dodgeLostTo", "enableDodging")
+        addDependency("dodgeNoStats", "enableDodging")
 
         initialize()
     }
