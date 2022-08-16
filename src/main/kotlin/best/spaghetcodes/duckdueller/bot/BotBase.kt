@@ -10,6 +10,7 @@ import com.google.gson.JsonObject
 import net.minecraft.client.Minecraft
 import net.minecraft.network.play.server.S19PacketEntityStatus
 import net.minecraft.network.play.server.S3EPacketTeams
+import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.event.entity.player.AttackEntityEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import kotlin.concurrent.thread
@@ -168,7 +169,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                                     onJoinGame()
                                 } else {
                                     val stats = HttpUtils.getPlayerStats(uuid) ?: return@thread
-                                    handleStats(stats)
+                                    handleStats(stats, player)
                                 }
                             }
                         }
@@ -181,7 +182,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     /**
      * Handle the response from the hypixel api
      */
-    private fun handleStats(stats: JsonObject) {
+    private fun handleStats(stats: JsonObject, player: String) {
         if (toggled() && stats.get("success").asBoolean) {
             if (statKeys.containsKey("wins") && statKeys.containsKey("losses") && statKeys.containsKey("ws")) {
                 fun getStat(key: String): JsonObject {
@@ -198,6 +199,8 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                 val losses = getStat(statKeys["losses"]!!).asInt
                 val ws = getStat(statKeys["ws"]!!).asInt
                 val wlr = wins / (if (losses == 0) 1 else losses)
+
+                ChatUtils.info("$player ${EnumChatFormatting.GOLD} >> ${EnumChatFormatting.GOLD}Wins: ${EnumChatFormatting.GREEN}$wins ${EnumChatFormatting.GOLD} WLR: ${EnumChatFormatting.GREEN} $wlr ${EnumChatFormatting.GOLD}WS: ${EnumChatFormatting.GREEN} $ws")
 
                 var dodge = false
 
