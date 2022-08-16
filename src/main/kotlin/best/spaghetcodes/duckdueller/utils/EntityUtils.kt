@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
 import kotlin.math.abs
+import kotlin.math.acos
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -190,6 +191,22 @@ object EntityUtils {
     fun get2dLookVec(entity: Entity): Vec3 {
         val yaw = ((entity.rotationYaw + 90)  * Math.PI) / 180
         return Vec3(cos(yaw), 0.0, sin(yaw))
+    }
+
+    fun entityMovingLeft(entity: Entity, target: Entity): Boolean {
+        var lookVec = get2dLookVec(entity).rotateYaw(90f)
+        var entityVec = target.getVelocity()
+
+        val angle = acos((lookVec.xCoord * entityVec.xCoord + lookVec.zCoord * entityVec.zCoord) / (lookVec.lengthVector() * entityVec.lengthVector())) * 180 / Math.PI
+        return angle > 90
+    }
+
+    fun entityMovingRight(entity: Entity, target: Entity): Boolean {
+        var lookVec = get2dLookVec(entity).rotateYaw(90f)
+        var entityVec = target.getVelocity()
+
+        val angle = acos((lookVec.xCoord * entityVec.xCoord + lookVec.zCoord * entityVec.zCoord) / (lookVec.lengthVector() * entityVec.lengthVector())) * 180 / Math.PI
+        return angle < 90
     }
 
     private fun getClosestCorner(corner1: Vec3, corner2: Vec3, corner3: Vec3, corner4: Vec3): ArrayList<Vec3> {
