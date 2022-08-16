@@ -1,6 +1,10 @@
 package best.spaghetcodes.duckdueller.bot
 
+import best.spaghetcodes.duckdueller.events.packet.PacketEvent
 import net.minecraft.client.Minecraft
+import net.minecraft.network.play.server.S19PacketEntityStatus
+import net.minecraftforge.event.entity.player.AttackEntityEvent
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 /**
  * Base class for all bots
@@ -16,6 +20,8 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     fun toggle() {
         toggled = !toggled
     }
+
+    private var attackedID = -1
 
     /********
      * Methods to override
@@ -67,5 +73,36 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
      * Called every tick
      */
     protected open fun onTick() {}
+
+    /********
+     * Base Methods
+     ********/
+
+    @SubscribeEvent
+    fun onPacket(ev: PacketEvent) {
+        if (toggled) {
+            if (ev.getPacket() is S19PacketEntityStatus) { // use the status packet for attack events
+                val packet = ev.getPacket() as S19PacketEntityStatus
+                if (packet.opCode.toInt() == 2) { // damage
+                    val entity = packet.getEntity(mc.theWorld)
+                    if (entity != null) {
+                        if (entity.entityId == attackedID) {
+                            attackedID = -1
+                            onAttack()
+                        } else if (mc.thePlayer != null && entity.entityId == mc.thePlayer.entityId) {
+                            onAttacked()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    fun onAttackEntityEvent(ev: AttackEntityEvent) {
+        if (toggled() && ev.entity == mc.thePlayer) {
+            attackedID = ev.target.entityId
+        }
+    }
 
 }
