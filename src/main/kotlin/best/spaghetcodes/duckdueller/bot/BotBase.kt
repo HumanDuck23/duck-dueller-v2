@@ -1,7 +1,10 @@
 package best.spaghetcodes.duckdueller.bot
 
+import best.spaghetcodes.duckdueller.DuckDueller
 import best.spaghetcodes.duckdueller.events.packet.PacketEvent
+import best.spaghetcodes.duckdueller.utils.ChatUtils
 import best.spaghetcodes.duckdueller.utils.HttpUtils
+import best.spaghetcodes.duckdueller.utils.RandomUtils
 import best.spaghetcodes.duckdueller.utils.TimeUtils
 import com.google.gson.JsonObject
 import net.minecraft.client.Minecraft
@@ -178,6 +181,53 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     /**
      * Handle the response from the hypixel api
      */
-    private fun handleStats(stats: JsonObject) {}
+    private fun handleStats(stats: JsonObject) {
+        if (toggled() && stats.get("success").asBoolean) {
+            if (statKeys.containsKey("wins") && statKeys.containsKey("losses") && statKeys.containsKey("ws")) {
+                fun getStat(key: String): JsonObject {
+                    var tmpObj = stats
+
+                    for (p in key.split(".")) {
+                        tmpObj = tmpObj.get(p).asJsonObject
+                    }
+
+                    return tmpObj
+                }
+
+                val wins = getStat(statKeys["wins"]!!).asInt
+                val losses = getStat(statKeys["losses"]!!).asInt
+                val ws = getStat(statKeys["ws"]!!).asInt
+                val wlr = wins / (if (losses == 0) 1 else losses)
+
+                var dodge = false
+
+                if (DuckDueller.config?.enableDodging == true) {
+                    val config = DuckDueller.config
+                    if (wins > config?.dodgeWins!!) {
+                        dodge = true
+                    } else if (wlr > config.dodgeWLR) {
+                        dodge = true
+                    } else if (ws > config.dodgeWS) {
+                        dodge = true
+                    }
+                }
+
+                if (dodge) {
+                    beforeLeave()
+                    leaveGame()
+                }
+            }
+        } else if (toggled()) {
+            ChatUtils.error("Error getting stats! Check the log for more information.")
+            println("Error getting stats! success == false")
+            println(DuckDueller.gson.toJson(stats))
+        }
+    }
+
+    fun leaveGame() {
+        TimeUtils.setTimeout(fun () {
+            ChatUtils.sendAsPlayer("/l")
+        }, RandomUtils.randomIntInRange(100, 300))
+    }
 
 }
