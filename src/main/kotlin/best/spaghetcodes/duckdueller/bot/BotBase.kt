@@ -187,6 +187,14 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
             if (unformatted.contains("Are you sure? Type /lobby again")) {
                 leaveGame()
             }
+
+            if (unformatted.contains("Opponent:")) {
+                onGameStart()
+            }
+
+            if (unformatted.contains("Accuracy")) {
+                onGameEnd()
+            }
         }
     }
 
