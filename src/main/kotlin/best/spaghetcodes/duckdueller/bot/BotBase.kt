@@ -257,6 +257,8 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
             calledFoundOpponent = true
             opponentTimer?.cancel()
             opponent = null
+            combo = 0
+            opponentCombo = 0
 
             if (DuckDueller.config?.sendAutoGG == true) {
                 TimeUtils.setTimeout(fun () {
