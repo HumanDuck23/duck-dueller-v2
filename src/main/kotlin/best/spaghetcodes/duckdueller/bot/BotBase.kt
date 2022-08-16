@@ -185,6 +185,9 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                             if (mc.thePlayer != null) {
                                 if (player == mc.thePlayer.displayNameString) { // if the player is the bot
                                     onJoinGame()
+                                } else {
+                                    val stats = HttpUtils.getPlayerStats(uuid) ?: return@thread
+                                    handleStats(stats, player)
                                 }
                             } else {
                                 val stats = HttpUtils.getPlayerStats(uuid) ?: return@thread
