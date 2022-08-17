@@ -180,7 +180,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
             if (mc.thePlayer != null && opponent != null) {
                 ticksSinceHit++
-                
+
                 val distance = EntityUtils.getDistanceNoY(mc.thePlayer, opponent)
 
                 if (distance > 5 && (combo != 0 || opponentCombo != 0)) {
@@ -258,7 +258,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     private fun resetVars() {
         playersSent.clear()
         playersQuit.clear()
-        calledFoundOpponent = true
+        calledFoundOpponent = false
         opponentTimer?.cancel()
         opponent = null
         combo = 0
