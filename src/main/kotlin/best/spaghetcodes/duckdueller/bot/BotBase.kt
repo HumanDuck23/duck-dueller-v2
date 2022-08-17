@@ -53,6 +53,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
     protected var combo = 0
     protected var opponentCombo = 0
+    protected var ticksSinceHit = 0
 
     fun opponent() = opponent
 
@@ -133,6 +134,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                                 onAttack()
                                 combo++
                                 opponentCombo = 0
+                                ticksSinceHit = 0
                             } else if (mc.thePlayer != null && entity.entityId == mc.thePlayer.entityId) {
                                 onAttacked()
                                 combo = 0
@@ -177,6 +179,8 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
             onTick()
 
             if (mc.thePlayer != null && opponent != null) {
+                ticksSinceHit++
+                
                 val distance = EntityUtils.getDistanceNoY(mc.thePlayer, opponent)
 
                 if (distance > 5 && (combo != 0 || opponentCombo != 0)) {
@@ -259,6 +263,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
         opponent = null
         combo = 0
         opponentCombo = 0
+        ticksSinceHit = 0
     }
 
     private fun gameStart() {
