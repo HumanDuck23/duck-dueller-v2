@@ -166,6 +166,16 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     fun onClientTick(ev: ClientTickEvent) {
         if (toggled) {
             onTick()
+
+            if (mc.thePlayer != null && opponent != null) {
+                val distance = EntityUtils.getDistanceNoY(mc.thePlayer, opponent)
+
+                if (distance > 5 && (combo != 0 || opponentCombo != 0)) {
+                    combo = 0
+                    opponentCombo = 0
+                    ChatUtils.info("combo reset")
+                }
+            }
         }
 
         if (KeyBindings.toggleBotKeyBinding.isPressed) {
