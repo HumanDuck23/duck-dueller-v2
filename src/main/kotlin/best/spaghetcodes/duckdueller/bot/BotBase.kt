@@ -236,6 +236,15 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
             if (unformatted.contains("Accuracy")) {
                 gameEnd()
             }
+
+            // Failsafe
+            if (unformatted.lowercase().contains("something went wrong trying") || unformatted.lowercase().contains("please don't spam the command")) {
+                TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(6000, 8000))
+            } else if (unformatted.contains("A disconnect occurred in your connection, so you were put")) {
+                Movement.clearAll()
+                Mouse.stopLeftAC()
+                TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(6000, 8000))
+            }
         }
     }
 
