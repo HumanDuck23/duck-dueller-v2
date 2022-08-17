@@ -10,6 +10,10 @@ import best.spaghetcodes.duckdueller.utils.*
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiMainMenu
+import net.minecraft.client.gui.GuiMultiplayer
+import net.minecraft.client.multiplayer.GuiConnecting
+import net.minecraft.client.multiplayer.ServerData
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.network.play.server.S19PacketEntityStatus
 import net.minecraft.network.play.server.S3EPacketTeams
@@ -17,8 +21,11 @@ import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraftforge.event.entity.player.AttackEntityEvent
+import net.minecraftforge.fml.client.FMLClientHandler
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.util.Timer
@@ -54,6 +61,8 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     protected var combo = 0
     protected var opponentCombo = 0
     protected var ticksSinceHit = 0
+
+    private var reconnectTimer: Timer? = null
 
     fun opponent() = opponent
 
@@ -260,6 +269,25 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
         }
     }
 
+    @SubscribeEvent
+    fun onConnect(ev: ClientConnectedToServerEvent) {
+        if (toggled()) {
+            println("Reconnect successful!")
+            reconnectTimer?.cancel()
+            TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(6000, 8000))
+        }
+    }
+
+    @SubscribeEvent
+    fun onDisconnect(ev: ClientDisconnectionFromServerEvent) {
+        if (toggled()) { // well that wasn't supposed to happen, try and reconnect
+            println("Disconnected from server, reconnecting...")
+            TimeUtils.setTimeout(fun () {
+                reconnectTimer = TimeUtils.setInterval(this::reconnect, 0, 30000)
+            }, RandomUtils.randomIntInRange(5000, 7000))
+        }
+    }
+
     /********
      * Private Methods
      ********/
@@ -436,6 +464,20 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
         TimeUtils.setTimeout(fun () {
             ChatUtils.sendAsPlayer(queueCommand)
         }, RandomUtils.randomIntInRange(100, 300))
+    }
+
+    private fun reconnect() {
+        if (DuckDueller.mc.currentScreen is GuiMultiplayer) {
+            DuckDueller.mc.addScheduledTask(fun () {
+                FMLClientHandler.instance().setupServerList()
+                FMLClientHandler.instance().connectToServer(DuckDueller.mc.currentScreen, ServerData("hypixel", "mc.hypixel.net", false))
+            })
+        } else {
+            if (DuckDueller.mc.theWorld == null) {
+                DuckDueller.mc.displayGuiScreen(GuiMultiplayer(GuiMainMenu()))
+                reconnect()
+            }
+        }
     }
 
 }
