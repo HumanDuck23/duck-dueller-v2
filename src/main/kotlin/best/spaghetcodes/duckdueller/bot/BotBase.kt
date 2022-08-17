@@ -45,6 +45,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
     private var playerCache: HashMap<String, String> = hashMapOf()
     private var playersSent: ArrayList<String> = arrayListOf()
+    private var playersQuit: ArrayList<String> = arrayListOf()
 
     private var opponent: EntityPlayer? = null
     private var opponentTimer: Timer? = null
@@ -142,12 +143,20 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                 }
                 is S3EPacketTeams -> { // use this for stat checking
                     val packet = ev.getPacket() as S3EPacketTeams
-                    if (packet.action == 3 && packet.name == "§7§k") {
+                    if (packet.action == 3 && packet.name == "§7§k") { // action 3 is ADD
                         val players = packet.players
                         for (player in players) {
+                            if (playersQuit.contains(player)) {
+                                playersQuit.remove(player)
+                            }
                             TimeUtils.setTimeout(fun () { // timeout to allow ingame state to update
                                 handlePlayer(player)
                             }, 1500)
+                        }
+                    } else if (packet.action == 4 && packet.name == "§7§k") { // action 4 is REMOVE
+                        val players = packet.players
+                        for (player in players) {
+                            playersQuit.add(player)
                         }
                     }
                 }
@@ -231,6 +240,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
         if (DuckDueller.mc.thePlayer != null && ev.entity == DuckDueller.mc.thePlayer) {
             if (toggled()) {
                 playersSent.clear()
+                playersQuit.clear()
                 Movement.clearAll()
                 Combat.stopRandomStrafe()
                 Mouse.stopLeftAC()
@@ -350,6 +360,9 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                     return null
                 }
 
+                if (playersQuit.contains(player)) {
+                    return
+                }
 
                 if (!playersSent.contains(player)) {
                     playersSent.add(player)
