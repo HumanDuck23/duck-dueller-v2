@@ -80,14 +80,14 @@ class Sumo : BotBase("/play duels_sumo_duel") {
             var randomStrafe = false
 
             if (distance > 2) {
-                if (nearEdge(3f)) {
+                if (nearEdge(2f)) {
                     if (EntityUtils.entityMovingRight(mc.thePlayer, opponent()!!)) {
                         movePriority[1] += 2
                     } else if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
                         movePriority[0] += 2
                     }
                 } else {
-                    if (opponentNearEdge(4f) && combo < 1) {
+                    if (opponentNearEdge(4f) && combo < 2) {
                         if (EntityUtils.entityMovingRight(mc.thePlayer, opponent()!!)) {
                             movePriority[0] += 2
                         } else if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
@@ -124,7 +124,7 @@ class Sumo : BotBase("/play duels_sumo_duel") {
             }
 
             // placing this here so that it only strafes in a combo if it's REALLY close to an edge
-            if (combo >= 1) {
+            if (combo >= 2) {
                 clear = true
             }
 
