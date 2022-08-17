@@ -87,17 +87,26 @@ class Sumo : BotBase("/play duels_sumo_duel") {
                         movePriority[0] += 2
                     }
                 } else {
-                    if (opponentNearEdge(4f) && combo < 2) {
-                        if (EntityUtils.entityMovingRight(mc.thePlayer, opponent()!!)) {
-                            movePriority[0] += 2
-                        } else if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
-                            movePriority[1] += 2
+                    if (opponentNearEdge(4f)) {
+                        if (opponent()?.onGround == true) {
+                            if (EntityUtils.entityMovingRight(mc.thePlayer, opponent()!!)) {
+                                movePriority[0] += 2
+                            } else if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
+                                movePriority[1] += 2
+                            } else {
+                                clear = true
+                            }
                         }
                     } else {
                         randomStrafe = true
                     }
                 }
             } else {
+                clear = true
+            }
+
+            // placing this here so that it only strafes in a combo if it's REALLY close to an edge
+            if (combo >= 2) {
                 clear = true
             }
 
@@ -123,8 +132,7 @@ class Sumo : BotBase("/play duels_sumo_duel") {
                 clear = false
             }
 
-            // placing this here so that it only strafes in a combo if it's REALLY close to an edge
-            if (combo >= 2) {
+            if (distance < 2) {
                 clear = true
             }
 
@@ -146,7 +154,7 @@ class Sumo : BotBase("/play duels_sumo_duel") {
                 Movement.clearLeftRight()
             } else {
                 if (randomStrafe) {
-                    Combat.startRandomStrafe(600, 900)
+                    Combat.startRandomStrafe(900, 1400)
                 } else {
                     Combat.stopRandomStrafe()
                     if (movePriority[0] > movePriority[1]) {
