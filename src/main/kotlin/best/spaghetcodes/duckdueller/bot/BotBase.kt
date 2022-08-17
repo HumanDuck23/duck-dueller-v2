@@ -239,8 +239,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     fun onJoinWorld(ev: EntityJoinWorldEvent) {
         if (DuckDueller.mc.thePlayer != null && ev.entity == DuckDueller.mc.thePlayer) {
             if (toggled()) {
-                playersSent.clear()
-                playersQuit.clear()
+                resetVars()
                 Movement.clearAll()
                 Combat.stopRandomStrafe()
                 Mouse.stopLeftAC()
@@ -251,6 +250,16 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     /********
      * Private Methods
      ********/
+
+    private fun resetVars() {
+        playersSent.clear()
+        playersQuit.clear()
+        calledFoundOpponent = true
+        opponentTimer?.cancel()
+        opponent = null
+        combo = 0
+        opponentCombo = 0
+    }
 
     private fun gameStart() {
         if (toggled()) {
@@ -273,12 +282,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     private fun gameEnd() {
         if (toggled()) {
             onGameEnd()
-            playersSent.clear()
-            calledFoundOpponent = true
-            opponentTimer?.cancel()
-            opponent = null
-            combo = 0
-            opponentCombo = 0
+            resetVars()
 
             if (DuckDueller.config?.sendAutoGG == true) {
                 TimeUtils.setTimeout(fun () {
