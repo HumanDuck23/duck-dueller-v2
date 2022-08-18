@@ -32,6 +32,30 @@ object WorldUtils {
         //return circleAirCheck(player.position, distance, EntityUtils.get2dLookVec(player).rotateYaw(-90f), 2, 2)
     }
 
+    /**
+     * Returns the distance to the closest left edge, or -1 if there is none within 20 blocks
+     */
+    fun distanceToLeftEdge(player: EntityPlayer): Int {
+        for (i in 1..20) {
+            if (airOnLeft(player, i.toFloat())) {
+                return i
+            }
+        }
+        return -1
+    }
+
+    /**
+     * Returns the distance to the closest right edge, or -1 if there is none within 20 blocks
+     */
+    fun distanceToRightEdge(player: EntityPlayer): Int {
+        for (i in 1..20) {
+            if (airOnRight(player, i.toFloat())) {
+                return i
+            }
+        }
+        return -1
+    }
+
     fun airCheckAngle(player: EntityPlayer, distance: Float, angleMin: Float, angleMax: Float): Boolean {
         if (angleMax < angleMin) {
             for (i in angleMin.toInt() downTo angleMax.toInt()) {
