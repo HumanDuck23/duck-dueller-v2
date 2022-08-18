@@ -2,6 +2,8 @@
     "compatibilityLevel": "JAVA_8",
     "package": "best.spaghetcodes.duckdueller.mixins",
     "refmap": "mixins.duckdueller.refmap.json",
-    "mixins": [],
+    "mixins": [
+        "MixinModList"
+    ],
     "verbose": true
 }
