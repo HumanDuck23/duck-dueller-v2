@@ -28,7 +28,7 @@ apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: "org.spongepowered.mixin"
 
 group = 'best.spaghetcodes'
-version = '1.0'
+version = '0.1.0'
 archivesBaseName = 'DuckDueller'
 
 compileJava.options.encoding = 'UTF-8'
