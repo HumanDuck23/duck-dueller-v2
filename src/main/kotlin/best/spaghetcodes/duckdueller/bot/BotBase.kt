@@ -64,6 +64,8 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
     private var reconnectTimer: Timer? = null
 
+    private var ticksSinceGameStart = 0
+
     fun opponent() = opponent
 
     /********
@@ -186,6 +188,16 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     fun onClientTick(ev: ClientTickEvent) {
         if (toggled) {
             onTick()
+
+            if (StateManager.state != StateManager.States.PLAYING) {
+                ticksSinceGameStart++
+                if (ticksSinceGameStart / 20 > (DuckDueller.config?.rqNoGame ?: 30)) {
+                    ticksSinceGameStart = 0
+                    joinGame()
+                }
+            } else {
+                ticksSinceGameStart = 0
+            }
 
             if (mc.thePlayer != null && opponent != null) {
                 ticksSinceHit++
