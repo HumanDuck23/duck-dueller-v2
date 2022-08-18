@@ -6,6 +6,7 @@ import best.spaghetcodes.duckdueller.bot.player.Combat
 import best.spaghetcodes.duckdueller.bot.player.Mouse
 import best.spaghetcodes.duckdueller.bot.player.Movement
 import best.spaghetcodes.duckdueller.utils.*
+import kotlin.math.abs
 
 class Sumo : BotBase("/play duels_sumo_duel") {
 
@@ -100,10 +101,15 @@ class Sumo : BotBase("/play duels_sumo_duel") {
                     } else {
                         val le = WorldUtils.distanceToLeftEdge(mc.thePlayer)
                         val re = WorldUtils.distanceToRightEdge(mc.thePlayer)
-                        if (le < re) {
-                            movePriority[1] += 5
-                        } else if (re < le) {
-                            movePriority[0] += 5
+                        val diff = abs(abs(le) - abs(re))
+                        if (diff > 2) {
+                            if (le < re) {
+                                movePriority[1] += 5
+                            } else if (re < le) {
+                                movePriority[0] += 5
+                            } else {
+                                randomStrafe = true
+                            }
                         } else {
                             randomStrafe = true
                         }
