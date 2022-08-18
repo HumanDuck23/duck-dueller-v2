@@ -87,7 +87,7 @@ class Sumo : BotBase("/play duels_sumo_duel") {
                         movePriority[0] += 2
                     }
                 } else {
-                    if (opponentNearEdge(4f)) {
+                    if (opponentNearEdge(2f)) {
                         if (opponent()?.onGround == true) {
                             if (EntityUtils.entityMovingRight(mc.thePlayer, opponent()!!)) {
                                 movePriority[0] += 2
@@ -98,7 +98,15 @@ class Sumo : BotBase("/play duels_sumo_duel") {
                             }
                         }
                     } else {
-                        randomStrafe = true
+                        val le = WorldUtils.distanceToLeftEdge(mc.thePlayer)
+                        val re = WorldUtils.distanceToRightEdge(mc.thePlayer)
+                        if (le < re) {
+                            movePriority[1] += 5
+                        } else if (re < le) {
+                            movePriority[0] += 5
+                        } else {
+                            randomStrafe = true
+                        }
                     }
                 }
             } else {
@@ -113,9 +121,9 @@ class Sumo : BotBase("/play duels_sumo_duel") {
             // a bunch of if's to detect edges and avoid them instead of just not walking off
 
             if (
-                (WorldUtils.airCheckAngle(mc.thePlayer, 9f, 20f, 60f)
-                        || WorldUtils.airCheckAngle(mc.thePlayer, 8.5f, 70f, 110f)
-                        || WorldUtils.airCheckAngle(mc.thePlayer, 9f, 120f, 160f))
+                (WorldUtils.airCheckAngle(mc.thePlayer, 5f, 20f, 60f)
+                        || WorldUtils.airCheckAngle(mc.thePlayer, 4.5f, 70f, 110f)
+                        || WorldUtils.airCheckAngle(mc.thePlayer, 5f, 120f, 160f))
                 && combo <= 3
             ) {
                 movePriority[1] += 5
@@ -123,9 +131,9 @@ class Sumo : BotBase("/play duels_sumo_duel") {
             }
 
             if (
-                (WorldUtils.airCheckAngle(mc.thePlayer, 9f, -20f, -60f)
-                        || WorldUtils.airCheckAngle(mc.thePlayer, 8.5f, -70f, -110f)
-                        || WorldUtils.airCheckAngle(mc.thePlayer, 9f, -120f, -160f))
+                (WorldUtils.airCheckAngle(mc.thePlayer, 5f, -20f, -60f)
+                        || WorldUtils.airCheckAngle(mc.thePlayer, 4.5f, -70f, -110f)
+                        || WorldUtils.airCheckAngle(mc.thePlayer, 5f, -120f, -160f))
                 && combo <= 3
             ) {
                 movePriority[0] += 5
@@ -136,11 +144,11 @@ class Sumo : BotBase("/play duels_sumo_duel") {
                 clear = true
             }
 
-            if (rightEdge(5f)) {
+            if (rightEdge(4f)) {
                 movePriority[0] += 10
                 clear = false
             }
-            if (leftEdge(5f)) {
+            if (leftEdge(4f)) {
                 movePriority[1] += 10
                 clear = false
             }
