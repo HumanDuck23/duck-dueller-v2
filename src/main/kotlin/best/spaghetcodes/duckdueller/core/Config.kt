@@ -190,15 +190,15 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
     val autoRqDelay = 2500
 
     @Property(
-        type = PropertyType.SLIDER,
+        type = PropertyType.NUMBER,
         name = "Requeue After No Game",
         description = "How long to wait before re-queueing if no game starts",
         category = "Auto Requeue",
-        min = 15000,
-        max = 60000,
-        increment = 1000
+        min = 15,
+        max = 60,
+        increment = 5
     )
-    val rqNoGame = 30000
+    val rqNoGame = 30
 
     /*
         Queue Dodging
