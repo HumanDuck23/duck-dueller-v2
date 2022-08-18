@@ -455,15 +455,19 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     }
 
     private fun leaveGame() {
-        TimeUtils.setTimeout(fun () {
-            ChatUtils.sendAsPlayer("/l")
-        }, RandomUtils.randomIntInRange(100, 300))
+        if (toggled() && StateManager.state != StateManager.States.PLAYING) {
+            TimeUtils.setTimeout(fun () {
+                ChatUtils.sendAsPlayer("/l")
+            }, RandomUtils.randomIntInRange(100, 300))
+        }
     }
 
     private fun joinGame() {
-        TimeUtils.setTimeout(fun () {
-            ChatUtils.sendAsPlayer(queueCommand)
-        }, RandomUtils.randomIntInRange(100, 300))
+        if (toggled() && StateManager.state != StateManager.States.PLAYING) {
+            TimeUtils.setTimeout(fun () {
+                ChatUtils.sendAsPlayer(queueCommand)
+            }, RandomUtils.randomIntInRange(100, 300))
+        }
     }
 
     private fun reconnect() {
