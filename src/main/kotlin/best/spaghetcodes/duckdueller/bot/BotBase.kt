@@ -17,6 +17,7 @@ import net.minecraft.client.multiplayer.ServerData
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.network.play.server.S19PacketEntityStatus
 import net.minecraft.network.play.server.S3EPacketTeams
+import net.minecraft.network.play.server.S45PacketTitle
 import net.minecraft.util.EnumChatFormatting
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
@@ -53,6 +54,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     private var playerCache: HashMap<String, String> = hashMapOf()
     private var playersSent: ArrayList<String> = arrayListOf()
     private var playersQuit: ArrayList<String> = arrayListOf()
+    private var playersLost: ArrayList<String> = arrayListOf()
 
     private var opponent: EntityPlayer? = null
     private var opponentTimer: Timer? = null
@@ -65,6 +67,8 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     private var reconnectTimer: Timer? = null
 
     private var ticksSinceGameStart = 0
+
+    private var lastOpponentName = ""
 
     fun opponent() = opponent
 
@@ -172,6 +176,39 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                             playersQuit.add(player)
                         }
                     }
+                }
+                is S45PacketTitle -> { // use this to determine who won the duel
+                    if (mc.theWorld != null) {
+                        TimeUtils.setTimeout(fun () {
+                            val packet = ev.getPacket() as S45PacketTitle
+                            if (packet.message != null) {
+                                val unformatted = packet.message.unformattedText.lowercase()
+                                if (unformatted.contains("won the duel!") && mc.thePlayer != null) {
+                                    var winner = ""
+                                    var loser = ""
+                                    var iWon = false
+
+                                    val p = ChatUtils.removeFormatting(packet.message.unformattedText).split("won")[0].trim()
+                                    if (unformatted.contains(mc.thePlayer.displayNameString.lowercase())) {
+                                        Session.wins++
+                                        winner = mc.thePlayer.displayNameString
+                                        loser = lastOpponentName
+                                        iWon = true
+                                    } else {
+                                        Session.losses++
+                                        ChatUtils.info("Adding $p to the list of players to dodge...")
+                                        playersLost.add(p)
+                                        winner = p
+                                        loser = mc.thePlayer.displayNameString
+                                        iWon = false
+                                    }
+
+                                    ChatUtils.info(Session.getSession())
+                                }
+                            }
+                        }, 1000)
+                    }
+
                 }
             }
         }
