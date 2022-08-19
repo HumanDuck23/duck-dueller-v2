@@ -1,14 +1,14 @@
 [
     {
-        "modid": "examplemod",
-        "name": "ExampleMod",
-        "description": "Template Mod",
+        "modid": "duckdueller",
+        "name": "DuckDueller",
+        "description": "Hypixel Duels Bot",
         "version": "${version}",
         "mcversion": "${mcversion}",
         "url": "",
         "updateUrl": "",
         "authorList": [
-            "Debuggings"
+            "HumanDuck23"
         ],
         "credits": "",
         "logoFile": "",
