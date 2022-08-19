@@ -76,6 +76,10 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
      * Methods to override
      ********/
 
+    protected open fun getName(): String {
+        return "Base"
+    }
+
     /**
      * Called when the bot attacks the opponent
      * Triggered by the damage sound, not the clientside attack event
@@ -204,6 +208,22 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                                     }
 
                                     ChatUtils.info(Session.getSession())
+
+                                    if (DuckDueller.config?.sendWebhookMessages == true) {
+                                        if (DuckDueller.config?.webhookURL != "") {
+                                            // Send the webhook embed
+                                            val fields = WebHook.buildFields(arrayListOf(mapOf("name" to "Winner", "value" to winner, "inline" to "true"), mapOf("name" to "Loser", "value" to loser, "inline" to "true")))
+                                            val footer = WebHook.buildFooter(ChatUtils.removeFormatting(Session.getSession()), "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
+                                            val author = WebHook.buildAuthor("Duck Dueller - ${getName()}", "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
+                                            val thumbnail = WebHook.buildThumbnail("https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
+
+                                            WebHook.sendEmbed(
+                                                DuckDueller.config?.webhookURL!!,
+                                                WebHook.buildEmbed("${if (iWon) ":smirk:" else ":confused:"} Game ${if (iWon) "WON" else "LOST"}!", fields, footer, author, thumbnail, if (iWon) 0x66ed8a else 0xed6d66))
+                                        } else {
+                                            ChatUtils.error("Webhook URL hasn't been set!")
+                                        }
+                                    }
                                 }
                             }
                         }, 1000)
