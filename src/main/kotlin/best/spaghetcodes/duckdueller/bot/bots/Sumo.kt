@@ -191,7 +191,7 @@ class Sumo : BotBase("/play duels_sumo_duel") {
                 }
             }
 
-            if (distance < 1.2 || (distance < 2 && opponentNearEdge(3f))) {
+            if (distance < 1.2 || (distance < 2 && combo > 1)) {
                 Movement.stopForward()
             } else {
                 if (!tapping) {
