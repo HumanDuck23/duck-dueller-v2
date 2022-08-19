@@ -313,6 +313,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
         combo = 0
         opponentCombo = 0
         ticksSinceHit = 0
+        ticksSinceGameStart = 0
     }
 
     private fun gameStart() {
