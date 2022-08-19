@@ -109,13 +109,14 @@ object Mouse {
 
     @SubscribeEvent
     fun onTick(ev: TickEvent.ClientTickEvent) {
-        if (DuckDueller.mc.thePlayer != null && DuckDueller.bot?.toggled() == true && tracking && DuckDueller.bot?.opponent() != null) {
+        if (DuckDueller.mc.thePlayer != null && DuckDueller.bot?.toggled() == true) {
             if (leftClickDur > 0) {
                 leftClickDur--
             } else {
                 KeyBinding.setKeyBindState(DuckDueller.mc.gameSettings.keyBindAttack.keyCode, false)
             }
-
+        }
+        if (DuckDueller.mc.thePlayer != null && DuckDueller.bot?.toggled() == true && tracking && DuckDueller.bot?.opponent() != null) {
             val rotations = EntityUtils.getRotations(DuckDueller.mc.thePlayer, DuckDueller.bot?.opponent(), false)
 
             if (rotations != null) {
