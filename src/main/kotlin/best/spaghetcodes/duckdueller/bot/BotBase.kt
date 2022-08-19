@@ -495,6 +495,10 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                         dodge = true
                     } else if (ws > config.dodgeWS) {
                         dodge = true
+                    } else if (DuckDueller.config?.dodgeLostTo == true) {
+                        if (playersLost.contains(player)) {
+                            dodge = true
+                        }
                     }
                 }
 
