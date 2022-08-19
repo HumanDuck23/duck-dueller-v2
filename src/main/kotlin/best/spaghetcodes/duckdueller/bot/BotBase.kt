@@ -270,6 +270,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
             if (unformatted.contains("Your new API key is ")) {
                 val key = ev.message.unformattedText.split("Your new API key is ")[1]
                 DuckDueller.config?.apiKey = key
+                DuckDueller.config?.writeData()
                 ChatUtils.info("Saved API Key!")
             }
         }
