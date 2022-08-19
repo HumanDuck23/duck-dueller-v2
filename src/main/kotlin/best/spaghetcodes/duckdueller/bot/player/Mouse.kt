@@ -18,9 +18,15 @@ object Mouse {
 
     private var _usingProjectile = false
 
+    private var leftClickDur = 0
+
     fun leftClick() {
-        if (DuckDueller.bot?.toggled() == true) {
-            KeyBinding.onTick(DuckDueller.mc.gameSettings.keyBindAttack.keyCode)
+        if (DuckDueller.bot?.toggled() == true && DuckDueller.mc.thePlayer != null && !DuckDueller.mc.thePlayer.isUsingItem) {
+            DuckDueller.mc.thePlayer.swingItem()
+            KeyBinding.setKeyBindState(DuckDueller.mc.gameSettings.keyBindAttack.keyCode, true)
+            if (DuckDueller.mc.objectMouseOver != null && DuckDueller.mc.objectMouseOver.entityHit != null) {
+                DuckDueller.mc.playerController.attackEntity(DuckDueller.mc.thePlayer, DuckDueller.mc.objectMouseOver.entityHit)
+            }
         }
     }
 
@@ -104,6 +110,12 @@ object Mouse {
     @SubscribeEvent
     fun onTick(ev: TickEvent.ClientTickEvent) {
         if (DuckDueller.mc.thePlayer != null && DuckDueller.bot?.toggled() == true && tracking && DuckDueller.bot?.opponent() != null) {
+            if (leftClickDur > 0) {
+                leftClickDur--
+            } else {
+                KeyBinding.setKeyBindState(DuckDueller.mc.gameSettings.keyBindAttack.keyCode, false)
+            }
+
             val rotations = EntityUtils.getRotations(DuckDueller.mc.thePlayer, DuckDueller.bot?.opponent(), false)
 
             if (rotations != null) {
