@@ -68,6 +68,10 @@ class Sumo : BotBase("/play duels_sumo_duel") {
 
     override fun onTick() {
         if (mc.thePlayer != null && opponent() != null) {
+            if (!mc.thePlayer.isSprinting) {
+                Movement.startSprinting()
+            }
+
             val distance = EntityUtils.getDistanceNoY(mc.thePlayer, opponent())
 
             if (distance > (DuckDueller.config?.maxDistanceAttack ?: 5)) {
