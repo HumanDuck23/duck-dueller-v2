@@ -327,7 +327,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
         if (toggled()) {
             if (DuckDueller.config?.sendStartMessage == true) {
                 TimeUtils.setTimeout(fun () {
-                    ChatUtils.sendAsPlayer(DuckDueller.config?.startMessage ?: "glhf!")
+                    ChatUtils.sendAsPlayer("/ac " + (DuckDueller.config?.startMessage ?: "glhf!"))
                 }, DuckDueller.config?.startMessageDelay ?: 100)
             }
 
@@ -348,7 +348,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
             if (DuckDueller.config?.sendAutoGG == true) {
                 TimeUtils.setTimeout(fun () {
-                    ChatUtils.sendAsPlayer(DuckDueller.config?.ggMessage ?: "gg")
+                    ChatUtils.sendAsPlayer("/ac " + (DuckDueller.config?.ggMessage ?: "gg"))
                 }, DuckDueller.config?.ggDelay ?: 100)
 
                 TimeUtils.setTimeout(this::joinGame, DuckDueller.config?.autoRqDelay ?: 2000)
