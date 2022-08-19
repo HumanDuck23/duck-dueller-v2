@@ -29,7 +29,7 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
         placeholder = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
         category = "General",
     )
-    val apiKey = ""
+    var apiKey = ""
 
     @Property(
         type = PropertyType.SWITCH,

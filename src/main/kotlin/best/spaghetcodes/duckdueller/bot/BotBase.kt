@@ -266,6 +266,12 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                 Mouse.stopLeftAC()
                 TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(6000, 8000))
             }
+
+            if (unformatted.contains("Your new API key is ")) {
+                val key = ev.message.unformattedText.split("Your new API key is ")[1]
+                DuckDueller.config?.apiKey = key
+                ChatUtils.info("Saved API Key!")
+            }
         }
     }
 
