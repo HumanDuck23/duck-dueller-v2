@@ -32,6 +32,7 @@ Don't worry, there will be a release eventually (at first probably just a beta r
  - 🚧 Pre-Game Movement
  - ✅ Discord Webhook Integration
  - ✅ Many failsafes (including auto-reconnect)
+ - ✅ Hidden from mods sent to Hypixel
  - ✅ Highly Customizable
 
 ### Can I contribute to this project?
