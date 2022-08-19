@@ -1,34 +1,39 @@
-# ExampleMod
-Template mod with Mixins and Essential.
+## Duck Dueller
 
-### Program arguments:
-```
---tweakClass
-gg.essential.loader.stage0.EssentialSetupTweaker
---mixin
-mixins.examplemod.json
-```
+---
 
-### VM options:
-```
--Dmixin.debug.export=true
--Dmixin.debug.verbose=true
--javaagent:<path-to-mixin.jar>
-```
+![Image](https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png)
 
-### How to get Mixin JAR path:
-- Expand External Libraries
-  
-![External Libraries](https://i.debuggings.dev/0H38gESl.png)
+### What is Duck Dueller?
 
-- Find `Gradle: org.spongepowered:mixin:<version>` and expand it
+Duck Dueller is a free and open-source Forge Hypixel Duels bot for 1.8.9!
 
-![Mixin](https://i.debuggings.dev/nqEcOgwB.png)
+### What gamemodes are supported?
 
-- Right click on `mixin-<version>.jar`, Click `Copy Path...`, Click `Absolute Path`
+ - ✅ Sumo
+ - 🚧 Classic
+ - 🚧 Boxing
+ - 🚧 OP
 
-![Copy Path](https://i.debuggings.dev/KXkK19u6.png)
+A few more might be added later on, but these are the currently planned ones.
 
-![Absolute Path](https://i.debuggings.dev/SZjoBtmj.png)
+### Where can I download it?
 
-- And finally, paste your clipboard contents to VM options replacing `<path-to-mixin.jar>`
+Right now there is no .jar file available for download. If you still want to use it, you'll need to download this repo and build it yourself.
+Don't worry, there will be a release eventually (at first probably just a beta release).
+
+### What features does it have?
+
+ - ✅ Queue Dodging
+ - ✅ Smart Aim
+ - ✅ Smart Strafing
+ - ✅ Edge Detection
+ - ✅ W-Tap
+ - 🚧 Pre-Game Movement
+ - ✅ Discord Webhook Integration
+ - ✅ Many failsafes (including auto-reconnect)
+ - ✅ Highly Customizable
+
+### Can I contribute to this project?
+
+Sure, any help is welcome! Just fork this repo and open a pull request with your modifications.
