@@ -10,6 +10,10 @@ import kotlin.math.abs
 
 class Sumo : BotBase("/play duels_sumo_duel") {
 
+    override fun getName(): String {
+        return "Sumo"
+    }
+
     init {
         setStatKeys(
             mapOf(
