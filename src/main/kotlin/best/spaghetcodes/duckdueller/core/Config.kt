@@ -262,6 +262,8 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
     )
     val dodgeNoStats = true
 
+    val bots = mapOf(0 to Sumo(), 2 to Classic())
+
     init {
         addDependency("webhookURL", "sendWebhookMessages")
 
@@ -276,8 +278,6 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
         addDependency("dodgeWLR", "enableDodging")
         addDependency("dodgeLostTo", "enableDodging")
         addDependency("dodgeNoStats", "enableDodging")
-
-        val bots = mapOf(0 to Sumo(), 2 to Classic())
 
         registerListener("currentBot") { bot: Int ->
             if (bots.keys.contains(bot)) {
