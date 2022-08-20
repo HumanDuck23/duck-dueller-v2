@@ -1,6 +1,7 @@
 package best.spaghetcodes.duckdueller.core
 
 import best.spaghetcodes.duckdueller.DuckDueller
+import best.spaghetcodes.duckdueller.utils.ChatUtils
 import gg.essential.vigilance.Vigilant
 import gg.essential.vigilance.data.Property
 import gg.essential.vigilance.data.PropertyType
@@ -273,6 +274,10 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
         addDependency("dodgeWLR", "enableDodging")
         addDependency("dodgeLostTo", "enableDodging")
         addDependency("dodgeNoStats", "enableDodging")
+
+        registerListener("currentBot") { bot: Int ->
+            // TODO: Bot swapping
+        }
 
         initialize()
     }
