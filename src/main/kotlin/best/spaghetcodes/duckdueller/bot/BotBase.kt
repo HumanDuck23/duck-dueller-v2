@@ -301,6 +301,8 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                     leaveGame()
                     TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(4000, 6000))
                 }
+            } else if (unformatted.contains("The game starts in 1 second!")) {
+                beforeStart()
             }
 
             if (unformatted.contains("Are you sure? Type /lobby again")) {
