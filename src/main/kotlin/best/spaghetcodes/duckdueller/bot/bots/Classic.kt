@@ -13,7 +13,7 @@ import best.spaghetcodes.duckdueller.utils.TimeUtils
 import best.spaghetcodes.duckdueller.utils.WorldUtils
 import net.minecraft.init.Blocks
 
-class Classic : BotBase("/play duels_sumo_duel"){
+class Classic : BotBase("/play duels_classic_duel"){
 
     override fun getName(): String {
         return "Classic"
