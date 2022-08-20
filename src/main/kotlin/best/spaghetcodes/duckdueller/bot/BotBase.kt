@@ -77,7 +77,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
      * Methods to override
      ********/
 
-    protected open fun getName(): String {
+    open fun getName(): String {
         return "Base"
     }
 
