@@ -53,6 +53,6 @@ class DuckDueller {
         MinecraftForge.EVENT_BUS.register(Mouse)
         MinecraftForge.EVENT_BUS.register(LobbyMovement)
 
-        swapBot(Sumo())
+        swapBot(config?.bots?.get(config?.currentBot ?: 0) ?: Sumo())
     }
 }
