@@ -15,11 +15,12 @@ object LobbyMovement {
     private var intervals: ArrayList<Timer?> = ArrayList()
 
     fun sumo() {
-        val opt = RandomUtils.randomIntInRange(0, 1)
+        /*val opt = RandomUtils.randomIntInRange(0, 1)
         when (opt) {
             0 -> sumo1()
             1 -> twerk()
-        }
+        }*/
+        sumo1()
     }
 
     fun stop() {
