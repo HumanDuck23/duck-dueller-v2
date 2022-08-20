@@ -79,12 +79,18 @@ class Classic : BotBase("/play duels_classic_duel"){
             }
 
             if (distance > 8.8) {
-                if (!(opponent() != null && opponent()!!.heldItem != null && opponent()!!.heldItem.displayName.lowercase().contains("bow"))) {
-                    Movement.startJumping()
-                } else {
+                if (opponent() != null && opponent()!!.heldItem != null && opponent()!!.heldItem.displayName.lowercase().contains("bow")) {
                     if (WorldUtils.blockInFront(mc.thePlayer, 2f, 0.5f) == Blocks.air) {
-                        Movement.stopJumping()
+                        if (EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
+                            Movement.stopJumping()
+                        } else {
+                            Movement.startJumping()
+                        }
+                    } else {
+                        Movement.startJumping()
                     }
+                } else {
+                    Movement.startJumping()
                 }
             } else {
                 if (WorldUtils.blockInFront(mc.thePlayer, 2f, 0.5f) == Blocks.air) {
