@@ -32,21 +32,22 @@ object LobbyMovement {
         if (DuckDueller.mc.thePlayer != null) {
             val left = RandomUtils.randomBool()
 
-            tickYawChange = if (left) -8.5f else 8.5f
+            val speed = RandomUtils.randomDoubleInRange(3.0, 9.0).toFloat()
+
+            tickYawChange = if (left) -speed else speed
             TimeUtils.setTimeout(fun () {
                 Movement.startForward()
                 Movement.startSprinting()
                 TimeUtils.setTimeout(fun () {
                     Movement.startJumping()
                 }, RandomUtils.randomIntInRange(400, 800))
-                intervals.add(TimeUtils.setInterval(
-                    fun () {
-                        tickYawChange = if (WorldUtils.airInFront(DuckDueller.mc.thePlayer, 7f)) {
-                            RandomUtils.randomDoubleInRange(if (left) 4.5 else -4.5, if (left) 7.0 else -7.0).toFloat()
-                        } else {
-                            0f
-                        }
-                           }, 0, RandomUtils.randomIntInRange(50, 100)))
+                intervals.add(TimeUtils.setInterval(fun () {
+                    tickYawChange = if (WorldUtils.airInFront(DuckDueller.mc.thePlayer, 7f)) {
+                        RandomUtils.randomDoubleInRange(if (left) 4.5 else -4.5, if (left) 7.0 else -7.0).toFloat()
+                    } else {
+                        0f
+                    }
+               }, 0, RandomUtils.randomIntInRange(50, 100)))
             }, RandomUtils.randomIntInRange(100, 250))
         }
     }
