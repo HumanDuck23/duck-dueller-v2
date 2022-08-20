@@ -3,6 +3,7 @@ package best.spaghetcodes.duckdueller.bot.bots
 import best.spaghetcodes.duckdueller.DuckDueller
 import best.spaghetcodes.duckdueller.bot.BotBase
 import best.spaghetcodes.duckdueller.bot.player.Combat
+import best.spaghetcodes.duckdueller.bot.player.LobbyMovement
 import best.spaghetcodes.duckdueller.bot.player.Mouse
 import best.spaghetcodes.duckdueller.bot.player.Movement
 import best.spaghetcodes.duckdueller.utils.*
@@ -25,6 +26,18 @@ class Sumo : BotBase("/play duels_sumo_duel") {
     }
 
     private var tapping = false
+
+    override fun onJoinGame() {
+        LobbyMovement.sumo()
+    }
+
+    override fun beforeStart() {
+        LobbyMovement.stop()
+    }
+
+    override fun beforeLeave() {
+        LobbyMovement.stop()
+    }
 
     override fun onGameStart() {
         Movement.startSprinting()
