@@ -40,6 +40,7 @@ class Sumo : BotBase("/play duels_sumo_duel") {
     }
 
     override fun onGameStart() {
+        LobbyMovement.stop()
         Movement.startSprinting()
         Movement.startForward()
     }

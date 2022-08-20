@@ -2,6 +2,7 @@ package best.spaghetcodes.duckdueller.bot
 
 import best.spaghetcodes.duckdueller.DuckDueller
 import best.spaghetcodes.duckdueller.bot.player.Combat
+import best.spaghetcodes.duckdueller.bot.player.LobbyMovement
 import best.spaghetcodes.duckdueller.bot.player.Mouse
 import best.spaghetcodes.duckdueller.bot.player.Movement
 import best.spaghetcodes.duckdueller.core.KeyBindings
@@ -340,6 +341,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
         if (DuckDueller.mc.thePlayer != null && ev.entity == DuckDueller.mc.thePlayer) {
             if (toggled()) {
                 resetVars()
+                LobbyMovement.stop()
                 Movement.clearAll()
                 Combat.stopRandomStrafe()
                 Mouse.stopLeftAC()
