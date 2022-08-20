@@ -209,6 +209,14 @@ object EntityUtils {
         return angle < 90
     }
 
+    fun entityFacingAway(entity: Entity, target: Entity): Boolean {
+        var vec1 = get2dLookVec(entity)
+        var vec2 = get2dLookVec(target)
+
+        val angle = acos((vec1.xCoord * vec2.xCoord + vec1.zCoord * vec2.zCoord) / (vec1.lengthVector() * vec2.lengthVector())) * 180 / Math.PI
+        return angle in 20f..70f
+    }
+
     private fun getClosestCorner(corner1: Vec3, corner2: Vec3, corner3: Vec3, corner4: Vec3): ArrayList<Vec3> {
         val pos = Vec3(DuckDueller.mc.thePlayer.posX, DuckDueller.mc.thePlayer.posY + DuckDueller.mc.thePlayer.eyeHeight, DuckDueller.mc.thePlayer.posZ)
 
