@@ -32,6 +32,12 @@ class DuckDueller {
         val gson = Gson()
         var config: Config? = null
         var bot: BotBase? = null
+
+        fun swapBot(b: BotBase) {
+            if (bot != null) MinecraftForge.EVENT_BUS.unregister(bot) // make sure to unregister the current bot
+            bot = b
+            MinecraftForge.EVENT_BUS.register(bot) // register the new bot
+        }
     }
 
     @Mod.EventHandler
@@ -48,11 +54,5 @@ class DuckDueller {
         MinecraftForge.EVENT_BUS.register(LobbyMovement)
 
         swapBot(Sumo())
-    }
-
-    fun swapBot(b: BotBase) {
-        if (bot != null) MinecraftForge.EVENT_BUS.unregister(bot) // make sure to unregister the current bot
-        bot = b
-        MinecraftForge.EVENT_BUS.register(bot) // register the new bot
     }
 }
