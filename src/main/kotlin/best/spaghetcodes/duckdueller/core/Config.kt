@@ -1,6 +1,8 @@
 package best.spaghetcodes.duckdueller.core
 
 import best.spaghetcodes.duckdueller.DuckDueller
+import best.spaghetcodes.duckdueller.bot.bots.Classic
+import best.spaghetcodes.duckdueller.bot.bots.Sumo
 import best.spaghetcodes.duckdueller.utils.ChatUtils
 import gg.essential.vigilance.Vigilant
 import gg.essential.vigilance.data.Property
@@ -275,8 +277,12 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
         addDependency("dodgeLostTo", "enableDodging")
         addDependency("dodgeNoStats", "enableDodging")
 
+        val bots = mapOf(0 to Sumo(), 2 to Classic())
+
         registerListener("currentBot") { bot: Int ->
-            // TODO: Bot swapping
+            if (bots.keys.contains(bot)) {
+                DuckDueller.swapBot(bots[bot]!!)
+            }
         }
 
         initialize()
