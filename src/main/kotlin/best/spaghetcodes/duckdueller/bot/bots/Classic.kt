@@ -81,7 +81,7 @@ class Classic : BotBase("/play duels_classic_duel"){
             if (distance > 8.8) {
                 if (opponent() != null && opponent()!!.heldItem != null && opponent()!!.heldItem.displayName.lowercase().contains("bow")) {
                     if (WorldUtils.blockInFront(mc.thePlayer, 2f, 0.5f) == Blocks.air) {
-                        if (EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
+                        if (!EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
                             Movement.stopJumping()
                         } else {
                             Movement.startJumping()
