@@ -117,19 +117,17 @@ object EntityUtils {
                 } else {
                     val dist = getDistanceNoY(player, target)
                     val tickPredict = when (dist) {
-                        in 0f..8f -> 10.0
-                        in 8f..15f -> 15.0
-                        in 15f..25f -> 20.0
-                        else -> 25.0
+                        in 0f..15f -> 10.0
+                        in 15f..30f -> 15.0
+                        else -> 20.0
                     }
                     val velocity = target.getVelocity().scale(tickPredict)
                     val flatVelo = Vec3(velocity.xCoord, 0.0, velocity.zCoord)
                     val height = when (dist) {
-                        in 0f..5f -> target.eyeHeight / 2
-                        in 5f..10f -> target.eyeHeight
-                        in 10f..15f -> target.eyeHeight * 1.25
-                        in 15f..25f -> target.eyeHeight * 1.5
-                        else -> target.eyeHeight * 1.75
+                        in 0f..8f -> target.eyeHeight / 2
+                        in 8f..15f -> target.eyeHeight
+                        in 15f..25f -> target.eyeHeight * 1.25
+                        else -> target.eyeHeight * 1.5
                     }
                     pos = target.positionVector.add(flatVelo).add(Vec3(0.0, height.toDouble(), 0.0)) ?: Vec3(target.posX, target.posY + target.eyeHeight, target.posZ)
                     if (pos.xCoord == target.posX && pos.zCoord == target.posZ) {
