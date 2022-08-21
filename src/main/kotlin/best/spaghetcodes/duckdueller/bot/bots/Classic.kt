@@ -52,7 +52,7 @@ class Classic : BotBase("/play duels_classic_duel"){
         val distance = EntityUtils.getDistanceNoY(mc.thePlayer, opponent())
         if (distance < 3) {
             if (mc.thePlayer != null && mc.thePlayer.heldItem != null) {
-                val n = mc.thePlayer.heldItem.displayName.lowercase()
+                val n = mc.thePlayer.heldItem.unlocalizedName.lowercase()
                 if (n.contains("rod")) { // wait after hitting with the rod
                     Combat.wTap(300)
                     combo--
@@ -82,7 +82,7 @@ class Classic : BotBase("/play duels_classic_duel"){
             }
 
             if (distance > 8.8) {
-                if (opponent() != null && opponent()!!.heldItem != null && opponent()!!.heldItem.displayName.lowercase().contains("bow")) {
+                if (opponent() != null && opponent()!!.heldItem != null && opponent()!!.heldItem.unlocalizedName.lowercase().contains("bow")) {
                     if (WorldUtils.blockInFront(mc.thePlayer, 2f, 0.5f) == Blocks.air) {
                         if (!EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
                             Movement.stopJumping()
@@ -111,7 +111,7 @@ class Classic : BotBase("/play duels_classic_duel"){
                 Movement.startForward()
             }
 
-            if (distance < 1.5 && mc.thePlayer.heldItem != null && !mc.thePlayer.heldItem.displayName.lowercase().contains("sword")) {
+            if (distance < 1.5 && mc.thePlayer.heldItem != null && !mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("sword")) {
                 Inventory.setInvItem("sword")
                 Mouse.rClickUp()
                 Mouse.startLeftAC()
@@ -130,7 +130,7 @@ class Classic : BotBase("/play duels_classic_duel"){
                                 Mouse.setUsingProjectile(false)
                             }, r + RandomUtils.randomIntInRange(50, 100))
                             TimeUtils.setTimeout(fun () {
-                                if (mc.thePlayer.heldItem != null && !mc.thePlayer.heldItem.displayName.lowercase().contains("bow")) {
+                                if (mc.thePlayer.heldItem != null && !mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("bow")) {
                                     Inventory.setInvItem("sword")
                                 }
                                 TimeUtils.setTimeout(fun () {
@@ -184,7 +184,7 @@ class Classic : BotBase("/play duels_classic_duel"){
                     randomStrafe = true
                 } else {
                     randomStrafe = false
-                    if (opponent() != null && opponent()!!.heldItem != null && (opponent()!!.heldItem.displayName.lowercase().contains("bow") || opponent()!!.heldItem.displayName.lowercase().contains("rod"))) {
+                    if (opponent() != null && opponent()!!.heldItem != null && (opponent()!!.heldItem.unlocalizedName.lowercase().contains("bow") || opponent()!!.heldItem.unlocalizedName.lowercase().contains("rod"))) {
                         randomStrafe = true
                         if (distance < 15) {
                             Movement.stopJumping()
