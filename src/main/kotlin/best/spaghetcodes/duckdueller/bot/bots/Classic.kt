@@ -117,7 +117,7 @@ class Classic : BotBase("/play duels_classic_duel"){
                 Mouse.startLeftAC()
             }
 
-            if ((distance in 7.0..7.5 || distance in 10.0..10.5) && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
+            if ((distance in 6.0..6.5 || distance in 10.0..10.5) && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
                 if (!Mouse.isUsingProjectile()) {
                     Mouse.stopLeftAC()
                     Mouse.setUsingProjectile(true)
@@ -130,7 +130,9 @@ class Classic : BotBase("/play duels_classic_duel"){
                                 Mouse.setUsingProjectile(false)
                             }, r + RandomUtils.randomIntInRange(50, 100))
                             TimeUtils.setTimeout(fun () {
-                                Inventory.setInvItem("sword")
+                                if (mc.thePlayer.heldItem != null && !mc.thePlayer.heldItem.displayName.lowercase().contains("bow")) {
+                                    Inventory.setInvItem("sword")
+                                }
                                 TimeUtils.setTimeout(fun () {
                                     if (StateManager.state == StateManager.States.PLAYING) {
                                         Mouse.startLeftAC()
