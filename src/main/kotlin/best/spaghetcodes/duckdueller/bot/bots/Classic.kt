@@ -55,12 +55,15 @@ class Classic : BotBase("/play duels_classic_duel"){
                 val n = mc.thePlayer.heldItem.displayName.lowercase()
                 if (n.contains("rod")) { // wait after hitting with the rod
                     Combat.wTap(300)
+                    combo--
                 } else if (n.contains("sword")) {
                     Mouse.rClick(RandomUtils.randomIntInRange(80, 100)) // otherwise just blockhit
                 }
             }
         }
-        Movement.clearLeftRight()
+        if (combo >= 3) {
+            Movement.clearLeftRight()
+        }
     }
 
     override fun onTick() {
@@ -114,7 +117,7 @@ class Classic : BotBase("/play duels_classic_duel"){
                 Mouse.startLeftAC()
             }
 
-            if ((distance in 6.0..6.5 || distance in 8.0..8.5) && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
+            if ((distance in 7.0..7.5 || distance in 10.0..10.5) && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
                 if (!Mouse.isUsingProjectile()) {
                     Mouse.stopLeftAC()
                     Mouse.setUsingProjectile(true)
@@ -179,7 +182,7 @@ class Classic : BotBase("/play duels_classic_duel"){
                     randomStrafe = true
                 } else {
                     randomStrafe = false
-                    if (opponent() != null && opponent()!!.heldItem != null && opponent()!!.heldItem.displayName.lowercase().contains("bow")) {
+                    if (opponent() != null && opponent()!!.heldItem != null && (opponent()!!.heldItem.displayName.lowercase().contains("bow") || opponent()!!.heldItem.displayName.lowercase().contains("rod"))) {
                         randomStrafe = true
                         if (distance < 15) {
                             Movement.stopJumping()
