@@ -117,9 +117,9 @@ object EntityUtils {
                 } else {
                     val dist = getDistanceNoY(player, target)
                     val tickPredict = when (dist) {
-                        in 0f..15f -> 10.0
-                        in 15f..30f -> 15.0
-                        else -> 20.0
+                        in 0f..15f -> 15.0
+                        in 15f..30f -> 20.0
+                        else -> 25.0
                     }
                     val velocity = target.getVelocity().scale(tickPredict)
                     val flatVelo = Vec3(velocity.xCoord, 0.0, velocity.zCoord)
