@@ -1,6 +1,7 @@
 package best.spaghetcodes.duckdueller.core
 
 import best.spaghetcodes.duckdueller.DuckDueller
+import best.spaghetcodes.duckdueller.bot.bots.Boxing
 import best.spaghetcodes.duckdueller.bot.bots.Classic
 import best.spaghetcodes.duckdueller.bot.bots.Sumo
 import best.spaghetcodes.duckdueller.utils.ChatUtils
@@ -262,7 +263,7 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
     )
     val dodgeNoStats = true
 
-    val bots = mapOf(0 to Sumo(), 2 to Classic())
+    val bots = mapOf(0 to Sumo(), 1 to Boxing(), 2 to Classic())
 
     init {
         addDependency("webhookURL", "sendWebhookMessages")
