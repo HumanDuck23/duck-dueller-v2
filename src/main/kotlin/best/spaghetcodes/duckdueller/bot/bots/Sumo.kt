@@ -56,10 +56,10 @@ class Sumo : BotBase("/play duels_sumo_duel") {
     override fun onAttack() {
         tapping = true
         ChatUtils.info("W-Tap")
-        Combat.wTap(80)
+        Combat.wTap(100)
         TimeUtils.setTimeout(fun () {
             tapping = false
-        }, 80)
+        }, 100)
         Movement.clearLeftRight()
     }
 
