@@ -81,6 +81,14 @@ class Classic : BotBase("/play duels_classic_duel"){
                 Mouse.stopTracking()
             }
 
+            if (distance < (DuckDueller.config?.maxDistanceAttack ?: 10)) {
+                if (mc.thePlayer.heldItem != null && mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("sword")) {
+                    Mouse.startLeftAC()
+                }
+            } else {
+                Mouse.stopLeftAC()
+            }
+
             if (distance > 8.8) {
                 if (opponent() != null && opponent()!!.heldItem != null && opponent()!!.heldItem.unlocalizedName.lowercase().contains("bow")) {
                     if (WorldUtils.blockInFront(mc.thePlayer, 2f, 0.5f) == Blocks.air) {
