@@ -56,6 +56,24 @@ object WorldUtils {
         return -1
     }
 
+    fun distanceToRightBarrier(player: EntityPlayer): Int {
+        for (i in 1..60) {
+            if (barrierCheck(player, player.position.add(0.0, player.eyeHeight.toDouble(), 0.0), i.toFloat(), EntityUtils.get2dLookVec(player).rotateYaw(-90f))) {
+                return i
+            }
+        }
+        return -1
+    }
+
+    fun distanceToLeftBarrier(player: EntityPlayer): Int {
+        for (i in 1..60) {
+            if (barrierCheck(player, player.position.add(0.0, player.eyeHeight.toDouble(), 0.0), i.toFloat(), EntityUtils.get2dLookVec(player).rotateYaw(90f))) {
+                return i
+            }
+        }
+        return -1
+    }
+
     fun airCheckAngle(player: EntityPlayer, distance: Float, angleMin: Float, angleMax: Float): Boolean {
         if (angleMax < angleMin) {
             for (i in angleMin.toInt() downTo angleMax.toInt()) {
@@ -76,6 +94,15 @@ object WorldUtils {
     private fun airCheck(player: EntityPlayer, pos: BlockPos, distance: Float, lookVec: Vec3): Boolean {
         for (i in 1..distance.toInt()) {
             if (DuckDueller.mc.theWorld.getBlockState(BlockPos(pos.x + lookVec.xCoord * i, pos.y - (if (player.onGround) 0.2 else 1.4), pos.z + lookVec.zCoord * i)).block == Blocks.air) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun barrierCheck(player: EntityPlayer, pos: BlockPos, distance: Float, lookVec: Vec3): Boolean {
+        for (i in 1..distance.toInt()) {
+            if (DuckDueller.mc.theWorld.getBlockState(BlockPos(pos.x + lookVec.xCoord * i, pos.y - (if (player.onGround) 0.2 else 1.4), pos.z + lookVec.zCoord * i)).block == Blocks.barrier) {
                 return true
             }
         }
