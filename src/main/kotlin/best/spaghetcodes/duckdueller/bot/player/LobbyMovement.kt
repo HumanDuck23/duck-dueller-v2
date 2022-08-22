@@ -31,7 +31,7 @@ object LobbyMovement {
 
     private fun sumo1() {
         if (DuckDueller.mc.thePlayer != null) {
-            val left = RandomUtils.randomBool()
+            var left = RandomUtils.randomBool()
 
             val speed = RandomUtils.randomDoubleInRange(3.0, 9.0).toFloat()
 
@@ -44,11 +44,18 @@ object LobbyMovement {
                 }, RandomUtils.randomIntInRange(400, 800))
                 intervals.add(TimeUtils.setInterval(fun () {
                     tickYawChange = if (WorldUtils.airInFront(DuckDueller.mc.thePlayer, 7f)) {
-                        RandomUtils.randomDoubleInRange(if (left) 4.5 else -4.5, if (left) 7.0 else -7.0).toFloat()
+                        if (WorldUtils.airInFront(DuckDueller.mc.thePlayer, 3f)) {
+                            RandomUtils.randomDoubleInRange(if (left) 9.5 else -9.5, if (left) 13.0 else -13.0).toFloat()
+                        } else RandomUtils.randomDoubleInRange(if (left) 4.5 else -4.5, if (left) 7.0 else -7.0).toFloat()
                     } else {
                         0f
                     }
-               }, 0, RandomUtils.randomIntInRange(50, 100)))
+                }, 0, RandomUtils.randomIntInRange(50, 100)))
+                intervals.add(TimeUtils.setTimeout(fun () {
+                    intervals.add(TimeUtils.setInterval(fun () {
+                        left = !left
+                    }, 0, RandomUtils.randomIntInRange(5000, 10000)))
+                }, RandomUtils.randomIntInRange(5000, 10000)))
             }, RandomUtils.randomIntInRange(100, 250))
         }
     }
