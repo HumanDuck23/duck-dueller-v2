@@ -157,7 +157,11 @@ class Classic : BotBase("/play duels_classic_duel"){
                     TimeUtils.setTimeout(fun () {
                         Inventory.setInvItem("bow")
                         TimeUtils.setTimeout(fun () {
-                            val r = RandomUtils.randomIntInRange(1000, 1500)
+                            val r = when (distance) {
+                                in 0f..10f -> RandomUtils.randomIntInRange(700, 900)
+                                in 10f..20f -> RandomUtils.randomIntInRange(1000, 1200)
+                                else -> RandomUtils.randomIntInRange(1300, 1500)
+                            }
                             Mouse.rClick(r)
                             TimeUtils.setTimeout(fun () {
                                 shotsFired++
