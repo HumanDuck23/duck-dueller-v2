@@ -282,8 +282,8 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
     @SubscribeEvent
     fun onChat(ev: ClientChatReceivedEvent) {
+        val unformatted = ev.message.unformattedText
         if (toggled() && mc.thePlayer != null) {
-            val unformatted = ev.message.unformattedText
 
             if (unformatted.contains("The game starts in 2 seconds!")) {
                 println(playersSent.joinToString(", "))
