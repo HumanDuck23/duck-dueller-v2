@@ -33,7 +33,7 @@ object WorldUtils {
     }
 
     /**
-     * Returns the distance to the closest left edge, or -1 if there is none within 20 blocks
+     * Returns the distance to the closest left edge, or 21 if there is none within 20 blocks
      */
     fun distanceToLeftEdge(player: EntityPlayer): Int {
         for (i in 1..20) {
@@ -41,11 +41,11 @@ object WorldUtils {
                 return i
             }
         }
-        return -1
+        return 21
     }
 
     /**
-     * Returns the distance to the closest right edge, or -1 if there is none within 20 blocks
+     * Returns the distance to the closest right edge, or 21 if there is none within 20 blocks
      */
     fun distanceToRightEdge(player: EntityPlayer): Int {
         for (i in 1..20) {
@@ -53,7 +53,7 @@ object WorldUtils {
                 return i
             }
         }
-        return -1
+        return 21
     }
 
     fun distanceToRightBarrier(player: EntityPlayer): Int {
