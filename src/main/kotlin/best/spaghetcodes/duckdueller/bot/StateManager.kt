@@ -14,16 +14,22 @@ object StateManager {
     }
 
     var state = States.LOBBY
+    var gameFull = false
 
     @SubscribeEvent
     fun onChat(ev: ClientChatReceivedEvent) {
         val unformatted = ev.message.unformattedText
         if (unformatted.matches(Regex(".* has joined \\(./2\\)!"))) {
             state = States.GAME
+            if (unformatted.matches(Regex(".* has joined \\(2/2\\)!"))) {
+                gameFull = true
+            }
         } else if (unformatted.contains("Opponent:")) {
             state = States.PLAYING
         } else if (unformatted.contains("Accuracy")) {
             state = States.GAME
+        } else if (unformatted.contains("has quit!")) {
+            gameFull = false
         }
     }
 
@@ -31,6 +37,7 @@ object StateManager {
     fun onJoinWorld(ev: EntityJoinWorldEvent) {
         if (DuckDueller.mc.thePlayer != null && ev.entity == DuckDueller.mc.thePlayer) {
             state = States.LOBBY
+            gameFull = false
         }
     }
 
