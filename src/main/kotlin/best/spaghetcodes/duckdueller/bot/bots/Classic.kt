@@ -73,6 +73,10 @@ class Classic : BotBase("/play duels_classic_duel"){
             }
         }
         if (opponent() != null && mc.theWorld != null && mc.thePlayer != null) {
+            if (!mc.thePlayer.isSprinting) {
+                Movement.startSprinting()
+            }
+
             val distance = EntityUtils.getDistanceNoY(mc.thePlayer, opponent())
 
             if (distance < (DuckDueller.config?.maxDistanceLook ?: 150)) {
