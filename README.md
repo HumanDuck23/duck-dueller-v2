@@ -36,6 +36,12 @@ Don't worry, there will be a release eventually (at first probably just a beta r
  - ✅ Hidden from mods sent to Hypixel
  - ✅ Highly Customizable
 
+### What are some known issues?
+
+ - Aim lag sometimes
+   - Unclear whether this is related to my unstable internet or not
+ - Dodges players that already left the game
+
 ### Can I contribute to this project?
 
 Sure, any help is welcome! Just fork this repo and open a pull request with your modifications.
