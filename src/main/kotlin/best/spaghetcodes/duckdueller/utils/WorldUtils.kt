@@ -74,6 +74,16 @@ object WorldUtils {
         return -1
     }
 
+    fun entityOffEdge(player: EntityPlayer): Boolean {
+        if (!player.onGround) {
+            val pos = player.positionVector
+            if (DuckDueller.mc.theWorld.getBlockState(BlockPos(pos.addVector(0.0, -4.0, 0.0))).block == Blocks.air) {
+                return true
+            }
+        }
+        return false
+    }
+
     fun airCheckAngle(player: EntityPlayer, distance: Float, angleMin: Float, angleMax: Float): Boolean {
         if (angleMax < angleMin) {
             for (i in angleMin.toInt() downTo angleMax.toInt()) {

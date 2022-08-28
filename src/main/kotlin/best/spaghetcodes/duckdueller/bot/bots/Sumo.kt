@@ -2,6 +2,7 @@ package best.spaghetcodes.duckdueller.bot.bots
 
 import best.spaghetcodes.duckdueller.DuckDueller
 import best.spaghetcodes.duckdueller.bot.BotBase
+import best.spaghetcodes.duckdueller.bot.StateManager
 import best.spaghetcodes.duckdueller.bot.player.Combat
 import best.spaghetcodes.duckdueller.bot.player.LobbyMovement
 import best.spaghetcodes.duckdueller.bot.player.Mouse
@@ -26,6 +27,7 @@ class Sumo : BotBase("/play duels_sumo_duel") {
     }
 
     private var tapping = false
+    private var opponentOffEdge = false
 
     override fun onJoinGame() {
         LobbyMovement.sumo()
@@ -86,10 +88,14 @@ class Sumo : BotBase("/play duels_sumo_duel") {
     }
 
     override fun onTick() {
-        if (mc.thePlayer != null && opponent() != null) {
+        opponentOffEdge = opponent() != null && mc.thePlayer != null &&
+                (WorldUtils.entityOffEdge(opponent()!!) || opponentOffEdge && EntityUtils.getDistanceNoY(mc.thePlayer, opponent()!!) > 6)
+        if (!opponentOffEdge && mc.thePlayer != null && opponent() != null) {
             if (!mc.thePlayer.isSprinting) {
                 Movement.startSprinting()
             }
+
+            Mouse.startTracking()
 
             val distance = EntityUtils.getDistanceNoY(mc.thePlayer, opponent())
 
@@ -171,6 +177,13 @@ class Sumo : BotBase("/play duels_sumo_duel") {
             if (WorldUtils.airInBack(mc.thePlayer, 2.5f) && mc.thePlayer.onGround) {
                 Movement.startForward()
                 Movement.clearLeftRight()
+            }
+        } else {
+            if (opponentOffEdge && StateManager.state == StateManager.States.PLAYING) {
+                Movement.clearAll()
+                Mouse.stopLeftAC()
+                Combat.stopRandomStrafe()
+                Mouse.stopTracking()
             }
         }
     }
