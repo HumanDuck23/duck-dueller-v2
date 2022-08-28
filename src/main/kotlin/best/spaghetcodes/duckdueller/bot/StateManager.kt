@@ -28,6 +28,7 @@ object StateManager {
             state = States.PLAYING
         } else if (unformatted.contains("Accuracy")) {
             state = States.GAME
+            gameFull = false
         } else if (unformatted.contains("has quit!")) {
             gameFull = false
         }
