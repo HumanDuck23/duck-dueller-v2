@@ -7,10 +7,7 @@ import best.spaghetcodes.duckdueller.bot.player.Combat
 import best.spaghetcodes.duckdueller.bot.player.Inventory
 import best.spaghetcodes.duckdueller.bot.player.Mouse
 import best.spaghetcodes.duckdueller.bot.player.Movement
-import best.spaghetcodes.duckdueller.utils.EntityUtils
-import best.spaghetcodes.duckdueller.utils.RandomUtils
-import best.spaghetcodes.duckdueller.utils.TimeUtils
-import best.spaghetcodes.duckdueller.utils.WorldUtils
+import best.spaghetcodes.duckdueller.utils.*
 import net.minecraft.init.Blocks
 
 class Classic : BotBase("/play duels_classic_duel"){
@@ -67,8 +64,10 @@ class Classic : BotBase("/play duels_classic_duel"){
     }
 
     override fun onTick() {
+        var needJump = false
         if (mc.thePlayer != null) {
             if (WorldUtils.blockInFront(mc.thePlayer, 2f, 0.5f) != Blocks.air && mc.thePlayer.onGround) {
+                needJump = true
                 Movement.singleJump(RandomUtils.randomIntInRange(150, 250))
             }
         }
@@ -96,7 +95,7 @@ class Classic : BotBase("/play duels_classic_duel"){
             if (distance > 8.8) {
                 if (opponent() != null && opponent()!!.heldItem != null && opponent()!!.heldItem.unlocalizedName.lowercase().contains("bow")) {
                     if (WorldUtils.blockInFront(mc.thePlayer, 2f, 0.5f) == Blocks.air) {
-                        if (!EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
+                        if (!EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!) && !needJump) {
                             Movement.stopJumping()
                         } else {
                             Movement.startJumping()
@@ -108,7 +107,7 @@ class Classic : BotBase("/play duels_classic_duel"){
                     Movement.startJumping()
                 }
             } else {
-                if (WorldUtils.blockInFront(mc.thePlayer, 2f, 0.5f) == Blocks.air) {
+                if (!needJump) {
                     Movement.stopJumping()
                 }
             }
@@ -202,7 +201,7 @@ class Classic : BotBase("/play duels_classic_duel"){
                     randomStrafe = false
                     if (opponent() != null && opponent()!!.heldItem != null && (opponent()!!.heldItem.unlocalizedName.lowercase().contains("bow") || opponent()!!.heldItem.unlocalizedName.lowercase().contains("rod"))) {
                         randomStrafe = true
-                        if (distance < 15) {
+                        if (distance < 15 && !needJump) {
                             Movement.stopJumping()
                         }
                     } else {
