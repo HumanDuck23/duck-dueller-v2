@@ -11,7 +11,7 @@ Duck Dueller is a free and open-source Forge Hypixel Duels bot for 1.8.9!
 ### What gamemodes are supported?
 
  - ✅ Sumo
- - 🚧 Classic
+ - ✅ Classic
  - 🚧 Boxing
  - 🚧 OP
 
@@ -29,7 +29,8 @@ Don't worry, there will be a release eventually (at first probably just a beta r
  - ✅ Smart Strafing
  - ✅ Edge Detection
  - ✅ W-Tap
- - 🚧 Pre-Game Movement
+ - ✅ Pre-Game Movement (Sumo only for now)
+ - ✅ Bow & Rod
  - ✅ Discord Webhook Integration
  - ✅ Many failsafes (including auto-reconnect)
  - ✅ Hidden from mods sent to Hypixel
