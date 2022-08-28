@@ -551,7 +551,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     }
 
     private fun joinGame() {
-        if (toggled() && StateManager.state != StateManager.States.PLAYING) {
+        if (toggled() && StateManager.state != StateManager.States.PLAYING && !StateManager.gameFull) {
             TimeUtils.setTimeout(fun () {
                 ChatUtils.sendAsPlayer(queueCommand)
             }, RandomUtils.randomIntInRange(100, 300))
