@@ -54,13 +54,14 @@ class Sumo : BotBase("/play duels_sumo_duel") {
     }
 
     override fun onAttack() {
-        tapping = true
-        ChatUtils.info("W-Tap")
-        Combat.wTap(100)
-        TimeUtils.setTimeout(fun () {
-            tapping = false
-        }, 100)
-        Movement.clearLeftRight()
+        if (!tapping) {
+            tapping = true
+            ChatUtils.info("W-Tap")
+            Combat.wTap(100)
+            TimeUtils.setTimeout(fun () {
+                tapping = false
+            }, 100)
+        }
     }
 
     override fun onFoundOpponent() {
@@ -102,83 +103,27 @@ class Sumo : BotBase("/play duels_sumo_duel") {
             var clear = false
             var randomStrafe = false
 
-            if (distance > 2) {
-                if (nearEdge(2f)) {
-                    if (EntityUtils.entityMovingRight(mc.thePlayer, opponent()!!)) {
-                        movePriority[1] += 2
-                    } else if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
-                        movePriority[0] += 2
+            if (distance > 3) {
+                val le = WorldUtils.distanceToLeftEdge(mc.thePlayer)
+                val re = WorldUtils.distanceToRightEdge(mc.thePlayer)
+                val diff = abs(abs(le) - abs(re))
+                if (diff > 2) {
+                    if (le < re) {
+                        movePriority[1] += 5
+                    } else if (re < le) {
+                        movePriority[0] += 5
+                    } else {
+                        randomStrafe = true
                     }
                 } else {
-                    if (opponentNearEdge(2f)) {
-                        if (opponent()?.onGround == true) {
-                            if (EntityUtils.entityMovingRight(mc.thePlayer, opponent()!!)) {
-                                movePriority[0] += 2
-                            } else if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
-                                movePriority[1] += 2
-                            } else {
-                                clear = true
-                            }
-                        }
-                    } else {
-                        val le = WorldUtils.distanceToLeftEdge(mc.thePlayer)
-                        val re = WorldUtils.distanceToRightEdge(mc.thePlayer)
-                        val diff = abs(abs(le) - abs(re))
-                        if (diff > 2) {
-                            if (le < re) {
-                                movePriority[1] += 5
-                            } else if (re < le) {
-                                movePriority[0] += 5
-                            } else {
-                                randomStrafe = true
-                            }
-                        } else {
-                            randomStrafe = true
-                        }
-                    }
+                    randomStrafe = true
                 }
             } else {
                 clear = true
             }
 
-            // placing this here so that it only strafes in a combo if it's REALLY close to an edge
             if (combo >= 2) {
                 clear = true
-            }
-
-            // a bunch of if's to detect edges and avoid them instead of just not walking off
-
-            if (
-                (WorldUtils.airCheckAngle(mc.thePlayer, 5f, 20f, 60f)
-                        || WorldUtils.airCheckAngle(mc.thePlayer, 4.5f, 70f, 110f)
-                        || WorldUtils.airCheckAngle(mc.thePlayer, 5f, 120f, 160f))
-                && combo <= 3
-            ) {
-                movePriority[1] += 5
-                clear = false
-            }
-
-            if (
-                (WorldUtils.airCheckAngle(mc.thePlayer, 5f, -20f, -60f)
-                        || WorldUtils.airCheckAngle(mc.thePlayer, 4.5f, -70f, -110f)
-                        || WorldUtils.airCheckAngle(mc.thePlayer, 5f, -120f, -160f))
-                && combo <= 3
-            ) {
-                movePriority[0] += 5
-                clear = false
-            }
-
-            if (distance < 2) {
-                clear = true
-            }
-
-            if (rightEdge(4f)) {
-                movePriority[0] += 10
-                clear = false
-            }
-            if (leftEdge(4f)) {
-                movePriority[1] += 10
-                clear = false
             }
 
             if (combo >= 3 && distance >= 3.2 && mc.thePlayer.onGround && !nearEdge(5f) && !WorldUtils.airInFront(mc.thePlayer, 3f)) {
@@ -188,7 +133,7 @@ class Sumo : BotBase("/play duels_sumo_duel") {
             if (clear) {
                 Combat.stopRandomStrafe()
                 Movement.clearLeftRight()
-            } else {
+            } else if (!tapping) {
                 if (randomStrafe) {
                     Combat.startRandomStrafe(900, 1400)
                 } else {
@@ -209,7 +154,7 @@ class Sumo : BotBase("/play duels_sumo_duel") {
                 }
             }
 
-            if (distance < 1.2 || (distance < 2 && combo > 2)) {
+            if (distance < 1.2) {
                 Movement.stopForward()
             } else {
                 if (!tapping) {
