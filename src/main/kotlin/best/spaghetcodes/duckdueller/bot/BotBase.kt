@@ -445,6 +445,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                     } else {
                         uuid = HttpUtils.usernameToUUID(player)
                     }
+                    println(player)
 
                     if (uuid == null) { // nicked or fake player
                         //TODO: Check the list of players the bot has lost to
