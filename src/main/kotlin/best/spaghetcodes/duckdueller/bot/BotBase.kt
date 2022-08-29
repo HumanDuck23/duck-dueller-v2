@@ -212,11 +212,18 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
                                     if (DuckDueller.config?.sendWebhookMessages == true) {
                                         if (DuckDueller.config?.webhookURL != "") {
+                                            val opponentName = if (iWon) loser else winner
+                                            val faceUrl = if (playerCache.containsKey(opponentName)) {
+                                                "https://crafatar.com/avatars/${playerCache[opponentName]}"
+                                            } else {
+                                                "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png"
+                                            }
+
                                             // Send the webhook embed
                                             val fields = WebHook.buildFields(arrayListOf(mapOf("name" to "Winner", "value" to winner, "inline" to "true"), mapOf("name" to "Loser", "value" to loser, "inline" to "true")))
                                             val footer = WebHook.buildFooter(ChatUtils.removeFormatting(Session.getSession()), "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
                                             val author = WebHook.buildAuthor("Duck Dueller - ${getName()}", "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
-                                            val thumbnail = WebHook.buildThumbnail("https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
+                                            val thumbnail = WebHook.buildThumbnail(faceUrl)
 
                                             WebHook.sendEmbed(
                                                 DuckDueller.config?.webhookURL!!,
