@@ -238,14 +238,14 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
     val dodgeWS = 15
 
     @Property(
-        type = PropertyType.NUMBER,
+        type = PropertyType.DECIMAL_SLIDER,
         name = "Dodge W/L",
         description = "How large a player's w/l ratio can be before being dodged",
         category = "Queue Dodging",
-        min = 3,
-        max = 15,
+        minF = 2f,
+        maxF = 15f,
     )
-    val dodgeWLR = 3
+    val dodgeWLR = 3.0f
 
     @Property(
         type = PropertyType.SWITCH,
