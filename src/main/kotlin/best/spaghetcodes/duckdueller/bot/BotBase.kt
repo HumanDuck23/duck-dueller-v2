@@ -220,7 +220,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                                             }
 
                                             // Send the webhook embed
-                                            val fields = WebHook.buildFields(arrayListOf(mapOf("name" to "Winner", "value" to winner, "inline" to "true"), mapOf("name" to "Loser", "value" to loser, "inline" to "true")))
+                                            val fields = WebHook.buildFields(arrayListOf(mapOf("name" to "Winner", "value" to winner, "inline" to "true"), mapOf("name" to "Loser", "value" to loser, "inline" to "true"), mapOf("name" to "Bot Started", "value" to "<t:${Session.startTime}:R>", "inline" to "false")))
                                             val footer = WebHook.buildFooter(ChatUtils.removeFormatting(Session.getSession()), "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
                                             val author = WebHook.buildAuthor("Duck Dueller - ${getName()}", "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
                                             val thumbnail = WebHook.buildThumbnail(faceUrl)
@@ -283,6 +283,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
             if (toggled()) {
                 ChatUtils.info("Current selected bot: ${EnumChatFormatting.GREEN}${getName()}")
                 joinGame()
+                Session.startTime = System.currentTimeMillis() / 1000
             }
         }
     }
