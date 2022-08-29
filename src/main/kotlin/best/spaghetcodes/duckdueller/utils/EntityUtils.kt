@@ -167,8 +167,8 @@ object EntityUtils {
     }
 
     fun crossHairDistance(yaw: Float, pitch: Float, player: EntityPlayer): Float {
-        val nYaw = yaw - player.rotationYaw - yaw
-        val nPitch = pitch - player.rotationPitch - pitch
+        val nYaw = abs(player.rotationYaw - yaw)
+        val nPitch = abs(player.rotationPitch - pitch)
         return MathHelper.sqrt_float(nYaw * nYaw + nPitch * nPitch)
     }
 
