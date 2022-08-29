@@ -422,7 +422,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
             val quickRefreshTimer = TimeUtils.setInterval(this::bakery, 200, 50)
             TimeUtils.setTimeout(fun () {
                 quickRefreshTimer?.cancel()
-                opponentTimer = TimeUtils.setInterval(this::bakery, 0, 2000)
+                opponentTimer = TimeUtils.setInterval(this::bakery, 0, 500)
             }, quickRefresh)
 
             onGameStart()
