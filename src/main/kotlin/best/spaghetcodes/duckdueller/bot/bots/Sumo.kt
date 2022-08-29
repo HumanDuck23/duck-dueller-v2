@@ -113,7 +113,7 @@ class Sumo : BotBase("/play duels_sumo_duel") {
                 val le = WorldUtils.distanceToLeftEdge(mc.thePlayer)
                 val re = WorldUtils.distanceToRightEdge(mc.thePlayer)
                 val diff = abs(abs(le) - abs(re))
-                if (diff > 2) {
+                if (diff > 1) {
                     if (le < re) {
                         movePriority[1] += 5
                     } else if (re < le) {
