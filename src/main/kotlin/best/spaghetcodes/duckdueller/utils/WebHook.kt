@@ -46,9 +46,11 @@ object WebHook {
         }
     }
 
-    fun buildEmbed(title: String, fields: JsonArray, footer: JsonObject, author: JsonObject, thumbnail: JsonObject, color: Int): JsonObject {
+    fun buildEmbed(title: String, description: String, fields: JsonArray, footer: JsonObject, author: JsonObject, thumbnail: JsonObject, color: Int): JsonObject {
         val obj = JsonObject()
         obj.addProperty("title", title)
+        if (description != "")
+            obj.addProperty("description", description)
         obj.addProperty("color", color)
         obj.add("footer", footer)
         obj.add("author", author)
