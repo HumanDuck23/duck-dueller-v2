@@ -8,6 +8,7 @@ object Session {
 
     var wins = 0
     var losses = 0
+    var startTime: Long = -1
 
     fun getSession(): String {
         val df = DecimalFormat("#.##")
