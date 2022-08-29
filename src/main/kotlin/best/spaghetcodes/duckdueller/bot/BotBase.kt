@@ -8,6 +8,7 @@ import best.spaghetcodes.duckdueller.bot.player.Movement
 import best.spaghetcodes.duckdueller.core.KeyBindings
 import best.spaghetcodes.duckdueller.events.packet.PacketEvent
 import best.spaghetcodes.duckdueller.utils.*
+import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import net.minecraft.client.Minecraft
@@ -227,7 +228,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
                                             WebHook.sendEmbed(
                                                 DuckDueller.config?.webhookURL!!,
-                                                WebHook.buildEmbed("${if (iWon) ":smirk:" else ":confused:"} Game ${if (iWon) "WON" else "LOST"}!", fields, footer, author, thumbnail, if (iWon) 0x66ed8a else 0xed6d66))
+                                                WebHook.buildEmbed("${if (iWon) ":smirk:" else ":confused:"} Game ${if (iWon) "WON" else "LOST"}!", "", fields, footer, author, thumbnail, if (iWon) 0x66ed8a else 0xed6d66))
                                         } else {
                                             ChatUtils.error("Webhook URL hasn't been set!")
                                         }
@@ -362,6 +363,15 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     fun onConnect(ev: ClientConnectedToServerEvent) {
         if (toggled()) {
             println("Reconnect successful!")
+
+            val author = WebHook.buildAuthor("Duck Dueller - ${getName()}", "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
+            val thumbnail = WebHook.buildThumbnail("https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
+
+            WebHook.sendEmbed(
+                DuckDueller.config?.webhookURL!!,
+                WebHook.buildEmbed("Reconnected!", "The bot successfully reconnected!", JsonArray(), JsonObject(), author, thumbnail, 0x66ed8a))
+
+
             reconnectTimer?.cancel()
             TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(6000, 8000))
         }
@@ -371,6 +381,14 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     fun onDisconnect(ev: ClientDisconnectionFromServerEvent) {
         if (toggled()) { // well that wasn't supposed to happen, try and reconnect
             println("Disconnected from server, reconnecting...")
+
+            val author = WebHook.buildAuthor("Duck Dueller - ${getName()}", "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
+            val thumbnail = WebHook.buildThumbnail("https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
+
+            WebHook.sendEmbed(
+                DuckDueller.config?.webhookURL!!,
+                WebHook.buildEmbed("Disconnected!", "The bot was disconnected! Attempting to reconnect...", JsonArray(), JsonObject(), author, thumbnail, 0xed6d66))
+
             TimeUtils.setTimeout(fun () {
                 reconnectTimer = TimeUtils.setInterval(this::reconnect, 0, 30000)
             }, RandomUtils.randomIntInRange(5000, 7000))
