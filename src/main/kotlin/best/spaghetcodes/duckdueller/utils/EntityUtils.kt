@@ -31,11 +31,7 @@ object EntityUtils {
             false
         } else if (DuckDueller.mc.thePlayer.isEntityAlive && entity.isEntityAlive) {
             if (!entity.isInvisible /*&& !entity.isInvisibleToPlayer(mc.thePlayer)*/) {
-                if (DuckDueller.mc.thePlayer.getDistanceToEntity(entity) > 64.0f) {
-                    false
-                } else {
-                    DuckDueller.mc.thePlayer.canEntityBeSeen(entity)
-                }
+                DuckDueller.mc.thePlayer.getDistanceToEntity(entity) <= 64.0f
             } else {
                 false
             }
