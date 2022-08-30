@@ -212,6 +212,14 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
     )
     val paperRequeue = true
 
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Fast Requeue",
+        description = "Faster Requeue (no rewards)",
+        category = "Auto Requeue",
+    )
+    val fastRequeue = true
+
     /*
         Queue Dodging
      */
