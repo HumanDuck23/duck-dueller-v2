@@ -79,14 +79,25 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
 
     @Property(
         type = PropertyType.NUMBER,
-        name = "Look Speed",
-        description = "How fast the bot can look around (lower number = less snappy, slightly less accurate when teleporting)",
+        name = "Horizontal Look Speed",
+        description = "How fast the bot can look left/right (lower number = less snappy, slightly less accurate when teleporting)",
         category = "Combat",
         min = 5,
         max = 15,
         increment = 1
     )
-    val lookSpeed = 10
+    val lookSpeedHorizontal = 10
+
+    @Property(
+        type = PropertyType.NUMBER,
+        name = "Vertical Look Speed",
+        description = "How fast the bot can look up/down (lower number = less snappy, slightly less accurate when teleporting)",
+        category = "Combat",
+        min = 5,
+        max = 15,
+        increment = 1
+    )
+    val lookSpeedVertical = 5
 
     @Property(
         type = PropertyType.DECIMAL_SLIDER,
