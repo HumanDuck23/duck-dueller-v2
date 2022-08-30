@@ -44,7 +44,6 @@ object StateManager {
             state = States.LOBBY
             gameFull = false
             gameStartedAt = -1L
-            lastGameDuration = 0L
         }
     }
 
