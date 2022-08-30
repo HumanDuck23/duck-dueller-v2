@@ -11,7 +11,7 @@ object Inventory {
         val _item = item.lowercase()
         for (i in 0..8) {
             try {
-                if (DuckDueller.mc.thePlayer.inventory.getCurrentItem().displayName.lowercase().contains(_item)
+                if (DuckDueller.mc.thePlayer.inventory.getCurrentItem().unlocalizedName.lowercase().contains(_item)
                 ) {
                     return true
                 } else {
