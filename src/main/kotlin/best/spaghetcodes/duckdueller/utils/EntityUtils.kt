@@ -126,9 +126,6 @@ object EntityUtils {
                         else -> target.eyeHeight * 1.5
                     }
                     pos = target.positionVector.add(flatVelo).add(Vec3(0.0, height.toDouble(), 0.0)) ?: Vec3(target.posX, target.posY + target.eyeHeight, target.posZ)
-                    if (pos.xCoord == target.posX && pos.zCoord == target.posZ) {
-                        println("X: ${target.motionX} || Z: ${target.motionZ}")
-                    }
                 }
             }
 
