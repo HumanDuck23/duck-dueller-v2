@@ -114,18 +114,30 @@ object Mouse {
 
             if (rotations != null) {
                 val lookRand = (DuckDueller.config?.lookRand ?: 0).toDouble()
-                var da = ((rotations[0] - DuckDueller.mc.thePlayer.rotationYaw) + RandomUtils.randomDoubleInRange(-lookRand, lookRand)).toFloat()
-                val maxRot = (DuckDueller.config?.lookSpeed ?: 10).toFloat()
-                if (abs(da) > maxRot) {
-                    da = if (da > 0) {
-                        maxRot
+                var dyaw = ((rotations[0] - DuckDueller.mc.thePlayer.rotationYaw) + RandomUtils.randomDoubleInRange(-lookRand, lookRand)).toFloat()
+                var dpitch = ((rotations[1] - DuckDueller.mc.thePlayer.rotationPitch) + RandomUtils.randomDoubleInRange(-lookRand, lookRand)).toFloat()
+
+                val maxRotH = (DuckDueller.config?.lookSpeedHorizontal ?: 10).toFloat()
+                val maxRotV = (DuckDueller.config?.lookSpeedVertical ?: 5).toFloat()
+
+                if (abs(dyaw) > maxRotH) {
+                    dyaw = if (dyaw > 0) {
+                        maxRotH
                     } else {
-                        -maxRot
+                        -maxRotH
                     }
                 }
 
-                DuckDueller.mc.thePlayer.rotationYaw += da
-                DuckDueller.mc.thePlayer.rotationPitch = rotations[1] // pitch is perfect screw you
+                if (abs(dpitch) > maxRotV) {
+                    dpitch = if (dpitch > 0) {
+                        maxRotV
+                    } else {
+                        -maxRotV
+                    }
+                }
+
+                DuckDueller.mc.thePlayer.rotationYaw += dyaw
+                DuckDueller.mc.thePlayer.rotationPitch += dpitch
             }
         }
     }
