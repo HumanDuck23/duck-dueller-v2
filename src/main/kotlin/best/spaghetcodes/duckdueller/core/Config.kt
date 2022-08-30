@@ -93,7 +93,7 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
         name = "Vertical Look Speed",
         description = "How fast the bot can look up/down (lower number = less snappy, slightly less accurate when teleporting)",
         category = "Combat",
-        min = 5,
+        min = 1,
         max = 15,
         increment = 1
     )
