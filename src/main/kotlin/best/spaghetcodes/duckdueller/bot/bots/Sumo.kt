@@ -31,7 +31,9 @@ class Sumo : BotBase("/play duels_sumo_duel") {
     private var tap50 = false
 
     override fun onJoinGame() {
-        LobbyMovement.sumo()
+        if (DuckDueller.config?.lobbyMovement == true) {
+            LobbyMovement.sumo()
+        }
     }
 
     override fun beforeStart() {
