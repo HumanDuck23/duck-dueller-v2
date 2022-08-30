@@ -6,17 +6,18 @@ import best.spaghetcodes.duckdueller.bot.player.LobbyMovement
 import best.spaghetcodes.duckdueller.bot.player.Mouse
 import best.spaghetcodes.duckdueller.bot.player.Movement
 import best.spaghetcodes.duckdueller.core.KeyBindings
-import best.spaghetcodes.duckdueller.events.packet.PacketEvent
 import best.spaghetcodes.duckdueller.utils.*
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import io.netty.channel.ChannelHandlerContext
+import io.netty.channel.SimpleChannelInboundHandler
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiMainMenu
 import net.minecraft.client.gui.GuiMultiplayer
-import net.minecraft.client.multiplayer.GuiConnecting
 import net.minecraft.client.multiplayer.ServerData
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.network.Packet
 import net.minecraft.network.play.server.S19PacketEntityStatus
 import net.minecraft.network.play.server.S3EPacketTeams
 import net.minecraft.network.play.server.S45PacketTitle
@@ -141,12 +142,10 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
      * Base Methods
      ********/
 
-    @SubscribeEvent
-    fun onPacket(ev: PacketEvent) {
+    fun onPacket(packet: Packet<*>) {
         if (toggled) {
-            when (ev.getPacket()) {
+            when (packet) {
                 is S19PacketEntityStatus -> { // use the status packet for attack events
-                    val packet = ev.getPacket() as S19PacketEntityStatus
                     if (packet.opCode.toInt() == 2) { // damage
                         val entity = packet.getEntity(mc.theWorld)
                         if (entity != null) {
@@ -165,7 +164,6 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                     }
                 }
                 is S3EPacketTeams -> { // use this for stat checking
-                    val packet = ev.getPacket() as S3EPacketTeams
                     if (packet.action == 3 && packet.name == "§7§k") { // action 3 is ADD
                         val players = packet.players
                         for (player in players) {
@@ -186,7 +184,6 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                 is S45PacketTitle -> { // use this to determine who won the duel
                     if (mc.theWorld != null) {
                         TimeUtils.setTimeout(fun () {
-                            val packet = ev.getPacket() as S45PacketTitle
                             if (packet.message != null) {
                                 val unformatted = packet.message.unformattedText.lowercase()
                                 if (unformatted.contains("won the duel!") && mc.thePlayer != null) {
@@ -252,6 +249,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
     @SubscribeEvent
     fun onClientTick(ev: ClientTickEvent) {
+        registerPacketListener()
         if (toggled) {
             onTick()
 
@@ -595,6 +593,29 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                 DuckDueller.mc.displayGuiScreen(GuiMultiplayer(GuiMainMenu()))
                 reconnect()
             }
+        }
+    }
+
+    class PacketReader(private val container: BotBase) : SimpleChannelInboundHandler<Packet<*>>(false) {
+
+        override fun channelRead0(ctx: ChannelHandlerContext?, msg: Packet<*>?) {
+            if (msg != null) {
+                container.onPacket(msg)
+            }
+            ctx?.fireChannelRead(msg)
+        }
+
+    }
+
+    private fun registerPacketListener() {
+        val pipeline = mc.thePlayer?.sendQueue?.networkManager?.channel()?.pipeline()
+        if (pipeline != null && pipeline.get("${getName()}_packet_handler") == null) {
+            pipeline.addBefore(
+                "packet_handler",
+                "${getName()}_packet_handler",
+                PacketReader(this)
+            )
+            println("Registered ${getName()}_packet_handler")
         }
     }
 
