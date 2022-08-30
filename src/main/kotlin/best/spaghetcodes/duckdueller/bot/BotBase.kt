@@ -443,7 +443,12 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                     ChatUtils.sendAsPlayer("/ac " + (DuckDueller.config?.ggMessage ?: "gg"))
                 }, DuckDueller.config?.ggDelay ?: 100)
 
-                TimeUtils.setTimeout(this::joinGame, DuckDueller.config?.autoRqDelay ?: 2000)
+                val delay = DuckDueller.config?.autoRqDelay ?: 2000
+                if (DuckDueller.config?.fastRequeue == true) {
+                    TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(200, 500))
+                } else {
+                    TimeUtils.setTimeout(this::joinGame, delay)
+                }
             }
         }
     }
