@@ -46,10 +46,12 @@ class PacketListener : ChannelDuplexHandler() {
 
     @SubscribeEvent
     fun joinEvent(event: FMLNetworkEvent.ClientConnectedToServerEvent) {
-        event.manager.channel().pipeline().addBefore(
-            "packet_handler",
-            "duckdueller_packet_handler",
-            PacketListener()
-        )
+        if (event.manager.channel().pipeline().get("duelsbooster_packet_handler") == null) {
+            event.manager.channel().pipeline().addBefore(
+                "packet_handler",
+                "duckdueller_packet_handler",
+                PacketListener()
+            )
+        }
     }
 }
