@@ -334,6 +334,12 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                 Mouse.stopLeftAC()
                 TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(6000, 8000))
             }
+
+            if (unformatted.contains("Woah there, slow down!") && DuckDueller.config?.strictDodging == true) {
+                disconnect()
+                TimeUtils.setTimeout(this::reconnect, RandomUtils.randomIntInRange(4000, 5000))
+            }
+
         }
 
         if (unformatted.contains("Your new API key is ")) {
@@ -579,6 +585,14 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
             TimeUtils.setTimeout(fun () {
                 ChatUtils.sendAsPlayer(queueCommand)
             }, RandomUtils.randomIntInRange(100, 300))
+        }
+    }
+
+    private fun disconnect() {
+        if (mc.theWorld != null) {
+            mc.theWorld.sendQuittingDisconnectingPacket()
+            mc.loadWorld(null)
+            mc.displayGuiScreen(GuiMultiplayer(GuiMainMenu()))
         }
     }
 
