@@ -15,6 +15,8 @@ object StateManager {
 
     var state = States.LOBBY
     var gameFull = false
+    var gameStartedAt = -1L
+    var lastGameDuration = 0L
 
     @SubscribeEvent
     fun onChat(ev: ClientChatReceivedEvent) {
@@ -26,9 +28,11 @@ object StateManager {
             }
         } else if (unformatted.contains("Opponent:")) {
             state = States.PLAYING
+            gameStartedAt = System.currentTimeMillis()
         } else if (unformatted.contains("Accuracy")) {
             state = States.GAME
             gameFull = false
+            lastGameDuration = System.currentTimeMillis() - gameStartedAt
         } else if (unformatted.contains("has quit!")) {
             gameFull = false
         }
@@ -39,6 +43,8 @@ object StateManager {
         if (DuckDueller.mc.thePlayer != null && ev.entity == DuckDueller.mc.thePlayer) {
             state = States.LOBBY
             gameFull = false
+            gameStartedAt = -1L
+            lastGameDuration = 0L
         }
     }
 
