@@ -216,6 +216,8 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                                                 "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png"
                                             }
 
+                                            val duration = StateManager.lastGameDuration / 1000
+
                                             // Send the webhook embed
                                             val fields = WebHook.buildFields(arrayListOf(mapOf("name" to "Winner", "value" to winner, "inline" to "true"), mapOf("name" to "Loser", "value" to loser, "inline" to "true"), mapOf("name" to "Bot Started", "value" to "<t:${Session.startTime}:R>", "inline" to "false")))
                                             val footer = WebHook.buildFooter(ChatUtils.removeFormatting(Session.getSession()), "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
@@ -224,7 +226,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
                                             WebHook.sendEmbed(
                                                 DuckDueller.config?.webhookURL!!,
-                                                WebHook.buildEmbed("${if (iWon) ":smirk:" else ":confused:"} Game ${if (iWon) "WON" else "LOST"}!", "", fields, footer, author, thumbnail, if (iWon) 0x66ed8a else 0xed6d66))
+                                                WebHook.buildEmbed("${if (iWon) ":smirk:" else ":confused:"} Game ${if (iWon) "WON" else "LOST"}!", "Game Duration: `${duration}`s", fields, footer, author, thumbnail, if (iWon) 0x66ed8a else 0xed6d66))
                                         } else {
                                             ChatUtils.error("Webhook URL hasn't been set!")
                                         }
