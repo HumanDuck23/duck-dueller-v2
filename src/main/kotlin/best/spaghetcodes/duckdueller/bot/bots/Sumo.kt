@@ -28,6 +28,7 @@ class Sumo : BotBase("/play duels_sumo_duel") {
 
     private var tapping = false
     private var opponentOffEdge = false
+    private var tap50 = false
 
     override fun onJoinGame() {
         LobbyMovement.sumo()
@@ -58,11 +59,13 @@ class Sumo : BotBase("/play duels_sumo_duel") {
     override fun onAttack() {
         if (!tapping) {
             tapping = true
-            ChatUtils.info("W-Tap")
-            Combat.wTap(100)
+            val dur = if (tap50) 50 else 100
+            ChatUtils.info("W-Tap $dur")
+            Combat.wTap(dur)
+            tap50 = !tap50
             TimeUtils.setTimeout(fun () {
                 tapping = false
-            }, 100)
+            }, dur)
         }
     }
 
