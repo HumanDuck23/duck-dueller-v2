@@ -37,6 +37,14 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
 
     @Property(
         type = PropertyType.SWITCH,
+        name = "Lobby Movement",
+        description = "Whether or not the bot should move in pre-game lobbies.",
+        category = "General",
+    )
+    val lobbyMovement = true
+
+    @Property(
+        type = PropertyType.SWITCH,
         name = "Send Webhook Messages",
         description = "Whether or not the bot should send a discord webhook message after each game.",
         category = "General",
