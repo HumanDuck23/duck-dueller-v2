@@ -269,7 +269,7 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
         description = "If Hypixel prevents the bot from leaving (woah there, slow down!), it will disconnect and reconnect to dodge.",
         category = "Queue Dodging",
     )
-    val strictDodging = true
+    val strictDodging = false
 
     val bots = mapOf(0 to Sumo(), 1 to Boxing(), 2 to Classic())
 
