@@ -73,6 +73,8 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
     private var lastOpponentName = ""
 
+    private var calledGameEnd = false
+
     fun opponent() = opponent
 
     /********
@@ -322,7 +324,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                 gameStart()
             }
 
-            if (unformatted.contains("Accuracy")) {
+            if (unformatted.contains("Accuracy") && !calledGameEnd) {
                 gameEnd()
             }
 
@@ -359,6 +361,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                 Movement.clearAll()
                 Combat.stopRandomStrafe()
                 Mouse.stopLeftAC()
+                calledGameEnd = false
             }
         }
     }
