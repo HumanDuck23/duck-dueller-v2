@@ -60,7 +60,15 @@ class Classic : BotBase("/play duels_classic_duel"){
                         tapping = false
                     }, 300)
                 } else if (n.contains("sword")) {
-                    Mouse.rClick(RandomUtils.randomIntInRange(80, 100)) // otherwise just blockhit
+                    if (distance < 2) {
+                        Mouse.rClick(RandomUtils.randomIntInRange(80, 100)) // otherwise just blockhit
+                    } else {
+                        Combat.wTap(100)
+                        tapping = true
+                        TimeUtils.setTimeout(fun () {
+                            tapping = false
+                        }, 100)
+                    }
                 }
             }
         }
