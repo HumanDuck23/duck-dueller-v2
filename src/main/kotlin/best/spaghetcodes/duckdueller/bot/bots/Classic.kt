@@ -188,7 +188,7 @@ open class Classic(c: String = "/play duels_classic_duel") : BotBase(c){
             }
 
             if ((EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!) && distance in 3.5f..30f) || (distance in 28.0..33.0 && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!))) {
-                if (distance > 5 && !Mouse.isUsingProjectile() && shotsFired < maxArrows) {
+                if (distance > 5 && !Mouse.isUsingProjectile() && shotsFired < maxArrows && !Mouse.isRunningAway()) {
                     clear = true
                     Mouse.stopLeftAC()
                     Mouse.setUsingProjectile(true)
