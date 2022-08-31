@@ -105,6 +105,14 @@ class Boxing : BotBase("/play duels_boxing_duel") {
                 Movement.singleJump(RandomUtils.randomIntInRange(100, 150))
             }
 
+            if (distance < 1.5 || (distance < 2.7 && combo >= 1)) {
+                Movement.stopForward()
+            } else {
+                if (!tapping) {
+                    Movement.startForward()
+                }
+            }
+
             val movePriority = arrayListOf(0, 0)
             var clear = false
             var randomStrafe = false
