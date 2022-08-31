@@ -588,13 +588,28 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
         }
     }
 
-    private fun joinGame() {
+    private fun joinGame(second: Boolean = false) {
         if (toggled() && StateManager.state != StateManager.States.PLAYING && !StateManager.gameFull) {
             if (StateManager.state == StateManager.States.GAME) {
-                Inventory.setInvItem("paper")
-                TimeUtils.setTimeout(fun () {
-                    Mouse.rClick(RandomUtils.randomIntInRange(100, 300))
-                }, RandomUtils.randomIntInRange(100, 300))
+                val paper = Inventory.setInvItem("paper")
+                if (paper) {
+                    TimeUtils.setTimeout(fun () {
+                        Mouse.rClick(RandomUtils.randomIntInRange(30, 70))
+                        TimeUtils.setTimeout(fun () {
+                            Mouse.rClick(RandomUtils.randomIntInRange(30, 70))
+                        }, RandomUtils.randomIntInRange(100, 300))
+                    }, RandomUtils.randomIntInRange(100, 300))
+                } else {
+                    if (second) {
+                        TimeUtils.setTimeout(fun () {
+                            ChatUtils.sendAsPlayer(queueCommand)
+                        }, RandomUtils.randomIntInRange(100, 300))
+                    } else {
+                        TimeUtils.setTimeout(fun () {
+                            joinGame(true)
+                        }, RandomUtils.randomIntInRange(1000, 1400))
+                    }
+                }
             } else {
                 TimeUtils.setTimeout(fun () {
                     ChatUtils.sendAsPlayer(queueCommand)
