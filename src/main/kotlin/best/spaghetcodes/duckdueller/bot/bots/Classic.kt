@@ -210,24 +210,32 @@ class Classic : BotBase("/play duels_classic_duel"){
                     }
                 }
             } else {
-                if (distance in 15f..8f) {
-                    randomStrafe = true
-                } else {
-                    randomStrafe = false
-                    if (opponent() != null && opponent()!!.heldItem != null && (opponent()!!.heldItem.unlocalizedName.lowercase().contains("bow") || opponent()!!.heldItem.unlocalizedName.lowercase().contains("rod"))) {
-                        randomStrafe = true
-                        if (distance < 15 && !needJump) {
-                            Movement.stopJumping()
-                        }
+                if (EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
+                    if (WorldUtils.leftOrRightToPoint(mc.thePlayer, Vec3(0.0, 0.0, 0.0))) {
+                        movePriority[0] += 4
                     } else {
-                        if (combo < 2 && distance < 8) {
-                            if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
-                                movePriority[1] += 1
-                            } else {
-                                movePriority[0] += 1
+                        movePriority[1] += 4
+                    }
+                } else {
+                    if (distance in 15f..8f) {
+                        randomStrafe = true
+                    } else {
+                        randomStrafe = false
+                        if (opponent() != null && opponent()!!.heldItem != null && (opponent()!!.heldItem.unlocalizedName.lowercase().contains("bow") || opponent()!!.heldItem.unlocalizedName.lowercase().contains("rod"))) {
+                            randomStrafe = true
+                            if (distance < 15 && !needJump) {
+                                Movement.stopJumping()
                             }
                         } else {
-                            clear = true
+                            if (combo < 2 && distance < 8) {
+                                if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
+                                    movePriority[1] += 1
+                                } else {
+                                    movePriority[0] += 1
+                                }
+                            } else {
+                                clear = true
+                            }
                         }
                     }
                 }
