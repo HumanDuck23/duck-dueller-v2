@@ -25,6 +25,24 @@ object Inventory {
     }
 
     /**
+     * Set the current inventory item (by itemDamage, use for potions etc)
+     */
+    fun setInvItemByDamage(itemDamage: Int): Boolean {
+        for (i in 0..8) {
+            try {
+                if (DuckDueller.mc.thePlayer.inventory.getCurrentItem().itemDamage == itemDamage) {
+                    return true
+                } else {
+                    DuckDueller.mc.thePlayer.inventory.changeCurrentItem(-1)
+                }
+            } catch (e: Exception) {
+                DuckDueller.mc.thePlayer.inventory.changeCurrentItem(-1)
+            }
+        }
+        return false
+    }
+
+    /**
      * Move the the passed inv slot
      */
     fun setInvSlot(slot: Int) {
