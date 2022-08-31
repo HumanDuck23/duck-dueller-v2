@@ -110,19 +110,23 @@ open class Classic(c: String = "/play duels_classic_duel") : BotBase(c){
                 Mouse.stopTracking()
             }
 
-            if (distance < (DuckDueller.config?.maxDistanceAttack ?: 10)) {
-                if (mc.thePlayer.heldItem != null && mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("sword")) {
-                    Mouse.startLeftAC()
+            if (!Mouse.isUsingPotion() && !Mouse.isRunningAway()) {
+                if (distance < (DuckDueller.config?.maxDistanceAttack ?: 10)) {
+                    if (mc.thePlayer.heldItem != null && mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("sword")) {
+                        Mouse.startLeftAC()
+                    }
+                } else {
+                    Mouse.stopLeftAC()
                 }
-            } else {
-                Mouse.stopLeftAC()
-            }
 
-            if (distance > 8.8) {
-                if (opponent() != null && opponent()!!.heldItem != null && opponent()!!.heldItem.unlocalizedName.lowercase().contains("bow")) {
-                    if (WorldUtils.blockInFront(mc.thePlayer, 2f, 0.5f) == Blocks.air) {
-                        if (!EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!) && !needJump) {
-                            Movement.stopJumping()
+                if (distance > 8.8) {
+                    if (opponent() != null && opponent()!!.heldItem != null && opponent()!!.heldItem.unlocalizedName.lowercase().contains("bow")) {
+                        if (WorldUtils.blockInFront(mc.thePlayer, 2f, 0.5f) == Blocks.air) {
+                            if (!EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!) && !needJump) {
+                                Movement.stopJumping()
+                            } else {
+                                Movement.startJumping()
+                            }
                         } else {
                             Movement.startJumping()
                         }
@@ -130,143 +134,143 @@ open class Classic(c: String = "/play duels_classic_duel") : BotBase(c){
                         Movement.startJumping()
                     }
                 } else {
-                    Movement.startJumping()
+                    if (!needJump) {
+                        Movement.stopJumping()
+                    }
                 }
-            } else {
-                if (!needJump) {
-                    Movement.stopJumping()
+
+                val movePriority = arrayListOf(0, 0)
+                var clear = false
+                var randomStrafe = false
+
+                if (distance < 1 || (distance < 2.7 && combo >= 1)) {
+                    Movement.stopForward()
+                } else {
+                    if (!tapping) {
+                        Movement.startForward()
+                    }
                 }
-            }
 
-            val movePriority = arrayListOf(0, 0)
-            var clear = false
-            var randomStrafe = false
-
-            if (distance < 1 || (distance < 2.7 && combo >= 1)) {
-                Movement.stopForward()
-            } else {
-                if (!tapping) {
-                    Movement.startForward()
+                if (distance < 1.5 && mc.thePlayer.heldItem != null && !mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("sword")) {
+                    Inventory.setInvItem("sword")
+                    Mouse.rClickUp()
+                    Mouse.startLeftAC()
                 }
-            }
 
-            if (distance < 1.5 && mc.thePlayer.heldItem != null && !mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("sword")) {
-                Inventory.setInvItem("sword")
-                Mouse.rClickUp()
-                Mouse.startLeftAC()
-            }
-
-            if ((distance in 5.7..6.5 || distance in 9.0..9.5) && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
-                if (!Mouse.isUsingProjectile()) {
-                    Mouse.stopLeftAC()
-                    Mouse.setUsingProjectile(true)
-                    TimeUtils.setTimeout(fun () {
-                        Inventory.setInvItem("rod")
+                if ((distance in 5.7..6.5 || distance in 9.0..9.5) && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
+                    if (!Mouse.isUsingProjectile() && !Mouse.isUsingPotion() && !Mouse.isRunningAway()) {
+                        Mouse.stopLeftAC()
+                        Mouse.setUsingProjectile(true)
                         TimeUtils.setTimeout(fun () {
-                            val r = RandomUtils.randomIntInRange(100, 200)
-                            Mouse.rClick(r)
+                            Inventory.setInvItem("rod")
                             TimeUtils.setTimeout(fun () {
-                                Mouse.setUsingProjectile(false)
-                            }, RandomUtils.randomIntInRange(30, 70))
+                                val r = RandomUtils.randomIntInRange(100, 200)
+                                Mouse.rClick(r)
+                                TimeUtils.setTimeout(fun () {
+                                    Mouse.setUsingProjectile(false)
+                                }, RandomUtils.randomIntInRange(30, 70))
+                                TimeUtils.setTimeout(fun () {
+                                    if (mc.thePlayer.heldItem != null && !mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("bow")) {
+                                        Inventory.setInvItem("sword")
+                                    }
+                                    TimeUtils.setTimeout(fun () {
+                                        if (StateManager.state == StateManager.States.PLAYING) {
+                                            Mouse.startLeftAC()
+                                        }
+                                    }, RandomUtils.randomIntInRange(100, 150))
+                                }, r + RandomUtils.randomIntInRange(250, 400))
+                            }, RandomUtils.randomIntInRange(50, 90))
+                        }, RandomUtils.randomIntInRange(10, 30))
+                    }
+                }
+
+                if (combo >= 3 && distance >= 3.2 && mc.thePlayer.onGround) {
+                    Movement.singleJump(RandomUtils.randomIntInRange(100, 150))
+                }
+
+                if ((EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!) && distance in 3.5f..30f) || (distance in 28.0..33.0 && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!))) {
+                    if (distance > 5 && !Mouse.isUsingProjectile() && shotsFired < maxArrows && !Mouse.isUsingPotion() && !Mouse.isRunningAway()) {
+                        clear = true
+                        Mouse.stopLeftAC()
+                        Mouse.setUsingProjectile(true)
+                        TimeUtils.setTimeout(fun () {
+                            Inventory.setInvItem("bow")
                             TimeUtils.setTimeout(fun () {
-                                if (mc.thePlayer.heldItem != null && !mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("bow")) {
-                                    Inventory.setInvItem("sword")
+                                val r = when (distance) {
+                                    in 0f..7f -> RandomUtils.randomIntInRange(700, 900)
+                                    in 7f..15f -> RandomUtils.randomIntInRange(1000, 1200)
+                                    else -> RandomUtils.randomIntInRange(1300, 1500)
                                 }
+                                Mouse.rClick(r)
                                 TimeUtils.setTimeout(fun () {
-                                    if (StateManager.state == StateManager.States.PLAYING) {
-                                        Mouse.startLeftAC()
-                                    }
-                                }, RandomUtils.randomIntInRange(100, 150))
-                            }, r + RandomUtils.randomIntInRange(250, 400))
-                        }, RandomUtils.randomIntInRange(50, 90))
-                    }, RandomUtils.randomIntInRange(10, 30))
-                }
-            }
-
-            if (combo >= 3 && distance >= 3.2 && mc.thePlayer.onGround) {
-                Movement.singleJump(RandomUtils.randomIntInRange(100, 150))
-            }
-
-            if ((EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!) && distance in 3.5f..30f) || (distance in 28.0..33.0 && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!))) {
-                if (distance > 5 && !Mouse.isUsingProjectile() && shotsFired < maxArrows && !Mouse.isRunningAway()) {
-                    clear = true
-                    Mouse.stopLeftAC()
-                    Mouse.setUsingProjectile(true)
-                    TimeUtils.setTimeout(fun () {
-                        Inventory.setInvItem("bow")
-                        TimeUtils.setTimeout(fun () {
-                            val r = when (distance) {
-                                in 0f..7f -> RandomUtils.randomIntInRange(700, 900)
-                                in 7f..15f -> RandomUtils.randomIntInRange(1000, 1200)
-                                else -> RandomUtils.randomIntInRange(1300, 1500)
-                            }
-                            Mouse.rClick(r)
-                            TimeUtils.setTimeout(fun () {
-                                shotsFired++
-                                Mouse.setUsingProjectile(false)
-                                Inventory.setInvItem("sword")
-                                TimeUtils.setTimeout(fun () {
-                                    if (StateManager.state == StateManager.States.PLAYING) {
-                                        Mouse.startLeftAC()
-                                    }
-                                }, RandomUtils.randomIntInRange(100, 200))
-                            }, r + RandomUtils.randomIntInRange(100, 150))
-                        }, RandomUtils.randomIntInRange(100, 200))
-                    }, RandomUtils.randomIntInRange(50, 100))
-                } else {
-                    clear = false
-                    if (WorldUtils.leftOrRightToPoint(mc.thePlayer, Vec3(0.0, 0.0, 0.0))) {
-                        movePriority[0] += 4
+                                    shotsFired++
+                                    Mouse.setUsingProjectile(false)
+                                    Inventory.setInvItem("sword")
+                                    TimeUtils.setTimeout(fun () {
+                                        if (StateManager.state == StateManager.States.PLAYING) {
+                                            Mouse.startLeftAC()
+                                        }
+                                    }, RandomUtils.randomIntInRange(100, 200))
+                                }, r + RandomUtils.randomIntInRange(100, 150))
+                            }, RandomUtils.randomIntInRange(100, 200))
+                        }, RandomUtils.randomIntInRange(50, 100))
                     } else {
-                        movePriority[1] += 4
+                        clear = false
+                        if (WorldUtils.leftOrRightToPoint(mc.thePlayer, Vec3(0.0, 0.0, 0.0))) {
+                            movePriority[0] += 4
+                        } else {
+                            movePriority[1] += 4
+                        }
                     }
-                }
-            } else {
-                if (distance in 15f..8f) {
-                    randomStrafe = true
                 } else {
-                    randomStrafe = false
-                    if (opponent() != null && opponent()!!.heldItem != null && (opponent()!!.heldItem.unlocalizedName.lowercase().contains("bow") || opponent()!!.heldItem.unlocalizedName.lowercase().contains("rod"))) {
+                    if (distance in 15f..8f) {
                         randomStrafe = true
-                        if (distance < 15 && !needJump) {
-                            Movement.stopJumping()
-                        }
                     } else {
-                        if (combo < 2 && distance < 8) {
-                            if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
-                                movePriority[1] += 1
-                            } else {
-                                movePriority[0] += 1
+                        randomStrafe = false
+                        if (opponent() != null && opponent()!!.heldItem != null && (opponent()!!.heldItem.unlocalizedName.lowercase().contains("bow") || opponent()!!.heldItem.unlocalizedName.lowercase().contains("rod"))) {
+                            randomStrafe = true
+                            if (distance < 15 && !needJump) {
+                                Movement.stopJumping()
                             }
                         } else {
-                            clear = true
+                            if (combo < 2 && distance < 8) {
+                                if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
+                                    movePriority[1] += 1
+                                } else {
+                                    movePriority[0] += 1
+                                }
+                            } else {
+                                clear = true
+                            }
                         }
                     }
                 }
-            }
 
-            if (clear) {
-                Combat.stopRandomStrafe()
-                Movement.clearLeftRight()
-            } else {
-                if (randomStrafe) {
-                    Combat.startRandomStrafe(1000, 2000)
-                } else {
+                if (clear) {
                     Combat.stopRandomStrafe()
-                    if (movePriority[0] > movePriority[1]) {
-                        Movement.stopRight()
-                        Movement.startLeft()
-                    } else if (movePriority[1] > movePriority[0]) {
-                        Movement.stopLeft()
-                        Movement.startRight()
+                    Movement.clearLeftRight()
+                } else {
+                    if (randomStrafe) {
+                        Combat.startRandomStrafe(1000, 2000)
                     } else {
-                        if (RandomUtils.randomBool()) {
+                        Combat.stopRandomStrafe()
+                        if (movePriority[0] > movePriority[1]) {
+                            Movement.stopRight()
                             Movement.startLeft()
-                        } else {
+                        } else if (movePriority[1] > movePriority[0]) {
+                            Movement.stopLeft()
                             Movement.startRight()
+                        } else {
+                            if (RandomUtils.randomBool()) {
+                                Movement.startLeft()
+                            } else {
+                                Movement.startRight()
+                            }
                         }
                     }
                 }
+            } else {
+                Mouse.stopLeftAC()
             }
         }
     }
