@@ -45,6 +45,8 @@ class Classic : BotBase("/play duels_classic_duel"){
         }, RandomUtils.randomIntInRange(200, 400))
     }
 
+    var tapping = false
+
     override fun onAttack() {
         val distance = EntityUtils.getDistanceNoY(mc.thePlayer, opponent())
         if (distance < 3) {
@@ -52,7 +54,11 @@ class Classic : BotBase("/play duels_classic_duel"){
                 val n = mc.thePlayer.heldItem.unlocalizedName.lowercase()
                 if (n.contains("rod")) { // wait after hitting with the rod
                     Combat.wTap(300)
+                    tapping = true
                     combo--
+                    TimeUtils.setTimeout(fun () {
+                        tapping = false
+                    }, 300)
                 } else if (n.contains("sword")) {
                     Mouse.rClick(RandomUtils.randomIntInRange(80, 100)) // otherwise just blockhit
                 }
@@ -119,7 +125,9 @@ class Classic : BotBase("/play duels_classic_duel"){
             if (distance < 1 || (distance < 2.7 && combo >= 1)) {
                 Movement.stopForward()
             } else {
-                Movement.startForward()
+                if (!tapping) {
+                    Movement.startForward()
+                }
             }
 
             if (distance < 1.5 && mc.thePlayer.heldItem != null && !mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("sword")) {
