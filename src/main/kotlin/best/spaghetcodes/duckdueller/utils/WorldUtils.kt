@@ -1,6 +1,7 @@
 package best.spaghetcodes.duckdueller.utils
 
 import best.spaghetcodes.duckdueller.DuckDueller
+import best.spaghetcodes.duckdueller.utils.Extensions.scale
 import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
@@ -76,10 +77,14 @@ object WorldUtils {
 
     fun entityOffEdge(player: EntityPlayer): Boolean {
         if (!player.onGround) {
-            val pos = player.positionVector
-            if (DuckDueller.mc.theWorld.getBlockState(BlockPos(pos.addVector(0.0, -4.0, 0.0))).block == Blocks.air) {
-                return true
+            val pos = player.positionVector.subtract(Vec3(0.0, 4.0, 0.0))
+            val positions = arrayListOf(pos.add(Vec3(0.2, 0.0, 0.0)), pos.add(Vec3(0.0, 0.0, 0.2)), pos.add(Vec3(-0.2, 0.0, 0.0)), pos.add(Vec3(0.2, 0.0, -0.2)))
+            for (position in positions) {
+                if (DuckDueller.mc.theWorld.getBlockState(BlockPos(position)).block != Blocks.air) {
+                    return false
+                }
             }
+            return true
         }
         return false
     }
