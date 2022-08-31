@@ -9,6 +9,7 @@ import best.spaghetcodes.duckdueller.bot.player.Mouse
 import best.spaghetcodes.duckdueller.bot.player.Movement
 import best.spaghetcodes.duckdueller.utils.*
 import net.minecraft.init.Blocks
+import net.minecraft.util.Vec3
 
 class Classic : BotBase("/play duels_classic_duel"){
 
@@ -203,10 +204,10 @@ class Classic : BotBase("/play duels_classic_duel"){
                     }, RandomUtils.randomIntInRange(50, 100))
                 } else {
                     clear = false
-                    if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
-                        movePriority[0] += 1
+                    if (WorldUtils.leftOrRightToPoint(mc.thePlayer, Vec3(0.0, 0.0, 0.0))) {
+                        movePriority[0] += 4
                     } else {
-                        movePriority[1] += 1
+                        movePriority[1] += 4
                     }
                 }
             } else {
