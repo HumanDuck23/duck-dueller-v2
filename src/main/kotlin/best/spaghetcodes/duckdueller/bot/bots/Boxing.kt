@@ -2,11 +2,15 @@ package best.spaghetcodes.duckdueller.bot.bots
 
 import best.spaghetcodes.duckdueller.DuckDueller
 import best.spaghetcodes.duckdueller.bot.BotBase
+import best.spaghetcodes.duckdueller.bot.StateManager
 import best.spaghetcodes.duckdueller.bot.player.Combat
+import best.spaghetcodes.duckdueller.bot.player.Inventory
 import best.spaghetcodes.duckdueller.bot.player.Mouse
 import best.spaghetcodes.duckdueller.bot.player.Movement
 import best.spaghetcodes.duckdueller.utils.*
 import net.minecraft.init.Blocks
+import net.minecraft.util.Vec3
+import java.util.*
 import kotlin.math.abs
 
 class Boxing : BotBase("/play duels_boxing_duel") {
@@ -26,10 +30,25 @@ class Boxing : BotBase("/play duels_boxing_duel") {
     }
 
     private var tapping = false
+    private var fishTimer: Timer? = null
 
     override fun onGameStart() {
         Movement.startSprinting()
         Movement.startForward()
+        TimeUtils.setTimeout(this::fishFunc, RandomUtils.randomIntInRange(10000, 20000))
+    }
+
+    fun fishFunc(fish: Boolean = true) {
+        if (StateManager.state == StateManager.States.PLAYING) {
+            if (fish) {
+                Inventory.setInvItem("fish")
+            } else {
+                Inventory.setInvItem("sword")
+            }
+            fishTimer = TimeUtils.setTimeout(fun () {
+                fishFunc(!fish)
+            }, RandomUtils.randomIntInRange(10000, 20000))
+        }
     }
 
     override fun onGameEnd() {
@@ -37,6 +56,7 @@ class Boxing : BotBase("/play duels_boxing_duel") {
             Movement.clearAll()
             Mouse.stopLeftAC()
             Combat.stopRandomStrafe()
+            fishTimer?.cancel()
         }, RandomUtils.randomIntInRange(100, 300))
     }
 
@@ -67,10 +87,18 @@ class Boxing : BotBase("/play duels_boxing_duel") {
                 Mouse.stopTracking()
             }
 
-            if (distance < (DuckDueller.config?.maxDistanceAttack ?: 10)) {
-                Mouse.startLeftAC()
+            if (combo < 3) {
+                if (distance < (DuckDueller.config?.maxDistanceAttack ?: 10)) {
+                    Mouse.startLeftAC()
+                } else {
+                    Mouse.stopLeftAC()
+                }
             } else {
-                Mouse.stopLeftAC()
+                if (distance < 3.5) {
+                    Mouse.startLeftAC()
+                } else {
+                    Mouse.stopLeftAC()
+                }
             }
 
             if (combo >= 3 && distance >= 3.2 && mc.thePlayer.onGround) {
@@ -97,22 +125,10 @@ class Boxing : BotBase("/play duels_boxing_duel") {
                 }
             } else {
                 // runner
-                val lb = WorldUtils.distanceToLeftBarrier(mc.thePlayer)
-                val rb = WorldUtils.distanceToRightBarrier(mc.thePlayer)
-                val diff = abs(abs(lb) - abs(rb))
-
-                if (diff > 2) {
-                    if (lb < rb) {
-                        movePriority[1] += 5
-                    } else if (rb < lb) {
-                        movePriority[0] += 5
-                    } else {
-                        if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
-                            movePriority[1] += 1
-                        } else {
-                            movePriority[0] += 1
-                        }
-                    }
+                if (WorldUtils.leftOrRightToPoint(mc.thePlayer, Vec3(0.0, 0.0, 0.0))) {
+                    movePriority[0] += 4
+                } else {
+                    movePriority[1] += 4
                 }
             }
 
