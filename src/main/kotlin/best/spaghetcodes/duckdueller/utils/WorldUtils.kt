@@ -89,6 +89,25 @@ object WorldUtils {
         return false
     }
 
+    /**
+     * Check whether moving left or right gets you closer to a specific point
+     * @return true if left, false if right
+     */
+    fun leftOrRightToPoint(player: EntityPlayer, point: Vec3): Boolean {
+        val pos = player.positionVector
+        val lookVec = EntityUtils.get2dLookVec(player)
+        val leftVec = lookVec.rotateYaw(90f).scale(2.0)
+        val rightVec = lookVec.rotateYaw(-90f).scale(2.0)
+
+        val leftPos = pos.add(leftVec)
+        val rightPos = pos.add(rightVec)
+
+        val leftDist = leftPos.distanceTo(point)
+        val rightDist = rightPos.distanceTo(point)
+
+        return leftDist < rightDist
+    }
+
     fun airCheckAngle(player: EntityPlayer, distance: Float, angleMin: Float, angleMax: Float): Boolean {
         if (angleMax < angleMin) {
             for (i in angleMin.toInt() downTo angleMax.toInt()) {
