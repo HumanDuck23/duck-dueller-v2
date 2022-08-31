@@ -11,7 +11,7 @@ import best.spaghetcodes.duckdueller.utils.*
 import net.minecraft.init.Blocks
 import net.minecraft.util.Vec3
 
-class Classic : BotBase("/play duels_classic_duel"){
+open class Classic(c: String = "/play duels_classic_duel") : BotBase(c){
 
     override fun getName(): String {
         return "Classic"
@@ -28,13 +28,20 @@ class Classic : BotBase("/play duels_classic_duel"){
     }
 
     var shotsFired = 0
+    open var maxArrows = 5
+
+    protected open fun _onGameStart() {}
 
     override fun onGameStart() {
+        _onGameStart()
         Movement.startSprinting()
         Movement.startForward()
     }
 
+    protected open fun _onGameEnd() {}
+
     override fun onGameEnd() {
+        _onGameEnd()
         shotsFired = 0
         Mouse.stopLeftAC()
         val i = TimeUtils.setInterval(Mouse::stopLeftAC, 100, 100)
@@ -48,7 +55,10 @@ class Classic : BotBase("/play duels_classic_duel"){
 
     var tapping = false
 
+    protected open fun _onAttack() {}
+
     override fun onAttack() {
+        _onAttack()
         val distance = EntityUtils.getDistanceNoY(mc.thePlayer, opponent())
         if (distance < 3) {
             if (mc.thePlayer != null && mc.thePlayer.heldItem != null) {
@@ -76,7 +86,10 @@ class Classic : BotBase("/play duels_classic_duel"){
         }
     }
 
+    protected open fun _onTick() {}
+
     override fun onTick() {
+        _onTick()
         var needJump = false
         if (mc.thePlayer != null) {
             if (WorldUtils.blockInFront(mc.thePlayer, 2f, 0.5f) != Blocks.air && mc.thePlayer.onGround) {
@@ -175,7 +188,7 @@ class Classic : BotBase("/play duels_classic_duel"){
             }
 
             if ((EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!) && distance in 3.5f..30f) || (distance in 28.0..33.0 && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!))) {
-                if (distance > 5 && !Mouse.isUsingProjectile() && shotsFired < 5) {
+                if (distance > 5 && !Mouse.isUsingProjectile() && shotsFired < maxArrows) {
                     clear = true
                     Mouse.stopLeftAC()
                     Mouse.setUsingProjectile(true)
