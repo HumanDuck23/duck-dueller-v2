@@ -18,6 +18,7 @@ object Mouse {
 
     private var _usingProjectile = false
     private var _usingPotion = false
+    private var _runningAway = false
 
     private var leftClickDur = 0
 
@@ -75,6 +76,14 @@ object Mouse {
 
     fun isUsingPotion(): Boolean {
         return _usingPotion
+    }
+
+    fun setRunningAway(runningAway: Boolean) {
+        _runningAway = runningAway
+    }
+
+    fun isRunningAway(): Boolean {
+        return _runningAway
     }
 
     private fun leftACFunc() {
