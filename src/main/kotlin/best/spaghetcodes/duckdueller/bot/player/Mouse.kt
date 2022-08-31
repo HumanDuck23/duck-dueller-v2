@@ -131,6 +131,10 @@ object Mouse {
             val rotations = EntityUtils.getRotations(DuckDueller.mc.thePlayer, DuckDueller.bot?.opponent(), false)
 
             if (rotations != null) {
+                if (_usingPotion) {
+                    rotations[1] = -45f
+                }
+
                 val lookRand = (DuckDueller.config?.lookRand ?: 0).toDouble()
                 var dyaw = ((rotations[0] - DuckDueller.mc.thePlayer.rotationYaw) + RandomUtils.randomDoubleInRange(-lookRand, lookRand)).toFloat()
                 var dpitch = ((rotations[1] - DuckDueller.mc.thePlayer.rotationPitch) + RandomUtils.randomDoubleInRange(-lookRand, lookRand)).toFloat()
