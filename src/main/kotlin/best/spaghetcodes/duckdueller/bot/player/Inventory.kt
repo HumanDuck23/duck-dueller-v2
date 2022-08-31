@@ -38,4 +38,19 @@ object Inventory {
         // bruh
     }
 
+    /**
+     * Checks it the player has this item in their inventory
+     */
+    fun hasItem(item: String): Boolean {
+        val _item = item.lowercase()
+        if (DuckDueller.mc.thePlayer != null) {
+            for (itemStack in DuckDueller.mc.thePlayer.getInventory()) {
+                if (itemStack.unlocalizedName.lowercase().contains(_item)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
 }
