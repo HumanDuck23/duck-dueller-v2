@@ -637,7 +637,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
     private fun registerPacketListener() {
         val pipeline = mc.thePlayer?.sendQueue?.networkManager?.channel()?.pipeline()
-        if (pipeline != null && pipeline.get("${getName()}_packet_handler") == null) {
+        if (pipeline != null && pipeline.get("${getName()}_packet_handler") == null && pipeline.get("packet_handler") != null) {
             pipeline.addBefore(
                 "packet_handler",
                 "${getName()}_packet_handler",
