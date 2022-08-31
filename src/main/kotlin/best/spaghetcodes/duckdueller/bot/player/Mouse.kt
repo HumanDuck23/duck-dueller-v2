@@ -142,7 +142,7 @@ object Mouse {
                 }
 
                 if (_usingPotion) {
-                    rotations[1] = 60f
+                    rotations[1] = 50f
                 }
 
                 val lookRand = (DuckDueller.config?.lookRand ?: 0).toDouble()
