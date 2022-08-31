@@ -24,6 +24,8 @@ object Mouse {
 
     private var lastLeftClick = 0L
 
+    private var runningRotations: FloatArray? = null
+
     fun leftClick() {
         if (DuckDueller.bot?.toggled() == true && DuckDueller.mc.thePlayer != null && !DuckDueller.mc.thePlayer.isUsingItem) {
             DuckDueller.mc.thePlayer.swingItem()
@@ -128,11 +130,23 @@ object Mouse {
             }
         }
         if (DuckDueller.mc.thePlayer != null && DuckDueller.bot?.toggled() == true && tracking && DuckDueller.bot?.opponent() != null) {
-            val rotations = EntityUtils.getRotations(DuckDueller.mc.thePlayer, DuckDueller.bot?.opponent(), false)
+            var rotations = EntityUtils.getRotations(DuckDueller.mc.thePlayer, DuckDueller.bot?.opponent(), false)
 
             if (rotations != null) {
+                if (_runningAway) {
+                    if (runningRotations == null) {
+                        runningRotations = rotations
+                        runningRotations!![0] += 180 + RandomUtils.randomDoubleInRange(-10.0, 10.0).toFloat()
+                    }
+                    if (abs(abs(runningRotations!![0]) - abs(rotations[0])) < 130) {
+                        runningRotations = rotations
+                        runningRotations!![0] += 180 + RandomUtils.randomDoubleInRange(-10.0, 10.0).toFloat()
+                    }
+                    rotations = runningRotations!!
+                }
+
                 if (_usingPotion) {
-                    rotations[1] = -45f
+                    rotations[1] = 60f
                 }
 
                 val lookRand = (DuckDueller.config?.lookRand ?: 0).toDouble()
