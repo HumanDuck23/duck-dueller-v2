@@ -17,6 +17,7 @@ object Mouse {
     private var tracking = false
 
     private var _usingProjectile = false
+    private var _usingPotion = false
 
     private var leftClickDur = 0
 
@@ -66,6 +67,14 @@ object Mouse {
 
     fun isUsingProjectile(): Boolean {
         return _usingProjectile
+    }
+
+    fun setUsingPotion(potion: Boolean) {
+        _usingPotion = potion
+    }
+
+    fun isUsingPotion(): Boolean {
+        return _usingPotion
     }
 
     private fun leftACFunc() {
