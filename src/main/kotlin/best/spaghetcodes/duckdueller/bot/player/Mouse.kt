@@ -136,7 +136,7 @@ object Mouse {
                 if (_runningAway) {
                     if (runningRotations == null) {
                         runningRotations = rotations
-                        runningRotations!![0] += 180 + RandomUtils.randomDoubleInRange(-10.0, 10.0).toFloat()
+                        runningRotations!![0] += 180 + RandomUtils.randomDoubleInRange(-5.0, 5.0).toFloat()
                     }
                     rotations = runningRotations!!
                 }
