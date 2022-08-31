@@ -9,16 +9,18 @@ object Inventory {
      */
     fun setInvItem(item: String): Boolean {
         val _item = item.lowercase()
-        for (i in 0..8) {
-            try {
-                if (DuckDueller.mc.thePlayer.inventory.getCurrentItem().unlocalizedName.lowercase().contains(_item)
-                ) {
-                    return true
-                } else {
+        if (DuckDueller.mc.thePlayer != null && DuckDueller.mc.thePlayer.inventory != null) {
+            for (i in 0..8) {
+                try {
+                    if (DuckDueller.mc.thePlayer.inventory.getCurrentItem().unlocalizedName.lowercase().contains(_item)
+                    ) {
+                        return true
+                    } else {
+                        DuckDueller.mc.thePlayer.inventory.changeCurrentItem(-1)
+                    }
+                } catch (e: Exception) {
                     DuckDueller.mc.thePlayer.inventory.changeCurrentItem(-1)
                 }
-            } catch (e: Exception) {
-                DuckDueller.mc.thePlayer.inventory.changeCurrentItem(-1)
             }
         }
         return false
@@ -28,15 +30,17 @@ object Inventory {
      * Set the current inventory item (by itemDamage, use for potions etc)
      */
     fun setInvItemByDamage(itemDamage: Int): Boolean {
-        for (i in 0..8) {
-            try {
-                if (DuckDueller.mc.thePlayer.inventory.getCurrentItem().itemDamage == itemDamage) {
-                    return true
-                } else {
+        if (DuckDueller.mc.thePlayer != null && DuckDueller.mc.thePlayer.inventory != null) {
+            for (i in 0..8) {
+                try {
+                    if (DuckDueller.mc.thePlayer.inventory.getCurrentItem().itemDamage == itemDamage) {
+                        return true
+                    } else {
+                        DuckDueller.mc.thePlayer.inventory.changeCurrentItem(-1)
+                    }
+                } catch (e: Exception) {
                     DuckDueller.mc.thePlayer.inventory.changeCurrentItem(-1)
                 }
-            } catch (e: Exception) {
-                DuckDueller.mc.thePlayer.inventory.changeCurrentItem(-1)
             }
         }
         return false
@@ -46,10 +50,12 @@ object Inventory {
      * Move the the passed inv slot
      */
     fun setInvSlot(slot: Int) {
-        if (slot in 0..9) {
-            for (i in 0..8) {
-                if (DuckDueller.mc.thePlayer.inventory.currentItem > slot) {
-                    DuckDueller.mc.thePlayer.inventory.changeCurrentItem(-1)
+        if (DuckDueller.mc.thePlayer != null && DuckDueller.mc.thePlayer.inventory != null) {
+            if (slot in 0..9) {
+                for (i in 0..8) {
+                    if (DuckDueller.mc.thePlayer.inventory.currentItem > slot) {
+                        DuckDueller.mc.thePlayer.inventory.changeCurrentItem(-1)
+                    }
                 }
             }
         }
