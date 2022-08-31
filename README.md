@@ -12,8 +12,13 @@ Duck Dueller is a free and open-source Forge Hypixel Duels bot for 1.8.9!
 
  - ✅ Sumo
  - ✅ Classic
- - 🚧 Boxing
+ - ✅ Boxing
  - 🚧 OP
+ - 🛒 Potential Future Modes:
+   - UHC
+   - Blitz
+   - MegaWalls
+   - NoDebuff
 
 A few more might be added later on, but these are the currently planned ones.
 
