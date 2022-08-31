@@ -155,7 +155,7 @@ class Classic : BotBase("/play duels_classic_duel"){
                             Mouse.rClick(r)
                             TimeUtils.setTimeout(fun () {
                                 Mouse.setUsingProjectile(false)
-                            }, r)
+                            }, RandomUtils.randomIntInRange(30, 70))
                             TimeUtils.setTimeout(fun () {
                                 if (mc.thePlayer.heldItem != null && !mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("bow")) {
                                     Inventory.setInvItem("sword")
@@ -175,8 +175,7 @@ class Classic : BotBase("/play duels_classic_duel"){
                 Movement.singleJump(RandomUtils.randomIntInRange(100, 150))
             }
 
-            if (EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!) && distance in 3.5f..30f) {
-                // bruh they running, that's cringe
+            if ((EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!) && distance in 3.5f..30f) || (distance in 28.0..33.0 && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!))) {
                 if (distance > 5 && !Mouse.isUsingProjectile() && shotsFired < 5) {
                     clear = true
                     Mouse.stopLeftAC()
