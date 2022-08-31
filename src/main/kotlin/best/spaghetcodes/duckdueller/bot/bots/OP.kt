@@ -8,6 +8,7 @@ import best.spaghetcodes.duckdueller.bot.player.Inventory
 import best.spaghetcodes.duckdueller.bot.player.Mouse
 import best.spaghetcodes.duckdueller.bot.player.Movement
 import best.spaghetcodes.duckdueller.utils.*
+import net.minecraft.init.Blocks
 import net.minecraft.util.Vec3
 import java.util.Random
 
@@ -40,6 +41,7 @@ class OP : BotBase("/play duels_op_duel") {
     var lastSpeedUse = 0L
     var lastRegenUse = 0L
     var lastGapUse = 0L
+    var lastPotUse = 0L
 
     var tapping = false
 
@@ -102,7 +104,8 @@ class OP : BotBase("/play duels_op_duel") {
                     Mouse.setUsingPotion(true)
 
                     TimeUtils.setTimeout(fun () {
-                        Mouse.rClick(RandomUtils.randomIntInRange(30, 70))
+                        Mouse.rClick(RandomUtils.randomIntInRange(200, 250))
+                        lastPotUse = System.currentTimeMillis()
 
                         TimeUtils.setTimeout(fun () {
                             Mouse.setUsingPotion(false)
@@ -111,7 +114,7 @@ class OP : BotBase("/play duels_op_duel") {
                                 Mouse.setRunningAway(false)
                                 Inventory.setInvItem("sword")
                             }, RandomUtils.randomIntInRange(700, 1000))
-                        }, RandomUtils.randomIntInRange(100, 200))
+                        }, RandomUtils.randomIntInRange(250, 290))
                     }, RandomUtils.randomIntInRange(200, 400))
                 }, RandomUtils.randomIntInRange(200, 400))
             } else {
@@ -123,6 +126,7 @@ class OP : BotBase("/play duels_op_duel") {
         val run = dist < 8
 
         if (run) {
+            Mouse.setUsingProjectile(false)
             Mouse.setRunningAway(true)
             TimeUtils.setTimeout(fun () {
                 _pot(dmg)
@@ -136,17 +140,19 @@ class OP : BotBase("/play duels_op_duel") {
         ChatUtils.info("GAPPING!")
         val dist = EntityUtils.getDistanceNoY(mc.thePlayer, opponent()!!)
         val time = when (dist) {
-            in 0f..7f -> RandomUtils.randomIntInRange(1300, 1600)
-            in 7f..15f -> RandomUtils.randomIntInRange(900, 1300)
-            else -> RandomUtils.randomIntInRange(700, 900)
+            in 0f..7f -> RandomUtils.randomIntInRange(2200, 2600)
+            in 7f..15f -> RandomUtils.randomIntInRange(1700, 2200)
+            else -> RandomUtils.randomIntInRange(1400, 1700)
         }
         if (Inventory.setInvItem("gold")) {
+            Mouse.setUsingProjectile(false)
             Mouse.setRunningAway(true)
 
             TimeUtils.setTimeout(fun () {
                 Mouse.rClick(RandomUtils.randomIntInRange(1800, 2100))
 
                 TimeUtils.setTimeout(fun () {
+                    lastGapUse = System.currentTimeMillis()
                     Inventory.setInvItem("sword")
 
                     TimeUtils.setTimeout(fun () {
@@ -222,16 +228,21 @@ class OP : BotBase("/play duels_op_duel") {
                 lastSpeedUse = System.currentTimeMillis()
             }
 
+            if (WorldUtils.blockInFront(mc.thePlayer, 3f, 1.5f) != Blocks.air) {
+                // wall
+                Mouse.setRunningAway(false)
+            }
+
             if (mc.thePlayer.health < 9 && combo < 3) {
                 // time to pot up
                 if (!Mouse.isUsingProjectile() && !Mouse.isRunningAway() && !Mouse.isUsingPotion()) {
-                    if (regenPotsLeft > 0 && System.currentTimeMillis() - lastRegenUse > 5000) {
+                    if (regenPotsLeft > 0 && System.currentTimeMillis() - lastRegenUse > 7000) {
                         pot(regenDamage)
                         regenPotsLeft--
                         lastRegenUse = System.currentTimeMillis()
                     } else {
-                        if (regenPotsLeft == 0 && System.currentTimeMillis() - lastRegenUse > 5000) {
-                            if (gapsLeft > 0 && System.currentTimeMillis() - lastGapUse > 10000) {
+                        if (regenPotsLeft == 0 && System.currentTimeMillis() - lastRegenUse > 7000) {
+                            if (gapsLeft > 0 && System.currentTimeMillis() - lastGapUse > 7000) {
                                 gap()
                                 gapsLeft--
                                 lastGapUse = System.currentTimeMillis()
@@ -266,7 +277,7 @@ class OP : BotBase("/play duels_op_duel") {
                         }, RandomUtils.randomIntInRange(50, 90))
                     }, RandomUtils.randomIntInRange(10, 30))
                 } else if ((EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!) && distance in 3.5f..30f) || (distance in 28.0..33.0 && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!))) {
-                    if (distance > 10 && shotsFired < maxArrows) {
+                    if (distance > 10 && shotsFired < maxArrows && System.currentTimeMillis() - lastPotUse > 5000) {
                         clear = true
                         Mouse.stopLeftAC()
                         Mouse.setUsingProjectile(true)
