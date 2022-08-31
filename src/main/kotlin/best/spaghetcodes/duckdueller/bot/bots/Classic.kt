@@ -128,7 +128,7 @@ class Classic : BotBase("/play duels_classic_duel"){
                 Mouse.startLeftAC()
             }
 
-            if ((distance in 6.0..6.5 || distance in 10.0..10.5) && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
+            if ((distance in 5.5..6.0 || distance in 9.0..9.5) && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
                 if (!Mouse.isUsingProjectile()) {
                     Mouse.stopLeftAC()
                     Mouse.setUsingProjectile(true)
@@ -139,7 +139,7 @@ class Classic : BotBase("/play duels_classic_duel"){
                             Mouse.rClick(r)
                             TimeUtils.setTimeout(fun () {
                                 Mouse.setUsingProjectile(false)
-                            }, r + RandomUtils.randomIntInRange(50, 100))
+                            }, r)
                             TimeUtils.setTimeout(fun () {
                                 if (mc.thePlayer.heldItem != null && !mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("bow")) {
                                     Inventory.setInvItem("sword")
@@ -149,7 +149,7 @@ class Classic : BotBase("/play duels_classic_duel"){
                                         Mouse.startLeftAC()
                                     }
                                 }, RandomUtils.randomIntInRange(100, 150))
-                            }, RandomUtils.randomIntInRange(500, 600))
+                            }, r + RandomUtils.randomIntInRange(250, 400))
                         }, RandomUtils.randomIntInRange(50, 90))
                     }, RandomUtils.randomIntInRange(10, 30))
                 }
@@ -169,8 +169,8 @@ class Classic : BotBase("/play duels_classic_duel"){
                         Inventory.setInvItem("bow")
                         TimeUtils.setTimeout(fun () {
                             val r = when (distance) {
-                                in 0f..10f -> RandomUtils.randomIntInRange(700, 900)
-                                in 10f..20f -> RandomUtils.randomIntInRange(1000, 1200)
+                                in 0f..7f -> RandomUtils.randomIntInRange(700, 900)
+                                in 7f..15f -> RandomUtils.randomIntInRange(1000, 1200)
                                 else -> RandomUtils.randomIntInRange(1300, 1500)
                             }
                             Mouse.rClick(r)
