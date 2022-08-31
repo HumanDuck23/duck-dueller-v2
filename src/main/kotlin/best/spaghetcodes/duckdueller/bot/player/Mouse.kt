@@ -138,10 +138,6 @@ object Mouse {
                         runningRotations = rotations
                         runningRotations!![0] += 180 + RandomUtils.randomDoubleInRange(-10.0, 10.0).toFloat()
                     }
-                    if (abs(abs(runningRotations!![0]) - abs(rotations[0])) < 130) {
-                        runningRotations = rotations
-                        runningRotations!![0] += 180 + RandomUtils.randomDoubleInRange(-10.0, 10.0).toFloat()
-                    }
                     rotations = runningRotations!!
                 }
 
