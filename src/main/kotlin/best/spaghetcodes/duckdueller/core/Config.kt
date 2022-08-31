@@ -3,6 +3,7 @@ package best.spaghetcodes.duckdueller.core
 import best.spaghetcodes.duckdueller.DuckDueller
 import best.spaghetcodes.duckdueller.bot.bots.Boxing
 import best.spaghetcodes.duckdueller.bot.bots.Classic
+import best.spaghetcodes.duckdueller.bot.bots.OP
 import best.spaghetcodes.duckdueller.bot.bots.Sumo
 import best.spaghetcodes.duckdueller.utils.ChatUtils
 import gg.essential.vigilance.Vigilant
@@ -22,7 +23,7 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
         name = "Current Bot",
         description = "The bot you want to use",
         category = "General",
-        options = ["Sumo", "Boxing", "Classic"]
+        options = ["Sumo", "Boxing", "Classic", "OP"]
     )
     val currentBot = 0
 
@@ -306,7 +307,7 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
     )
     val strictDodging = false
 
-    val bots = mapOf(0 to Sumo(), 1 to Boxing(), 2 to Classic())
+    val bots = mapOf(0 to Sumo(), 1 to Boxing(), 2 to Classic(), 3 to OP())
 
     init {
         addDependency("webhookURL", "sendWebhookMessages")
