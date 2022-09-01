@@ -82,6 +82,7 @@ object Mouse {
 
     fun setRunningAway(runningAway: Boolean) {
         _runningAway = runningAway
+        runningRotations = null // make sure to clear this, otherwise running away gets buggy asf
     }
 
     fun isRunningAway(): Boolean {
@@ -130,6 +131,9 @@ object Mouse {
             }
         }
         if (DuckDueller.mc.thePlayer != null && DuckDueller.bot?.toggled() == true && tracking && DuckDueller.bot?.opponent() != null) {
+            if (_runningAway) {
+                _usingProjectile = false
+            }
             var rotations = EntityUtils.getRotations(DuckDueller.mc.thePlayer, DuckDueller.bot?.opponent(), false)
 
             if (rotations != null) {
