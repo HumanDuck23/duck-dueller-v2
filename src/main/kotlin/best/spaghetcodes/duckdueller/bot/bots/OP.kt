@@ -73,26 +73,26 @@ class OP : BotBase("/play duels_op_duel") {
 
     override fun onAttack() {
         val distance = EntityUtils.getDistanceNoY(mc.thePlayer, opponent())
-        if (distance < 3) {
-            if (mc.thePlayer != null && mc.thePlayer.heldItem != null) {
-                val n = mc.thePlayer.heldItem.unlocalizedName.lowercase()
-                if (n.contains("rod")) { // wait after hitting with the rod
-                    Combat.wTap(300)
+        if (mc.thePlayer != null && mc.thePlayer.heldItem != null) {
+            val n = mc.thePlayer.heldItem.unlocalizedName.lowercase()
+            if (n.contains("rod")) { // wait after hitting with the rod
+                Combat.wTap(300)
+                tapping = true
+                combo--
+                TimeUtils.setTimeout(fun () {
+                    tapping = false
+                }, 300)
+            } else if (n.contains("sword")) {
+                if (distance < 2) {
+                    Mouse.rClick(RandomUtils.randomIntInRange(60, 90)) // otherwise just blockhit
+                } else {
+                    Combat.wTap(100)
                     tapping = true
-                    combo--
                     TimeUtils.setTimeout(fun () {
                         tapping = false
-                    }, 300)
-                } else if (n.contains("sword")) {
-                    Mouse.rClick(RandomUtils.randomIntInRange(80, 100)) // otherwise just blockhit
+                    }, 100)
                 }
             }
-        } else {
-            Combat.wTap(100)
-            tapping = true
-            TimeUtils.setTimeout(fun () {
-                tapping = false
-            }, 100)
         }
     }
 
