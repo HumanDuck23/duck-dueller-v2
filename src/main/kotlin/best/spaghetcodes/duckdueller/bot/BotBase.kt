@@ -6,6 +6,7 @@ import best.spaghetcodes.duckdueller.core.KeyBindings
 import best.spaghetcodes.duckdueller.utils.*
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
+import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
@@ -526,6 +527,10 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                             return null
                     }
                     return null
+                }
+
+                if (stats.get("player") == JsonNull.INSTANCE) {
+                    return
                 }
 
                 if (playersQuit.contains(player)) {
