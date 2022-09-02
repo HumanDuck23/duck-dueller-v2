@@ -162,7 +162,7 @@ class OP : BotBase("/play duels_op_duel") {
         }
 
         var run = dist < 8
-        if (run && EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
+        if (run && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
             Mouse.setUsingProjectile(false)
             Mouse.setRunningAway(true)
 
