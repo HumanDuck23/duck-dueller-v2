@@ -11,15 +11,10 @@ object Inventory {
         val _item = item.lowercase()
         if (DuckDueller.mc.thePlayer != null && DuckDueller.mc.thePlayer.inventory != null) {
             for (i in 0..8) {
-                try {
-                    if (DuckDueller.mc.thePlayer.inventory.getCurrentItem().unlocalizedName.lowercase().contains(_item)
-                    ) {
-                        return true
-                    } else {
-                        DuckDueller.mc.thePlayer.inventory.changeCurrentItem(-1)
-                    }
-                } catch (e: Exception) {
-                    DuckDueller.mc.thePlayer.inventory.changeCurrentItem(-1)
+                val stack = DuckDueller.mc.thePlayer.inventory.getStackInSlot(i)
+                if (stack.unlocalizedName.lowercase().contains(_item)) {
+                    DuckDueller.mc.thePlayer.inventory.currentItem = i
+                    return true
                 }
             }
         }
@@ -32,14 +27,10 @@ object Inventory {
     fun setInvItemByDamage(itemDamage: Int): Boolean {
         if (DuckDueller.mc.thePlayer != null && DuckDueller.mc.thePlayer.inventory != null) {
             for (i in 0..8) {
-                try {
-                    if (DuckDueller.mc.thePlayer.inventory.getCurrentItem().itemDamage == itemDamage) {
-                        return true
-                    } else {
-                        DuckDueller.mc.thePlayer.inventory.changeCurrentItem(-1)
-                    }
-                } catch (e: Exception) {
-                    DuckDueller.mc.thePlayer.inventory.changeCurrentItem(-1)
+                val stack = DuckDueller.mc.thePlayer.inventory.getStackInSlot(i)
+                if (stack.itemDamage == itemDamage) {
+                    DuckDueller.mc.thePlayer.inventory.currentItem = i
+                    return true
                 }
             }
         }
@@ -51,13 +42,7 @@ object Inventory {
      */
     fun setInvSlot(slot: Int) {
         if (DuckDueller.mc.thePlayer != null && DuckDueller.mc.thePlayer.inventory != null) {
-            if (slot in 0..9) {
-                for (i in 0..8) {
-                    if (DuckDueller.mc.thePlayer.inventory.currentItem > slot) {
-                        DuckDueller.mc.thePlayer.inventory.changeCurrentItem(-1)
-                    }
-                }
-            }
+            DuckDueller.mc.thePlayer.inventory.currentItem = slot
         }
         // bruh
     }
