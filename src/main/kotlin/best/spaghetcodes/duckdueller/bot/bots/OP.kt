@@ -354,6 +354,14 @@ class OP : BotBase("/play duels_op_duel") {
                 }
             }
 
+            if (WorldUtils.blockInPath(mc.thePlayer, 20, 1f) == Blocks.fire) {
+                if (Movement.left()) {
+                    movePriority[1] += 10
+                } else if (Movement.right()) {
+                    movePriority[0] += 10
+                }
+            }
+
             if (clear) {
                 Combat.stopRandomStrafe()
                 Movement.clearLeftRight()
