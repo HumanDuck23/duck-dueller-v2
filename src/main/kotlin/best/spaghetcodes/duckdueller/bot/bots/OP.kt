@@ -97,7 +97,6 @@ class OP : BotBase("/play duels_op_duel") {
     }
 
     private fun pot(dmg: Int) {
-        ChatUtils.info("POTTING! $dmg")
         fun _pot(dmg: Int) {
             if (Inventory.setInvItemByDamage(dmg)) {
                 lastPotUse = System.currentTimeMillis()
@@ -109,21 +108,21 @@ class OP : BotBase("/play duels_op_duel") {
 
                         TimeUtils.setTimeout(fun () {
                             Mouse.setUsingPotion(false)
+                            Inventory.setInvItem("sword")
 
                             TimeUtils.setTimeout(fun () {
                                 Mouse.setRunningAway(false)
-                                Inventory.setInvItem("sword")
-                            }, RandomUtils.randomIntInRange(700, 1000))
+                            }, RandomUtils.randomIntInRange(300, 500))
                         }, RandomUtils.randomIntInRange(250, 290))
-                    }, RandomUtils.randomIntInRange(200, 400))
-                }, RandomUtils.randomIntInRange(200, 400))
+                    }, RandomUtils.randomIntInRange(100, 200))
+                }, RandomUtils.randomIntInRange(50, 100))
             } else {
                 println("Unable to use potion $dmg! Not found!")
             }
         }
 
         val dist = EntityUtils.getDistanceNoY(mc.thePlayer, opponent()!!)
-        val run = dist < 5
+        val run = dist < 3
 
         if (run && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
             Mouse.setUsingProjectile(false)
@@ -137,7 +136,6 @@ class OP : BotBase("/play duels_op_duel") {
     }
 
     private fun gap() {
-        ChatUtils.info("GAPPING!")
         val dist = EntityUtils.getDistanceNoY(mc.thePlayer, opponent()!!)
         val time = when (dist) {
             in 0f..7f -> RandomUtils.randomIntInRange(2200, 2600)
@@ -146,7 +144,7 @@ class OP : BotBase("/play duels_op_duel") {
         }
         fun _gap() {
             if (Inventory.setInvItem("gold")) {
-                Mouse.rClick(RandomUtils.randomIntInRange(1800, 2100))
+                Mouse.rClick(RandomUtils.randomIntInRange(2100, 2200))
 
                 TimeUtils.setTimeout(fun () {
                     lastGapUse = System.currentTimeMillis()
@@ -161,7 +159,7 @@ class OP : BotBase("/play duels_op_duel") {
             }
         }
 
-        var run = dist < 8
+        val run = dist < 6
         if (run && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
             Mouse.setUsingProjectile(false)
             Mouse.setRunningAway(true)
@@ -242,7 +240,7 @@ class OP : BotBase("/play duels_op_duel") {
                 Mouse.setRunningAway(false)
             }
 
-            if (mc.thePlayer.health < 9 && combo < 2) {
+            if (mc.thePlayer.health < 9 && combo < 2 && mc.thePlayer.health <= opponent()!!.health) {
                 // time to pot up
                 if (!Mouse.isUsingProjectile() && !Mouse.isRunningAway() && !Mouse.isUsingPotion() && System.currentTimeMillis() - lastPotUse > 5000) {
                     if (regenPotsLeft > 0 && System.currentTimeMillis() - lastRegenUse > 7000) {
@@ -275,7 +273,9 @@ class OP : BotBase("/play duels_op_duel") {
                             }, RandomUtils.randomIntInRange(30, 70))
                             TimeUtils.setTimeout(fun () {
                                 if (mc.thePlayer.heldItem != null && !mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("bow")) {
-                                    Inventory.setInvItem("sword")
+                                    if (!Mouse.isUsingPotion() && !Mouse.isRunningAway()) {
+                                        Inventory.setInvItem("sword")
+                                    }
                                 }
                                 TimeUtils.setTimeout(fun () {
                                     if (StateManager.state == StateManager.States.PLAYING) {
@@ -302,7 +302,9 @@ class OP : BotBase("/play duels_op_duel") {
                                 TimeUtils.setTimeout(fun () {
                                     shotsFired++
                                     Mouse.setUsingProjectile(false)
-                                    Inventory.setInvItem("sword")
+                                    if (!Mouse.isUsingPotion() && !Mouse.isRunningAway()) {
+                                        Inventory.setInvItem("sword")
+                                    }
                                     TimeUtils.setTimeout(fun () {
                                         if (StateManager.state == StateManager.States.PLAYING) {
                                             Mouse.startLeftAC()
