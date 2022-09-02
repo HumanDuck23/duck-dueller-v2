@@ -100,12 +100,12 @@ class OP : BotBase("/play duels_op_duel") {
         ChatUtils.info("POTTING! $dmg")
         fun _pot(dmg: Int) {
             if (Inventory.setInvItemByDamage(dmg)) {
+                lastPotUse = System.currentTimeMillis()
                 TimeUtils.setTimeout(fun () {
                     Mouse.setUsingPotion(true)
 
                     TimeUtils.setTimeout(fun () {
                         Mouse.rClick(RandomUtils.randomIntInRange(200, 250))
-                        lastPotUse = System.currentTimeMillis()
 
                         TimeUtils.setTimeout(fun () {
                             Mouse.setUsingPotion(false)
@@ -123,9 +123,9 @@ class OP : BotBase("/play duels_op_duel") {
         }
 
         val dist = EntityUtils.getDistanceNoY(mc.thePlayer, opponent()!!)
-        val run = dist < 8
+        val run = dist < 5
 
-        if (run) {
+        if (run && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
             Mouse.setUsingProjectile(false)
             Mouse.setRunningAway(true)
             TimeUtils.setTimeout(fun () {
@@ -144,11 +144,8 @@ class OP : BotBase("/play duels_op_duel") {
             in 7f..15f -> RandomUtils.randomIntInRange(1700, 2200)
             else -> RandomUtils.randomIntInRange(1400, 1700)
         }
-        if (Inventory.setInvItem("gold")) {
-            Mouse.setUsingProjectile(false)
-            Mouse.setRunningAway(true)
-
-            TimeUtils.setTimeout(fun () {
+        fun _gap() {
+            if (Inventory.setInvItem("gold")) {
                 Mouse.rClick(RandomUtils.randomIntInRange(1800, 2100))
 
                 TimeUtils.setTimeout(fun () {
@@ -159,9 +156,21 @@ class OP : BotBase("/play duels_op_duel") {
                         Mouse.setRunningAway(false)
                     }, RandomUtils.randomIntInRange(1900, 2200))
                 }, RandomUtils.randomIntInRange(1900, 2200))
+            } else {
+                println("Unable to gap! No gaps found!")
+            }
+        }
+
+        var run = dist < 8
+        if (run && EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
+            Mouse.setUsingProjectile(false)
+            Mouse.setRunningAway(true)
+
+            TimeUtils.setTimeout(fun () {
+                _gap()
             }, time)
         } else {
-            println("Unable to gap! No gaps found!")
+            _gap()
         }
     }
 
@@ -222,7 +231,7 @@ class OP : BotBase("/play duels_op_duel") {
                 Mouse.startLeftAC()
             }
 
-            if (!hasSpeed && speedPotsLeft > 0 && System.currentTimeMillis() - lastSpeedUse > 15000) {
+            if (!hasSpeed && speedPotsLeft > 0 && System.currentTimeMillis() - lastSpeedUse > 15000 && System.currentTimeMillis() - lastPotUse > 5000) {
                 pot(speedDamage)
                 speedPotsLeft--
                 lastSpeedUse = System.currentTimeMillis()
@@ -233,9 +242,9 @@ class OP : BotBase("/play duels_op_duel") {
                 Mouse.setRunningAway(false)
             }
 
-            if (mc.thePlayer.health < 9 && combo < 3) {
+            if (mc.thePlayer.health < 9 && combo < 2) {
                 // time to pot up
-                if (!Mouse.isUsingProjectile() && !Mouse.isRunningAway() && !Mouse.isUsingPotion()) {
+                if (!Mouse.isUsingProjectile() && !Mouse.isRunningAway() && !Mouse.isUsingPotion() && System.currentTimeMillis() - lastPotUse > 5000) {
                     if (regenPotsLeft > 0 && System.currentTimeMillis() - lastRegenUse > 7000) {
                         pot(regenDamage)
                         regenPotsLeft--
