@@ -1,6 +1,7 @@
 package best.spaghetcodes.duckdueller.utils
 
 import best.spaghetcodes.duckdueller.DuckDueller
+import best.spaghetcodes.duckdueller.utils.Extensions.getVelocity
 import best.spaghetcodes.duckdueller.utils.Extensions.scale
 import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
@@ -12,6 +13,15 @@ object WorldUtils {
 
     fun blockInFront(player: EntityPlayer, distance: Float, yMod: Float = 0f): Block { // yMod = 0 -> feet, 1 -> 1 above feet etc
         val vec = Vec3(player.lookVec.xCoord * distance, 0.0, player.lookVec.zCoord * distance)
+        return DuckDueller.mc.theWorld.getBlockState(player.position.add(vec.xCoord, -0.2 + yMod, vec.zCoord)).block
+    }
+
+    /**
+     * The block that is x ticks away from the player at their current velocity
+     */
+    fun blockInPath(player: EntityPlayer, ticks: Int, yMod: Float = 0f): Block {
+        val velo = player.getVelocity()
+        val vec = Vec3(velo.xCoord * ticks, 0.0, velo.zCoord * ticks)
         return DuckDueller.mc.theWorld.getBlockState(player.position.add(vec.xCoord, -0.2 + yMod, vec.zCoord)).block
     }
 
