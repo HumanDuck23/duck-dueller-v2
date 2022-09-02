@@ -12,7 +12,7 @@ object Inventory {
         if (DuckDueller.mc.thePlayer != null && DuckDueller.mc.thePlayer.inventory != null) {
             for (i in 0..8) {
                 val stack = DuckDueller.mc.thePlayer.inventory.getStackInSlot(i)
-                if (stack.unlocalizedName.lowercase().contains(_item)) {
+                if (stack != null && stack.unlocalizedName.lowercase().contains(_item)) {
                     DuckDueller.mc.thePlayer.inventory.currentItem = i
                     return true
                 }
@@ -28,7 +28,7 @@ object Inventory {
         if (DuckDueller.mc.thePlayer != null && DuckDueller.mc.thePlayer.inventory != null) {
             for (i in 0..8) {
                 val stack = DuckDueller.mc.thePlayer.inventory.getStackInSlot(i)
-                if (stack.itemDamage == itemDamage) {
+                if (stack != null && stack.itemDamage == itemDamage) {
                     DuckDueller.mc.thePlayer.inventory.currentItem = i
                     return true
                 }
