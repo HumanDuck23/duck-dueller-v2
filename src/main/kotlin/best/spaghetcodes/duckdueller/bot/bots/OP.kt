@@ -223,7 +223,7 @@ class OP : BotBase("/play duels_op_duel") {
                 }
             }
 
-            if (distance < 1.5 && mc.thePlayer.heldItem != null && !mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("sword")) {
+            if (distance < 1.5 && mc.thePlayer.heldItem != null && !mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("sword") && !Mouse.isUsingPotion()) {
                 Inventory.setInvItem("sword")
                 Mouse.rClickUp()
                 Mouse.startLeftAC()
