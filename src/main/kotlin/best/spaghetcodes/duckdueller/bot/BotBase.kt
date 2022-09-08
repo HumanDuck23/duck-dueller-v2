@@ -487,7 +487,11 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                     println(player)
 
                     if (uuid == null) { // nicked or fake player
-                        //TODO: Check the list of players the bot has lost to
+                        if (playersLost.contains(player)) {
+                            beforeLeave()
+                            leaveGame()
+                            TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(4000, 6000))
+                        }
                     } else {
                         playerCache[player] = uuid // cache this player
                         if (!playersSent.contains(player)) { // don't send the same player twice
