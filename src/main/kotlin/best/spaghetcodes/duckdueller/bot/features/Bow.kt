@@ -1,4 +1,4 @@
-package best.spaghetcodes.duckdueller.bot.bots.features
+package best.spaghetcodes.duckdueller.bot.features
 
 import best.spaghetcodes.duckdueller.bot.StateManager
 import best.spaghetcodes.duckdueller.bot.player.Inventory

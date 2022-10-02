@@ -3,7 +3,7 @@ package best.spaghetcodes.duckdueller.bot.bots
 import best.spaghetcodes.duckdueller.DuckDueller
 import best.spaghetcodes.duckdueller.bot.BotBase
 import best.spaghetcodes.duckdueller.bot.StateManager
-import best.spaghetcodes.duckdueller.bot.bots.features.MovePriority
+import best.spaghetcodes.duckdueller.bot.features.MovePriority
 import best.spaghetcodes.duckdueller.bot.player.Combat
 import best.spaghetcodes.duckdueller.bot.player.Inventory
 import best.spaghetcodes.duckdueller.bot.player.Mouse
