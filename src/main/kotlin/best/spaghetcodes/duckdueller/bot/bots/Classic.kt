@@ -2,7 +2,9 @@ package best.spaghetcodes.duckdueller.bot.bots
 
 import best.spaghetcodes.duckdueller.DuckDueller
 import best.spaghetcodes.duckdueller.bot.BotBase
-import best.spaghetcodes.duckdueller.bot.StateManager
+import best.spaghetcodes.duckdueller.bot.bots.features.Bow
+import best.spaghetcodes.duckdueller.bot.bots.features.MovePriority
+import best.spaghetcodes.duckdueller.bot.bots.features.Rod
 import best.spaghetcodes.duckdueller.bot.player.Combat
 import best.spaghetcodes.duckdueller.bot.player.Inventory
 import best.spaghetcodes.duckdueller.bot.player.Mouse
@@ -11,7 +13,7 @@ import best.spaghetcodes.duckdueller.utils.*
 import net.minecraft.init.Blocks
 import net.minecraft.util.Vec3
 
-class Classic : BotBase("/play duels_classic_duel"){
+class Classic : BotBase("/play duels_classic_duel"), Bow, Rod, MovePriority {
 
     override fun getName(): String {
         return "Classic"
@@ -146,28 +148,7 @@ class Classic : BotBase("/play duels_classic_duel"){
 
             if ((distance in 5.7..6.5 || distance in 9.0..9.5) && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
                 if (!Mouse.isUsingProjectile()) {
-                    Mouse.stopLeftAC()
-                    Mouse.setUsingProjectile(true)
-                    TimeUtils.setTimeout(fun () {
-                        Inventory.setInvItem("rod")
-                        TimeUtils.setTimeout(fun () {
-                            val r = RandomUtils.randomIntInRange(100, 200)
-                            Mouse.rClick(r)
-                            TimeUtils.setTimeout(fun () {
-                                Mouse.setUsingProjectile(false)
-                            }, RandomUtils.randomIntInRange(30, 70))
-                            TimeUtils.setTimeout(fun () {
-                                if (mc.thePlayer.heldItem != null && !mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("bow")) {
-                                    Inventory.setInvItem("sword")
-                                }
-                                TimeUtils.setTimeout(fun () {
-                                    if (StateManager.state == StateManager.States.PLAYING) {
-                                        Mouse.startLeftAC()
-                                    }
-                                }, RandomUtils.randomIntInRange(100, 150))
-                            }, r + RandomUtils.randomIntInRange(250, 400))
-                        }, RandomUtils.randomIntInRange(50, 90))
-                    }, RandomUtils.randomIntInRange(10, 30))
+                    useRod()
                 }
             }
 
@@ -178,29 +159,9 @@ class Classic : BotBase("/play duels_classic_duel"){
             if ((EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!) && distance in 3.5f..30f) || (distance in 28.0..33.0 && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!))) {
                 if (distance > 5 && !Mouse.isUsingProjectile() && shotsFired < maxArrows) {
                     clear = true
-                    Mouse.stopLeftAC()
-                    Mouse.setUsingProjectile(true)
-                    TimeUtils.setTimeout(fun () {
-                        Inventory.setInvItem("bow")
-                        TimeUtils.setTimeout(fun () {
-                            val r = when (distance) {
-                                in 0f..7f -> RandomUtils.randomIntInRange(700, 900)
-                                in 7f..15f -> RandomUtils.randomIntInRange(1000, 1200)
-                                else -> RandomUtils.randomIntInRange(1300, 1500)
-                            }
-                            Mouse.rClick(r)
-                            TimeUtils.setTimeout(fun () {
-                                shotsFired++
-                                Mouse.setUsingProjectile(false)
-                                Inventory.setInvItem("sword")
-                                TimeUtils.setTimeout(fun () {
-                                    if (StateManager.state == StateManager.States.PLAYING) {
-                                        Mouse.startLeftAC()
-                                    }
-                                }, RandomUtils.randomIntInRange(100, 200))
-                            }, r + RandomUtils.randomIntInRange(100, 150))
-                        }, RandomUtils.randomIntInRange(100, 200))
-                    }, RandomUtils.randomIntInRange(50, 100))
+                    useBow(distance, fun () {
+                        shotsFired++
+                    })
                 } else {
                     clear = false
                     if (WorldUtils.leftOrRightToPoint(mc.thePlayer, Vec3(0.0, 0.0, 0.0))) {
@@ -241,29 +202,7 @@ class Classic : BotBase("/play duels_classic_duel"){
                 }
             }
 
-            if (clear) {
-                Combat.stopRandomStrafe()
-                Movement.clearLeftRight()
-            } else {
-                if (randomStrafe) {
-                    Combat.startRandomStrafe(1000, 2000)
-                } else {
-                    Combat.stopRandomStrafe()
-                    if (movePriority[0] > movePriority[1]) {
-                        Movement.stopRight()
-                        Movement.startLeft()
-                    } else if (movePriority[1] > movePriority[0]) {
-                        Movement.stopLeft()
-                        Movement.startRight()
-                    } else {
-                        if (RandomUtils.randomBool()) {
-                            Movement.startLeft()
-                        } else {
-                            Movement.startRight()
-                        }
-                    }
-                }
-            }
+            handle(clear, randomStrafe, movePriority)
         }
     }
 

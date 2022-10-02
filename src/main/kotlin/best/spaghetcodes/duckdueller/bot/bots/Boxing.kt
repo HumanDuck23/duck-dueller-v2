@@ -3,6 +3,7 @@ package best.spaghetcodes.duckdueller.bot.bots
 import best.spaghetcodes.duckdueller.DuckDueller
 import best.spaghetcodes.duckdueller.bot.BotBase
 import best.spaghetcodes.duckdueller.bot.StateManager
+import best.spaghetcodes.duckdueller.bot.bots.features.MovePriority
 import best.spaghetcodes.duckdueller.bot.player.Combat
 import best.spaghetcodes.duckdueller.bot.player.Inventory
 import best.spaghetcodes.duckdueller.bot.player.Mouse
@@ -13,7 +14,7 @@ import net.minecraft.util.Vec3
 import java.util.*
 import kotlin.math.abs
 
-class Boxing : BotBase("/play duels_boxing_duel") {
+class Boxing : BotBase("/play duels_boxing_duel"), MovePriority {
 
     override fun getName(): String {
         return "Boxing"
@@ -140,29 +141,7 @@ class Boxing : BotBase("/play duels_boxing_duel") {
                 }
             }
 
-            if (clear) {
-                Combat.stopRandomStrafe()
-                Movement.clearLeftRight()
-            } else {
-                if (randomStrafe) {
-                    Combat.startRandomStrafe(1000, 2000)
-                } else {
-                    Combat.stopRandomStrafe()
-                    if (movePriority[0] > movePriority[1]) {
-                        Movement.stopRight()
-                        Movement.startLeft()
-                    } else if (movePriority[1] > movePriority[0]) {
-                        Movement.stopLeft()
-                        Movement.startRight()
-                    } else {
-                        if (RandomUtils.randomBool()) {
-                            Movement.startLeft()
-                        } else {
-                            Movement.startRight()
-                        }
-                    }
-                }
-            }
+            handle(clear, randomStrafe, movePriority)
         }
     }
 
