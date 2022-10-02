@@ -113,7 +113,8 @@ object EntityUtils {
                 } else {
                     val dist = getDistanceNoY(player, target)
                     val tickPredict = when (dist) {
-                        in 0f..15f -> 15.0
+                        in 0f..5f -> dist.toDouble()
+                        in 5f..15f -> 15.0
                         in 15f..30f -> 20.0
                         else -> 25.0
                     }
