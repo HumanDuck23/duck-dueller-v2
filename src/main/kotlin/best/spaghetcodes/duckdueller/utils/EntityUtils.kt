@@ -52,7 +52,7 @@ object EntityUtils {
         return if (target == null || player == null) {
             null
         } else {
-            var pos: Vec3? = null
+            val pos: Vec3?
             if (center) {
                 pos = Vec3(target.posX, target.posY + target.eyeHeight, target.posZ)
             } else {
@@ -139,7 +139,7 @@ object EntityUtils {
             val yaw = (Math.atan2(diffZ, diffX) * 180.0 / 3.141592653589793).toFloat() - 90.0f
             val pitch = (-(Math.atan2(diffY, dist) * 180.0 / 3.141592653589793)).toFloat()
 
-            if (crossHairDistance(yaw, pitch, player) > 2) {
+            if ((crossHairDistance(yaw, pitch, player) > 8 || dist in 2.5..4.0) || Mouse.isUsingProjectile() || Mouse.isUsingPotion()) {
                 if (raw) {
                     floatArrayOf(
                         MathHelper.wrapAngleTo180_float(yaw - player.rotationYaw),
