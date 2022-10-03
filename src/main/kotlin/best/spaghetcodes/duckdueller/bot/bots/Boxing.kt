@@ -36,10 +36,12 @@ class Boxing : BotBase("/play duels_boxing_duel"), MovePriority {
     override fun onGameStart() {
         Movement.startSprinting()
         Movement.startForward()
-        TimeUtils.setTimeout(this::fishFunc, RandomUtils.randomIntInRange(10000, 20000))
+        if (DuckDueller.config?.boxingFish == true) {
+            TimeUtils.setTimeout(this::fishFunc, RandomUtils.randomIntInRange(10000, 20000))
+        }
     }
 
-    fun fishFunc(fish: Boolean = true) {
+    private fun fishFunc(fish: Boolean = true) {
         if (StateManager.state == StateManager.States.PLAYING) {
             if (fish) {
                 Inventory.setInvItem("fish")

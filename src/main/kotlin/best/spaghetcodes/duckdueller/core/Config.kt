@@ -307,6 +307,18 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
     )
     val strictDodging = false
 
+    /*
+        Misc
+     */
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Boxing Fish",
+        description = "Switch between the sword and the fish in boxing.",
+        category = "Misc",
+    )
+    val boxingFish = false
+
     val bots = mapOf(0 to Sumo(), 1 to Boxing(), 2 to Classic(), 3 to OP())
 
     init {
