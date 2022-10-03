@@ -116,7 +116,7 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
         minF = 0f,
         maxF = 2f,
     )
-    val lookRand = 1f
+    val lookRand = 0.3f
 
     @Property(
         type = PropertyType.NUMBER,
@@ -138,7 +138,7 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
         max = 15,
         increment = 1
     )
-    val maxDistanceAttack = 10
+    val maxDistanceAttack = 5
 
     /*
         Auto GG
