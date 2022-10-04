@@ -55,3 +55,7 @@ Videos of the other modes will also be released at some point.
    Can I contribute?
 </h2>
 Sure! Any contributions are greatly appreciated! Just fork this repo and open a pull request with your changes.
+
+<hr/>
+
+Duck Dueller now has a discord server! Join it [here](https://discord.gg/aZZ4UKEnTn)!
