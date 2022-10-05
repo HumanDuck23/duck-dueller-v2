@@ -44,22 +44,6 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
     )
     val lobbyMovement = true
 
-    @Property(
-        type = PropertyType.SWITCH,
-        name = "Send Webhook Messages",
-        description = "Whether or not the bot should send a discord webhook message after each game.",
-        category = "General",
-    )
-    val sendWebhookMessages = false
-
-    @Property(
-        type = PropertyType.TEXT,
-        name = "Discord Webhook URL",
-        description = "The webhook URL to send messages to.",
-        category = "General",
-    )
-    val webhookURL = ""
-
     /*
         COMBAT
      */
@@ -306,6 +290,42 @@ class Config : Vigilant(File(DuckDueller.configLocation)) {
         category = "Queue Dodging",
     )
     val strictDodging = false
+
+    /*
+        Webhook
+     */
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Send Webhook Messages",
+        description = "Whether or not the bot should send a discord webhook message after each game.",
+        category = "Webhook",
+    )
+    val sendWebhookMessages = false
+
+    @Property(
+        type = PropertyType.TEXT,
+        name = "Discord Webhook URL",
+        description = "The webhook URL to send messages to.",
+        category = "Webhook",
+    )
+    val webhookURL = ""
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Send Queue Stats",
+        description = "Should the bot send the stats of the player in the lobby to the webhook?",
+        category = "Webhook",
+    )
+    val sendWebhookStats = false
+
+    @Property(
+        type = PropertyType.SWITCH,
+        name = "Send Dodge Alerts",
+        description = "If enabled, the bot will send a webhook whenever it dodged a player/nick.",
+        category = "Webhook",
+    )
+    val sendWebhookDodge = false
 
     /*
         Misc
