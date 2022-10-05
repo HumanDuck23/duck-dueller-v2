@@ -664,14 +664,16 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     }
 
     private fun reconnect() {
-        if (DuckDueller.mc.currentScreen is GuiMultiplayer) {
-            DuckDueller.mc.addScheduledTask(fun () {
+        if (mc.currentScreen is GuiMultiplayer) {
+            mc.addScheduledTask(fun () {
+                println("Reconnecting...")
                 FMLClientHandler.instance().setupServerList()
-                FMLClientHandler.instance().connectToServer(DuckDueller.mc.currentScreen, ServerData("hypixel", "mc.hypixel.net", false))
+                FMLClientHandler.instance().connectToServer(mc.currentScreen, ServerData("hypixel", "mc.hypixel.net", false))
             })
         } else {
-            if (DuckDueller.mc.theWorld == null) {
-                DuckDueller.mc.displayGuiScreen(GuiMultiplayer(GuiMainMenu()))
+            if (mc.theWorld == null) {
+                println("Attempting to show new multiplayer screen...")
+                mc.displayGuiScreen(GuiMultiplayer(mc.currentScreen))
                 reconnect()
             }
         }
