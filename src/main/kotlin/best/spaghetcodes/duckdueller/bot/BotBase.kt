@@ -310,6 +310,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                 if (!found && DuckDueller.config?.dodgeNoStats == true) {
                     ChatUtils.info("No stats found, dodging...")
                     leaveGame()
+                    sendDodgeWebhook("")
                     TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(4000, 6000))
                 }
             } else if (unformatted.contains("The game starts in 1 second!")) {
@@ -559,6 +560,19 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
                 ChatUtils.info("$player ${EnumChatFormatting.GOLD} >> ${EnumChatFormatting.GOLD}Wins: ${EnumChatFormatting.GREEN}$wins ${EnumChatFormatting.GOLD}WLR: ${EnumChatFormatting.GREEN}${df.format(wlr)} ${EnumChatFormatting.GOLD}WS: ${EnumChatFormatting.GREEN}$ws")
 
+                if (DuckDueller.config?.sendWebhookStats == true) {
+                    val fields = WebHook.buildFields(arrayListOf(mapOf("name" to "Wins", "value" to "$wins", "inline" to "true"), mapOf("name" to "W/L", "value" to df.format(wlr), "inline" to "true"), mapOf("name" to "WS", "value" to "$ws", "inline" to "true")))
+                    val footer = WebHook.buildFooter(ChatUtils.removeFormatting(Session.getSession()), "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
+                    val author = WebHook.buildAuthor("Duck Dueller - ${getName()}", "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
+                    val thumbnail = WebHook.buildThumbnail("https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
+
+                    WebHook.sendEmbed(
+                        DuckDueller.config?.webhookURL!!,
+                        WebHook.buildEmbed("Stats of $player:", "", fields, footer, author, thumbnail, 0x581ff2)
+                    )
+                }
+
+
                 var dodge = false
 
                 if (DuckDueller.config?.enableDodging == true) {
@@ -579,6 +593,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                 if (dodge) {
                     beforeLeave()
                     leaveGame()
+                    sendDodgeWebhook(player)
                     TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(4000, 6000))
                 }
             }
@@ -586,6 +601,19 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
             ChatUtils.error("Error getting stats! Check the log for more information.")
             println("Error getting stats! success == false")
             println(DuckDueller.gson.toJson(stats))
+        }
+    }
+
+    private fun sendDodgeWebhook(player: String) {
+        if (DuckDueller.config?.sendWebhookDodge == true) {
+            val footer = WebHook.buildFooter(ChatUtils.removeFormatting(Session.getSession()), "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
+            val author = WebHook.buildAuthor("Duck Dueller - ${getName()}", "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
+            val thumbnail = WebHook.buildThumbnail("https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
+
+            WebHook.sendEmbed(
+                DuckDueller.config?.webhookURL!!,
+                WebHook.buildEmbed("Dodged someone!", if (player != "") "Dodged $player." else "Dodged a nick!", JsonArray(), footer, author, thumbnail, 0x581ff2)
+            )
         }
     }
 
