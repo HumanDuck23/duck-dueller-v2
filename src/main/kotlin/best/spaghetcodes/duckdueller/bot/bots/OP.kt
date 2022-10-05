@@ -3,9 +3,7 @@ package best.spaghetcodes.duckdueller.bot.bots
 import best.spaghetcodes.duckdueller.DuckDueller
 import best.spaghetcodes.duckdueller.bot.BotBase
 import best.spaghetcodes.duckdueller.bot.StateManager
-import best.spaghetcodes.duckdueller.bot.features.Bow
-import best.spaghetcodes.duckdueller.bot.features.MovePriority
-import best.spaghetcodes.duckdueller.bot.features.Rod
+import best.spaghetcodes.duckdueller.bot.features.*
 import best.spaghetcodes.duckdueller.bot.player.Combat
 import best.spaghetcodes.duckdueller.bot.player.Inventory
 import best.spaghetcodes.duckdueller.bot.player.Mouse
@@ -15,7 +13,7 @@ import net.minecraft.init.Blocks
 import net.minecraft.util.Vec3
 import java.util.Random
 
-class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority {
+class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority, Potion, Gap {
 
     override fun getName(): String {
         return "OP"
@@ -43,8 +41,8 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority {
 
     var lastSpeedUse = 0L
     var lastRegenUse = 0L
-    var lastGapUse = 0L
-    var lastPotUse = 0L
+    override var lastPotion = 0L
+    override var lastGap = 0L
 
     var tapping = false
 
@@ -62,7 +60,8 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority {
 
         lastSpeedUse = 0L
         lastRegenUse = 0L
-        lastGapUse = 0L
+        lastPotion = 0L
+        lastGap = 0L
 
         Mouse.stopLeftAC()
         val i = TimeUtils.setInterval(Mouse::stopLeftAC, 100, 100)
@@ -99,82 +98,6 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority {
         }
     }
 
-    private fun pot(dmg: Int) {
-        fun _pot(dmg: Int) {
-            if (Inventory.setInvItemByDamage(dmg)) {
-                lastPotUse = System.currentTimeMillis()
-                TimeUtils.setTimeout(fun () {
-                    Mouse.setUsingPotion(true)
-
-                    TimeUtils.setTimeout(fun () {
-                        Mouse.rClick(RandomUtils.randomIntInRange(200, 250))
-
-                        TimeUtils.setTimeout(fun () {
-                            Mouse.setUsingPotion(false)
-                            Inventory.setInvItem("sword")
-
-                            TimeUtils.setTimeout(fun () {
-                                Mouse.setRunningAway(false)
-                            }, RandomUtils.randomIntInRange(300, 500))
-                        }, RandomUtils.randomIntInRange(250, 290))
-                    }, RandomUtils.randomIntInRange(100, 200))
-                }, RandomUtils.randomIntInRange(50, 100))
-            } else {
-                println("Unable to use potion $dmg! Not found!")
-            }
-        }
-
-        val dist = EntityUtils.getDistanceNoY(mc.thePlayer, opponent()!!)
-        val run = dist < 3
-
-        if (run && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
-            Mouse.setUsingProjectile(false)
-            Mouse.setRunningAway(true)
-            TimeUtils.setTimeout(fun () {
-                _pot(dmg)
-            }, RandomUtils.randomIntInRange(300, 500))
-        } else {
-            _pot(dmg)
-        }
-    }
-
-    private fun gap() {
-        val dist = EntityUtils.getDistanceNoY(mc.thePlayer, opponent()!!)
-        val time = when (dist) {
-            in 0f..7f -> RandomUtils.randomIntInRange(2200, 2600)
-            in 7f..15f -> RandomUtils.randomIntInRange(1700, 2200)
-            else -> RandomUtils.randomIntInRange(1400, 1700)
-        }
-        fun _gap() {
-            if (Inventory.setInvItem("gold")) {
-                Mouse.rClick(RandomUtils.randomIntInRange(2100, 2200))
-
-                TimeUtils.setTimeout(fun () {
-                    lastGapUse = System.currentTimeMillis()
-                    Inventory.setInvItem("sword")
-
-                    TimeUtils.setTimeout(fun () {
-                        Mouse.setRunningAway(false)
-                    }, RandomUtils.randomIntInRange(1900, 2200))
-                }, RandomUtils.randomIntInRange(1900, 2200))
-            } else {
-                println("Unable to gap! No gaps found!")
-            }
-        }
-
-        val run = dist < 6
-        if (run && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
-            Mouse.setUsingProjectile(false)
-            Mouse.setRunningAway(true)
-
-            TimeUtils.setTimeout(fun () {
-                _gap()
-            }, time)
-        } else {
-            _gap()
-        }
-    }
-
     override fun onTick() {
         if (opponent() != null && mc.theWorld != null && mc.thePlayer != null) {
             if (!mc.thePlayer.isSprinting) {
@@ -206,7 +129,9 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority {
 
             if (distance > 8.8) {
                 if (opponent() != null && opponent()!!.heldItem != null && opponent()!!.heldItem.unlocalizedName.lowercase().contains("bow")) {
-                    Movement.stopJumping()
+                    if (!Mouse.isRunningAway()) {
+                        Movement.stopJumping()
+                    }
                 } else {
                     Movement.startJumping()
                 }
@@ -232,8 +157,8 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority {
                 Mouse.startLeftAC()
             }
 
-            if (!hasSpeed && speedPotsLeft > 0 && System.currentTimeMillis() - lastSpeedUse > 15000 && System.currentTimeMillis() - lastPotUse > 5000) {
-                pot(speedDamage)
+            if (!hasSpeed && speedPotsLeft > 0 && System.currentTimeMillis() - lastSpeedUse > 15000 && System.currentTimeMillis() - lastPotion > 5000) {
+                useSplashPotion(speedDamage, distance < 3.5, EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!))
                 speedPotsLeft--
                 lastSpeedUse = System.currentTimeMillis()
             }
@@ -243,19 +168,18 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority {
                 Mouse.setRunningAway(false)
             }
 
-            if (mc.thePlayer.health < 9 && combo < 2 && mc.thePlayer.health <= opponent()!!.health) {
+            if (mc.thePlayer.health < 11 && combo < 2 && mc.thePlayer.health <= opponent()!!.health) {
                 // time to pot up
-                if (!Mouse.isUsingProjectile() && !Mouse.isRunningAway() && !Mouse.isUsingPotion() && System.currentTimeMillis() - lastPotUse > 5000) {
-                    if (regenPotsLeft > 0 && System.currentTimeMillis() - lastRegenUse > 7000) {
-                        pot(regenDamage)
+                if (!Mouse.isUsingProjectile() && !Mouse.isRunningAway() && !Mouse.isUsingPotion() && System.currentTimeMillis() - lastPotion > 3500) {
+                    if (regenPotsLeft > 0 && System.currentTimeMillis() - lastRegenUse > 3500) {
+                        useSplashPotion(regenDamage, distance < 2, EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!))
                         regenPotsLeft--
                         lastRegenUse = System.currentTimeMillis()
                     } else {
-                        if (regenPotsLeft == 0 && System.currentTimeMillis() - lastRegenUse > 7000) {
-                            if (gapsLeft > 0 && System.currentTimeMillis() - lastGapUse > 7000) {
-                                gap()
+                        if (regenPotsLeft == 0 && System.currentTimeMillis() - lastRegenUse > 3500) {
+                            if (gapsLeft > 0 && System.currentTimeMillis() - lastGap > 3500) {
+                                useGap(distance, distance < 2, EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!))
                                 gapsLeft--
-                                lastGapUse = System.currentTimeMillis()
                             }
                         }
                     }
@@ -266,7 +190,7 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority {
                 if ((distance in 5.7..6.5 || distance in 9.0..9.5) && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
                     useRod()
                 } else if ((EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!) && distance in 3.5f..30f) || (distance in 28.0..33.0 && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!))) {
-                    if (distance > 10 && shotsFired < maxArrows && System.currentTimeMillis() - lastPotUse > 5000) {
+                    if (distance > 10 && shotsFired < maxArrows && System.currentTimeMillis() - lastPotion > 5000) {
                         clear = true
                         useBow(distance, fun () {
                             shotsFired++
