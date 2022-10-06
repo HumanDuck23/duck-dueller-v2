@@ -44,6 +44,14 @@ class Config : Vigilant(File(DuckDueller.configLocation), sortingBehavior = Conf
     )
     val lobbyMovement = true
 
+    @Property(
+    type = PropertyType.SWITCH,
+    name = "Disable Chat Messages",
+    description = "When this is enabled, the bot will not send any chat messages.",
+    category = "General",
+    )
+    val disableChatMessages = true
+
     /*
         COMBAT
      */

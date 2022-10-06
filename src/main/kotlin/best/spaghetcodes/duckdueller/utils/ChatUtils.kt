@@ -38,7 +38,7 @@ object ChatUtils {
     }
 
     private fun sendChatMessage(message: String) {
-        if (DuckDueller.mc.thePlayer != null) {
+        if (DuckDueller.mc.thePlayer != null && DuckDueller.config?.disableChatMessages != true) {
             DuckDueller.mc.thePlayer.addChatMessage(ChatComponentText(message))
         }
     }
