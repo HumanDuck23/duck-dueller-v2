@@ -13,6 +13,7 @@ import io.netty.channel.SimpleChannelInboundHandler
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiMainMenu
 import net.minecraft.client.gui.GuiMultiplayer
+import net.minecraft.client.multiplayer.GuiConnecting
 import net.minecraft.client.multiplayer.ServerData
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.network.Packet
@@ -676,10 +677,12 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                     FMLClientHandler.instance().connectToServer(mc.currentScreen, ServerData("hypixel", "mc.hypixel.net", false))
                 })
             } else {
-                if (mc.theWorld == null) {
-                    println("Attempting to show new multiplayer screen...")
-                    mc.displayGuiScreen(GuiMultiplayer(mc.currentScreen))
-                    reconnect()
+                if (mc.theWorld == null && mc.currentScreen !is GuiConnecting) {
+                    mc.addScheduledTask(fun () {
+                        println("Attempting to show new multiplayer screen...")
+                        mc.displayGuiScreen(GuiMultiplayer(GuiMainMenu()))
+                        reconnect()
+                    })
                 }
             }
         }
