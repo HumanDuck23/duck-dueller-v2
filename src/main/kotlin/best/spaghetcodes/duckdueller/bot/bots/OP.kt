@@ -233,7 +233,7 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority, Potion, Gap {
                                 } else {
                                     if (distance < 8) {
                                         val swap = floor(combo.toDouble() / RandomUtils.randomIntInRange(3, 6).toDouble())
-                                        if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
+                                        /*if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
                                             if (swap % 2 == 0.0) {
                                                 movePriority[1] += 1
                                             } else {
@@ -244,6 +244,14 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority, Potion, Gap {
                                                 movePriority[0] += 1
                                             } else {
                                                 movePriority[1] += 1
+                                            }
+                                        }*/
+                                        val rotations = EntityUtils.getRotations(opponent()!!, mc.thePlayer, false)
+                                        if (rotations != null) {
+                                            if (rotations[0] < 0) {
+                                                movePriority[1] += 5
+                                            } else {
+                                                movePriority[0] += 5
                                             }
                                         }
                                     }
