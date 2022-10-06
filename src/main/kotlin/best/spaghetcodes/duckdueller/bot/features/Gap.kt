@@ -12,6 +12,7 @@ interface Gap {
     var lastGap: Long
 
     fun useGap(distance: Float, run: Boolean, facingAway: Boolean) {
+        lastGap = System.currentTimeMillis()
         fun gap() {
             if (Inventory.setInvItem("gold")) {
                 ChatUtils.info("About to gap")
@@ -19,7 +20,6 @@ interface Gap {
                 Mouse.rClick(r)
 
                 TimeUtils.setTimeout(fun () {
-                    lastGap = System.currentTimeMillis()
                     Inventory.setInvItem("sword")
 
                     TimeUtils.setTimeout(fun () {

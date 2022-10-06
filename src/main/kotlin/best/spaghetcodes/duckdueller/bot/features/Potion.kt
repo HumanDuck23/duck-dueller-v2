@@ -12,10 +12,10 @@ interface Potion {
     var lastPotion: Long
 
     fun useSplashPotion(damage: Int, run: Boolean, facingAway: Boolean) {
+        lastPotion = System.currentTimeMillis()
         fun pot(dmg: Int) {
             if (Inventory.setInvItemByDamage(dmg)) {
                 ChatUtils.info("About to splash $dmg")
-                lastPotion = System.currentTimeMillis()
                 TimeUtils.setTimeout(fun() {
                     Mouse.setUsingPotion(true)
 
