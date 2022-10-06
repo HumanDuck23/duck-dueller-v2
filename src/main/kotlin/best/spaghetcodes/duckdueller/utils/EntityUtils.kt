@@ -139,7 +139,7 @@ object EntityUtils {
             val yaw = (Math.atan2(diffZ, diffX) * 180.0 / 3.141592653589793).toFloat() - 90.0f
             val pitch = (-(Math.atan2(diffY, dist) * 180.0 / 3.141592653589793)).toFloat()
 
-            if ((crossHairDistance(yaw, pitch, player) > 8 || dist in 2.5..4.0) || Mouse.isUsingProjectile() || Mouse.isUsingPotion()) {
+            if ((crossHairDistance(yaw, pitch, player) > 6 || dist in 2.5..4.0) || Mouse.isUsingProjectile() || Mouse.isUsingPotion()) {
                 if (raw) {
                     floatArrayOf(
                         MathHelper.wrapAngleTo180_float(yaw - player.rotationYaw),
