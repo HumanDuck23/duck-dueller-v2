@@ -35,6 +35,7 @@ class Classic : BotBase("/play duels_classic_duel"), Bow, Rod, MovePriority {
     override fun onGameStart() {
         Movement.startSprinting()
         Movement.startForward()
+        TimeUtils.setTimeout(Movement::startJumping, RandomUtils.randomIntInRange(400, 1200))
     }
 
     override fun onGameEnd() {
