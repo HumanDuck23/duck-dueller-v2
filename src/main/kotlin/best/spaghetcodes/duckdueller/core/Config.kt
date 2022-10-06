@@ -50,7 +50,7 @@ class Config : Vigilant(File(DuckDueller.configLocation), sortingBehavior = Conf
     description = "When this is enabled, the bot will not send any chat messages.",
     category = "General",
     )
-    val disableChatMessages = true
+    val disableChatMessages = false
 
     /*
         COMBAT
