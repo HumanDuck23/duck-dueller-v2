@@ -12,6 +12,7 @@ import best.spaghetcodes.duckdueller.utils.*
 import net.minecraft.init.Blocks
 import net.minecraft.util.Vec3
 import java.util.Random
+import kotlin.math.floor
 
 class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority, Potion, Gap {
 
@@ -49,6 +50,7 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority, Potion, Gap {
     override fun onGameStart() {
         Movement.startSprinting()
         Movement.startForward()
+        TimeUtils.setTimeout(Movement::startJumping, RandomUtils.randomIntInRange(400, 1200))
     }
 
     override fun onGameEnd() {
@@ -143,7 +145,7 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority, Potion, Gap {
             var clear = false
             var randomStrafe = false
 
-            if (distance < 1 || (distance < 2.7 && combo >= 1)) {
+            if (distance < 0.7 || (distance < 1.4 && combo >= 1)) {
                 Movement.stopForward()
             } else {
                 if (!tapping) {
@@ -157,7 +159,7 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority, Potion, Gap {
                 Mouse.startLeftAC()
             }
 
-            if (!hasSpeed && speedPotsLeft > 0 && System.currentTimeMillis() - lastSpeedUse > 15000 && System.currentTimeMillis() - lastPotion > 5000) {
+            if (!hasSpeed && speedPotsLeft > 0 && System.currentTimeMillis() - lastSpeedUse > 15000 && System.currentTimeMillis() - lastPotion > 3500) {
                 useSplashPotion(speedDamage, distance < 3.5, EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!))
                 speedPotsLeft--
                 lastSpeedUse = System.currentTimeMillis()
@@ -168,7 +170,7 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority, Potion, Gap {
                 Mouse.setRunningAway(false)
             }
 
-            if (mc.thePlayer.health < 11 && combo < 2 && mc.thePlayer.health <= opponent()!!.health) {
+            if (((distance > 3 && mc.thePlayer.health < 12) || mc.thePlayer.health < 9) && combo < 2 && mc.thePlayer.health <= opponent()!!.health) {
                 // time to pot up
                 if (!Mouse.isUsingProjectile() && !Mouse.isRunningAway() && !Mouse.isUsingPotion() && System.currentTimeMillis() - lastPotion > 3500) {
                     if (regenPotsLeft > 0 && System.currentTimeMillis() - lastRegenUse > 3500) {
@@ -176,8 +178,8 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority, Potion, Gap {
                         regenPotsLeft--
                         lastRegenUse = System.currentTimeMillis()
                     } else {
-                        if (regenPotsLeft == 0 && System.currentTimeMillis() - lastRegenUse > 3500) {
-                            if (gapsLeft > 0 && System.currentTimeMillis() - lastGap > 3500) {
+                        if (regenPotsLeft == 0 && System.currentTimeMillis() - lastRegenUse > 4000) {
+                            if (gapsLeft > 0 && System.currentTimeMillis() - lastGap > 4000) {
                                 useGap(distance, distance < 2, EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!))
                                 gapsLeft--
                             }
@@ -186,7 +188,7 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority, Potion, Gap {
                 }
             }
 
-            if (!Mouse.isUsingProjectile() && !Mouse.isRunningAway() && !Mouse.isUsingPotion()) {
+            if (!Mouse.isUsingProjectile() && !Mouse.isRunningAway() && !Mouse.isUsingPotion() && !Mouse.rClickDown && System.currentTimeMillis() - lastGap > 2500) {
                 if ((distance in 5.7..6.5 || distance in 9.0..9.5) && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
                     useRod()
                 } else if ((EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!) && distance in 3.5f..30f) || (distance in 28.0..33.0 && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!))) {
@@ -204,31 +206,47 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority, Potion, Gap {
                         }
                     }
                 } else {
-                    if (EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
+                    if (opponent()!!.isInvisibleToPlayer(mc.thePlayer)) {
+                        clear = false
                         if (WorldUtils.leftOrRightToPoint(mc.thePlayer, Vec3(0.0, 0.0, 0.0))) {
                             movePriority[0] += 4
                         } else {
                             movePriority[1] += 4
                         }
                     } else {
-                        if (distance in 15f..8f) {
-                            randomStrafe = true
-                        } else {
-                            randomStrafe = false
-                            if (opponent() != null && opponent()!!.heldItem != null && (opponent()!!.heldItem.unlocalizedName.lowercase().contains("bow") || opponent()!!.heldItem.unlocalizedName.lowercase().contains("rod"))) {
-                                randomStrafe = true
-                                if (distance < 15) {
-                                    Movement.stopJumping()
-                                }
+                        if (EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
+                            if (WorldUtils.leftOrRightToPoint(mc.thePlayer, Vec3(0.0, 0.0, 0.0))) {
+                                movePriority[0] += 4
                             } else {
-                                if (combo < 2 && distance < 8) {
-                                    if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
-                                        movePriority[1] += 1
-                                    } else {
-                                        movePriority[0] += 1
+                                movePriority[1] += 4
+                            }
+                        } else {
+                            if (distance in 15f..8f) {
+                                randomStrafe = true
+                            } else {
+                                randomStrafe = false
+                                if (opponent() != null && opponent()!!.heldItem != null && (opponent()!!.heldItem.unlocalizedName.lowercase().contains("bow") || opponent()!!.heldItem.unlocalizedName.lowercase().contains("rod"))) {
+                                    randomStrafe = true
+                                    if (distance < 15) {
+                                        Movement.stopJumping()
                                     }
                                 } else {
-                                    clear = true
+                                    if (distance < 8) {
+                                        val swap = floor(combo.toDouble() / RandomUtils.randomIntInRange(3, 6).toDouble())
+                                        if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
+                                            if (swap % 2 == 0.0) {
+                                                movePriority[1] += 1
+                                            } else {
+                                                movePriority[0] += 1
+                                            }
+                                        } else {
+                                            if (swap % 2 == 0.0) {
+                                                movePriority[0] += 1
+                                            } else {
+                                                movePriority[1] += 1
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -236,12 +254,8 @@ class OP : BotBase("/play duels_op_duel"), Bow, Rod, MovePriority, Potion, Gap {
                 }
             }
 
-            if (WorldUtils.blockInPath(mc.thePlayer, 20, 1f) == Blocks.fire) {
-                if (Movement.left()) {
-                    movePriority[1] += 10
-                } else if (Movement.right()) {
-                    movePriority[0] += 10
-                }
+            if (WorldUtils.blockInPath(mc.thePlayer, RandomUtils.randomIntInRange(3, 7), 1f) == Blocks.fire) {
+                Movement.singleJump(RandomUtils.randomIntInRange(200, 400))
             }
 
             handle(clear, randomStrafe, movePriority)
