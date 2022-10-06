@@ -12,7 +12,7 @@ import kotlin.math.abs
 object Mouse {
 
     private var leftAC = false
-    private var rClickDown = false
+    var rClickDown = false
 
     private var tracking = false
 
@@ -25,6 +25,8 @@ object Mouse {
     private var lastLeftClick = 0L
 
     private var runningRotations: FloatArray? = null
+
+    private var splashAim = 0.0
 
     fun leftClick() {
         if (DuckDueller.bot?.toggled() == true && DuckDueller.mc.thePlayer != null && !DuckDueller.mc.thePlayer.isUsingItem) {
@@ -74,6 +76,9 @@ object Mouse {
 
     fun setUsingPotion(potion: Boolean) {
         _usingPotion = potion
+        if (!_usingPotion) {
+            splashAim = 0.0
+        }
     }
 
     fun isUsingPotion(): Boolean {
@@ -146,7 +151,10 @@ object Mouse {
                 }
 
                 if (_usingPotion) {
-                    rotations[1] = 80f
+                    if (splashAim == 0.0) {
+                        splashAim = RandomUtils.randomDoubleInRange(80.0, 90.0)
+                    }
+                    rotations[1] = splashAim.toFloat()
                 }
 
                 val lookRand = (DuckDueller.config?.lookRand ?: 0).toDouble()
