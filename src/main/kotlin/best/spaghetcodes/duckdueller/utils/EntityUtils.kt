@@ -6,6 +6,7 @@ import best.spaghetcodes.duckdueller.utils.Extensions.getVelocity
 import best.spaghetcodes.duckdueller.utils.Extensions.scale
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.potion.Potion
 import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
 import kotlin.math.abs
@@ -115,9 +116,8 @@ object EntityUtils {
                     val tickPredict = when (dist) {
                         in 0f..8f -> dist.toDouble()
                         in 8f..15f -> 15.0
-                        in 15f..30f -> 20.0
-                        else -> 25.0
-                    }
+                        else -> 20.0
+                    } * if (player.isPotionActive(Potion.moveSpeed)) 1.3 else 1.0
                     val velocity = target.getVelocity().scale(tickPredict)
                     val flatVelo = Vec3(velocity.xCoord, 0.0, velocity.zCoord)
                     val height = when (dist) {
