@@ -124,14 +124,21 @@ class Boxing : BotBase("/play duels_boxing_duel"), MovePriority {
                 if (distance in 15f..8f) {
                     randomStrafe = true
                 } else {
-                    if (combo < 3 && distance < 8) {
+                    if (distance in 4f..8f) {
                         if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
                             movePriority[1] += 1
                         } else {
                             movePriority[0] += 1
                         }
-                    } else {
-                        clear = true
+                    } else if (distance < 4) {
+                        val rotations = EntityUtils.getRotations(opponent()!!, mc.thePlayer, false)
+                        if (rotations != null) {
+                            if (rotations[0] < 0) {
+                                movePriority[1] += 5
+                            } else {
+                                movePriority[0] += 5
+                            }
+                        }
                     }
                 }
             } else {

@@ -189,14 +189,15 @@ class Classic : BotBase("/play duels_classic_duel"), Bow, Rod, MovePriority {
                                 Movement.stopJumping()
                             }
                         } else {
-                            if (combo < 2 && distance < 8) {
-                                if (EntityUtils.entityMovingLeft(mc.thePlayer, opponent()!!)) {
-                                    movePriority[1] += 1
-                                } else {
-                                    movePriority[0] += 1
+                            if (distance < 8) {
+                                val rotations = EntityUtils.getRotations(opponent()!!, mc.thePlayer, false)
+                                if (rotations != null) {
+                                    if (rotations[0] < 0) {
+                                        movePriority[1] += 5
+                                    } else {
+                                        movePriority[0] += 5
+                                    }
                                 }
-                            } else {
-                                clear = true
                             }
                         }
                     }
