@@ -12,7 +12,7 @@ import gg.essential.vigilance.data.PropertyType
 
 import java.io.File
 
-class Config : Vigilant(File(DuckDueller.configLocation)) {
+class Config : Vigilant(File(DuckDueller.configLocation), sortingBehavior = ConfigSorter()) {
 
     /*
         GENERAL
