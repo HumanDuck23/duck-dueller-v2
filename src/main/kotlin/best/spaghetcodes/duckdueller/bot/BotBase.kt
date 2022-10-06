@@ -628,7 +628,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     private fun joinGame(second: Boolean = false) {
         if (toggled() && StateManager.state != StateManager.States.PLAYING && !StateManager.gameFull) {
             if (StateManager.state == StateManager.States.GAME) {
-                val paper = Inventory.setInvItem("paper")
+                val paper = DuckDueller.config?.paperRequeue == true && Inventory.setInvItem("paper")
                 if (paper) {
                     TimeUtils.setTimeout(fun () {
                         Mouse.rClick(RandomUtils.randomIntInRange(30, 70))
@@ -664,17 +664,19 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
     }
 
     private fun reconnect() {
-        if (mc.currentScreen is GuiMultiplayer) {
-            mc.addScheduledTask(fun () {
-                println("Reconnecting...")
-                FMLClientHandler.instance().setupServerList()
-                FMLClientHandler.instance().connectToServer(mc.currentScreen, ServerData("hypixel", "mc.hypixel.net", false))
-            })
-        } else {
-            if (mc.theWorld == null) {
-                println("Attempting to show new multiplayer screen...")
-                mc.displayGuiScreen(GuiMultiplayer(mc.currentScreen))
-                reconnect()
+        if (mc.theWorld == null) {
+            if (mc.currentScreen is GuiMultiplayer) {
+                mc.addScheduledTask(fun () {
+                    println("Reconnecting...")
+                    FMLClientHandler.instance().setupServerList()
+                    FMLClientHandler.instance().connectToServer(mc.currentScreen, ServerData("hypixel", "mc.hypixel.net", false))
+                })
+            } else {
+                if (mc.theWorld == null) {
+                    println("Attempting to show new multiplayer screen...")
+                    mc.displayGuiScreen(GuiMultiplayer(mc.currentScreen))
+                    reconnect()
+                }
             }
         }
     }
