@@ -208,6 +208,10 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
                                     ChatUtils.info(Session.getSession())
 
+                                    if (!iWon) {
+                                        TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(1000, 2000))
+                                    }
+
                                     if (DuckDueller.config?.sendWebhookMessages == true) {
                                         if (DuckDueller.config?.webhookURL != "") {
                                             val opponentName = if (iWon) loser else winner
