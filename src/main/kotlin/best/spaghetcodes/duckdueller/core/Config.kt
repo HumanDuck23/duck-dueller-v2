@@ -52,6 +52,38 @@ class Config : Vigilant(File(DuckDueller.configLocation), sortingBehavior = Conf
     )
     val disableChatMessages = false
 
+    @Property(
+        type = PropertyType.NUMBER,
+        name = "Throw After X Games",
+        description = "After X games the bot will underperform and throw the game. 0 = disabled.",
+        category = "General",
+        min = 0,
+        max = 1000,
+        increment = 10
+    )
+    val throwAfterGames = 0
+
+    @Property(
+        type = PropertyType.SLIDER,
+        name = "Disconnect After X Games",
+        description = "After X games the bot will toggle off and disconnect. 0 = disabled.",
+        category = "General",
+        min = 0,
+        max = 10000
+    )
+    val disconnectAfterGames = 0
+
+    @Property(
+        type = PropertyType.NUMBER,
+        name = "Disconnect After X Minutes",
+        description = "After X minutes the bot will toggle off and disconnect. 0 = disabled",
+        category = "General",
+        min = 0,
+        max = 500,
+        increment = 30
+    )
+    val disconnectAfterMinutes = 0
+
     /*
         COMBAT
      */
