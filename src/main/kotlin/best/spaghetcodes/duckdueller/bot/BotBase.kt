@@ -493,7 +493,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                     println(player)
 
                     if (uuid == null) { // nicked or fake player
-                        if (playersLost.contains(player)) {
+                        if (DuckDueller.config?.dodgeLostTo == true && playersLost.contains(player)) {
                             beforeLeave()
                             leaveGame()
                             TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(4000, 6000))
