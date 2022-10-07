@@ -308,6 +308,14 @@ class Config : Vigilant(File(DuckDueller.configLocation), sortingBehavior = Conf
     val dodgeWLR = 3.0f
 
     @Property(
+        type = PropertyType.PARAGRAPH,
+        name = "Specific Players to Dodge",
+        description = "Players to dodge regardless of stats (comma separated)",
+        category = "Queue Dodging",
+    )
+    val dodgePlayersList = ""
+
+    @Property(
         type = PropertyType.SWITCH,
         name = "Dodge Lost To",
         description = "Whether or not the bot should dodge people it already lost against",
