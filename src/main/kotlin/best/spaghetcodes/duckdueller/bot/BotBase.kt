@@ -213,9 +213,22 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                                         TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(1000, 2000))
                                     }
 
-                                    if  ((DuckDueller.config?.disconnectAfterGames ?: 0) > 0) {
+                                    if ((DuckDueller.config?.disconnectAfterGames ?: 0) > 0) {
                                         if (Session.wins + Session.losses >= DuckDueller.config?.disconnectAfterGames!!) {
                                             ChatUtils.info("Played ${DuckDueller.config?.disconnectAfterGames} games, disconnecting...")
+                                            TimeUtils.setTimeout(fun () {
+                                                ChatUtils.sendAsPlayer("/l duels")
+                                                TimeUtils.setTimeout(fun () {
+                                                    toggle()
+                                                    disconnect()
+                                                }, RandomUtils.randomIntInRange(2300, 5000))
+                                            }, RandomUtils.randomIntInRange(900, 1700))
+                                        }
+                                    }
+
+                                    if ((DuckDueller.config?.disconnectAfterMinutes ?: 0) > 0) {
+                                        if (System.currentTimeMillis() - Session.startTime >= DuckDueller.config?.disconnectAfterMinutes!! * 60 * 1000) {
+                                            ChatUtils.info("Played for ${DuckDueller.config?.disconnectAfterMinutes} minutes, disconnecting...")
                                             TimeUtils.setTimeout(fun () {
                                                 ChatUtils.sendAsPlayer("/l duels")
                                                 TimeUtils.setTimeout(fun () {
@@ -238,7 +251,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                                             val duration = StateManager.lastGameDuration / 1000
 
                                             // Send the webhook embed
-                                            val fields = WebHook.buildFields(arrayListOf(mapOf("name" to "Winner", "value" to winner, "inline" to "true"), mapOf("name" to "Loser", "value" to loser, "inline" to "true"), mapOf("name" to "Bot Started", "value" to "<t:${Session.startTime}:R>", "inline" to "false")))
+                                            val fields = WebHook.buildFields(arrayListOf(mapOf("name" to "Winner", "value" to winner, "inline" to "true"), mapOf("name" to "Loser", "value" to loser, "inline" to "true"), mapOf("name" to "Bot Started", "value" to "<t:${(Session.startTime / 1000).toInt()}:R>", "inline" to "false")))
                                             val footer = WebHook.buildFooter(ChatUtils.removeFormatting(Session.getSession()), "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
                                             val author = WebHook.buildAuthor("Duck Dueller - ${getName()}", "https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/duck_dueller.png")
                                             val thumbnail = WebHook.buildThumbnail(faceUrl)
@@ -302,7 +315,7 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
             if (toggled()) {
                 ChatUtils.info("Current selected bot: ${EnumChatFormatting.GREEN}${getName()}")
                 joinGame()
-                Session.startTime = System.currentTimeMillis() / 1000
+                Session.startTime = System.currentTimeMillis()
             }
         }
     }
