@@ -14,6 +14,7 @@ interface Gap {
     fun useGap(distance: Float, run: Boolean, facingAway: Boolean) {
         lastGap = System.currentTimeMillis()
         fun gap() {
+            Mouse.stopLeftAC()
             if (Inventory.setInvItem("gold")) {
                 ChatUtils.info("About to gap")
                 val r = RandomUtils.randomIntInRange(2100, 2200)
