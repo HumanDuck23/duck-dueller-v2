@@ -161,8 +161,15 @@ object Mouse {
                 var dyaw = ((rotations[0] - DuckDueller.mc.thePlayer.rotationYaw) + RandomUtils.randomDoubleInRange(-lookRand, lookRand)).toFloat()
                 var dpitch = ((rotations[1] - DuckDueller.mc.thePlayer.rotationPitch) + RandomUtils.randomDoubleInRange(-lookRand, lookRand)).toFloat()
 
-                val maxRotH = (DuckDueller.config?.lookSpeedHorizontal ?: 10).toFloat()
-                val maxRotV = (DuckDueller.config?.lookSpeedVertical ?: 5).toFloat()
+                val factor = when (EntityUtils.getDistanceNoY(DuckDueller.mc.thePlayer, DuckDueller.bot?.opponent()!!)) {
+                    in 0f..10f -> 1.0f
+                    in 10f..20f -> 0.6f
+                    in 20f..30f -> 0.4f
+                    else -> 0.2f
+                }
+
+                val maxRotH = (DuckDueller.config?.lookSpeedHorizontal ?: 10).toFloat() * factor
+                val maxRotV = (DuckDueller.config?.lookSpeedVertical ?: 5).toFloat() * factor
 
                 if (abs(dyaw) > maxRotH) {
                     dyaw = if (dyaw > 0) {
