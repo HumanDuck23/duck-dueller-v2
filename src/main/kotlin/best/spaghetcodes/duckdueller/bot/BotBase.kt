@@ -213,6 +213,19 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
                                         TimeUtils.setTimeout(this::joinGame, RandomUtils.randomIntInRange(1000, 2000))
                                     }
 
+                                    if  ((DuckDueller.config?.disconnectAfterGames ?: 0) > 0) {
+                                        if (Session.wins + Session.losses >= DuckDueller.config?.disconnectAfterGames!!) {
+                                            ChatUtils.info("Played ${DuckDueller.config?.disconnectAfterGames} games, disconnecting...")
+                                            TimeUtils.setTimeout(fun () {
+                                                ChatUtils.sendAsPlayer("/l duels")
+                                                TimeUtils.setTimeout(fun () {
+                                                    toggle()
+                                                    disconnect()
+                                                }, RandomUtils.randomIntInRange(2300, 5000))
+                                            }, RandomUtils.randomIntInRange(900, 1700))
+                                        }
+                                    }
+
                                     if (DuckDueller.config?.sendWebhookMessages == true) {
                                         if (DuckDueller.config?.webhookURL != "") {
                                             val opponentName = if (iWon) loser else winner
@@ -662,9 +675,11 @@ open class BotBase(val queueCommand: String, val quickRefresh: Int = 10000) {
 
     private fun disconnect() {
         if (mc.theWorld != null) {
-            mc.theWorld.sendQuittingDisconnectingPacket()
-            mc.loadWorld(null)
-            mc.displayGuiScreen(GuiMultiplayer(GuiMainMenu()))
+            mc.addScheduledTask(fun () {
+                mc.theWorld.sendQuittingDisconnectingPacket()
+                mc.loadWorld(null)
+                mc.displayGuiScreen(GuiMultiplayer(GuiMainMenu()))
+            })
         }
     }
 
