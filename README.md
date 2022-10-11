@@ -1,4 +1,12 @@
 ![alt](https://raw.githubusercontent.com/HumanDuck23/upload-stuff-here/main/DuckDuellerBanner.png)
+
+<h3 align="center" style="color: #ff4949">
+Duck Dueller has reached the end of active development. 
+I might make updates sometimes, but official support has ended.
+<br><br>
+I will be collaborating on a new bot, keep checking back for a link to that.
+</h3>
+
 <h2 align="center">
 What is Duck Dueller?
 </h2>
