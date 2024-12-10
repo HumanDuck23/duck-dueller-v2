@@ -1,18 +1,3 @@
-package best.spaghetcodes.duckdueller.bot.bots
-
-import best.spaghetcodes.duckdueller.DuckDueller
-import best.spaghetcodes.duckdueller.bot.BotBase
-import best.spaghetcodes.duckdueller.bot.features.Bow
-import best.spaghetcodes.duckdueller.bot.features.MovePriority
-import best.spaghetcodes.duckdueller.bot.features.Rod
-import best.spaghetcodes.duckdueller.bot.player.Combat
-import best.spaghetcodes.duckdueller.bot.player.Inventory
-import best.spaghetcodes.duckdueller.bot.player.Mouse
-import best.spaghetcodes.duckdueller.bot.player.Movement
-import best.spaghetcodes.duckdueller.utils.*
-import net.minecraft.init.Blocks
-import net.minecraft.util.Vec3
-
 class Classic : BotBase("/play duels_classic_duel"), Bow, Rod, MovePriority {
 
     override fun getName(): String {
@@ -54,29 +39,34 @@ class Classic : BotBase("/play duels_classic_duel"), Bow, Rod, MovePriority {
 
     override fun onAttack() {
         val distance = EntityUtils.getDistanceNoY(mc.thePlayer, opponent())
-        if (distance < 3) {
-            if (mc.thePlayer != null && mc.thePlayer.heldItem != null) {
-                val n = mc.thePlayer.heldItem.unlocalizedName.lowercase()
-                if (n.contains("rod")) { // wait after hitting with the rod
-                    Combat.wTap(300)
-                    tapping = true
-                    combo--
-                    TimeUtils.setTimeout(fun () {
-                        tapping = false
-                    }, 300)
-                } else if (n.contains("sword")) {
-                    Mouse.rClick(RandomUtils.randomIntInRange(80, 100)) // otherwise just blockhit
-                }
+
+        if (distance in 3.0..6.5) { // Ideal distance for using the rod
+            if (mc.thePlayer.heldItem != null && mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("rod")) {
+                useRod() // Use the rod to interrupt momentum
+                TimeUtils.setTimeout(fun() {
+                    if (distance < 3.5) {
+                        executeCrit() // Perform a crit after using the rod
+                    }
+                }, RandomUtils.randomIntInRange(100, 200)) // Slight delay for better timing
             }
-        } else {
-            Combat.wTap(100)
-            tapping = true
-            TimeUtils.setTimeout(fun () {
-                tapping = false
-            }, 100)
+        } else if (distance < 3.0) { // Close range combat
+            if (mc.thePlayer.heldItem != null && mc.thePlayer.heldItem.unlocalizedName.lowercase().contains("sword")) {
+                Mouse.rClick(RandomUtils.randomIntInRange(80, 100)) // Block-hit for defense
+            }
         }
+
         if (combo >= 3) {
             Movement.clearLeftRight()
+        }
+    }
+
+    fun executeCrit() {
+        if (mc.thePlayer.onGround) {
+            Movement.singleJump(RandomUtils.randomIntInRange(50, 100)) // Jump for crit
+            TimeUtils.setTimeout(fun() {
+                Mouse.startLeftAC() // Attack when falling
+                TimeUtils.setTimeout(Mouse::stopLeftAC, RandomUtils.randomIntInRange(150, 200)) // Stop attacking to reset
+            }, RandomUtils.randomIntInRange(50, 100))
         }
     }
 
@@ -94,6 +84,14 @@ class Classic : BotBase("/play duels_classic_duel"), Bow, Rod, MovePriority {
             }
 
             val distance = EntityUtils.getDistanceNoY(mc.thePlayer, opponent())
+
+            if (distance in 5.7..6.5 && !Mouse.isUsingProjectile()) {
+                useRod() // Use the rod proactively when opponent is at a good distance
+            }
+
+            if (distance < 3.5 && combo < 3 && mc.thePlayer.onGround) {
+                executeCrit() // Trigger crit if conditions are met
+            }
 
             if (distance < (DuckDueller.config?.maxDistanceLook ?: 150)) {
                 Mouse.startTracking()
@@ -147,60 +145,17 @@ class Classic : BotBase("/play duels_classic_duel"), Bow, Rod, MovePriority {
                 Mouse.startLeftAC()
             }
 
-            if ((distance in 5.7..6.5 || distance in 9.0..9.5) && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
-                if (!Mouse.isUsingProjectile()) {
-                    useRod()
-                }
-            }
-
-            if (combo >= 3 && distance >= 3.2 && mc.thePlayer.onGround) {
-                Movement.singleJump(RandomUtils.randomIntInRange(100, 150))
-            }
-
-            if ((EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!) && distance in 3.5f..30f) || (distance in 28.0..33.0 && !EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!))) {
-                if (distance > 5 && !Mouse.isUsingProjectile() && shotsFired < maxArrows) {
-                    clear = true
-                    useBow(distance, fun () {
-                        shotsFired++
-                    })
-                } else {
-                    clear = false
-                    if (WorldUtils.leftOrRightToPoint(mc.thePlayer, Vec3(0.0, 0.0, 0.0))) {
-                        movePriority[0] += 4
-                    } else {
-                        movePriority[1] += 4
-                    }
-                }
+            if (distance > 5 && !Mouse.isUsingProjectile() && shotsFired < maxArrows) {
+                clear = true
+                useBow(distance, fun () {
+                    shotsFired++
+                })
             } else {
-                if (EntityUtils.entityFacingAway(mc.thePlayer, opponent()!!)) {
-                    if (WorldUtils.leftOrRightToPoint(mc.thePlayer, Vec3(0.0, 0.0, 0.0))) {
-                        movePriority[0] += 4
-                    } else {
-                        movePriority[1] += 4
-                    }
+                clear = false
+                if (WorldUtils.leftOrRightToPoint(mc.thePlayer, Vec3(0.0, 0.0, 0.0))) {
+                    movePriority[0] += 4
                 } else {
-                    if (distance in 15f..8f) {
-                        randomStrafe = true
-                    } else {
-                        randomStrafe = false
-                        if (opponent() != null && opponent()!!.heldItem != null && (opponent()!!.heldItem.unlocalizedName.lowercase().contains("bow") || opponent()!!.heldItem.unlocalizedName.lowercase().contains("rod"))) {
-                            randomStrafe = true
-                            if (distance < 15 && !needJump) {
-                                Movement.stopJumping()
-                            }
-                        } else {
-                            if (distance < 8) {
-                                val rotations = EntityUtils.getRotations(opponent()!!, mc.thePlayer, false)
-                                if (rotations != null) {
-                                    if (rotations[0] < 0) {
-                                        movePriority[1] += 5
-                                    } else {
-                                        movePriority[0] += 5
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    movePriority[1] += 4
                 }
             }
 
