@@ -8,8 +8,8 @@ plugins {
     id("com.github.johnrengelman.shadow")
 }
 
-group = "best.spaghetcodes"
-version = "0.1.0"
+group = "bot.seven"
+version = "1.0"
 
 loom {
     runConfigs {
@@ -21,13 +21,13 @@ loom {
     launchConfigs {
         getByName("client") {
             arg("--tweakClass", "gg.essential.loader.stage0.EssentialSetupTweaker")
-            arg("--mixin", "mixins.duckdueller.json")
+            arg("--mixin", "mixins.wlr.json")
         }
     }
 
     forge {
         pack200Provider.set(Pack200Adapter())
-        mixinConfig("mixins.duckdueller.json")
+        mixinConfig("mixins.wlr.json")
     }
 }
 
@@ -59,7 +59,7 @@ tasks {
             mapOf(
                 "ModSide" to "CLIENT",
                 "TweakClass" to "gg.essential.loader.stage0.EssentialSetupTweaker",
-                "MixinConfigs" to "mixins.duckdueller.json"
+                "MixinConfigs" to "mixins.wlr.json"
             )
         )
     }

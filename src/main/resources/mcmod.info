@@ -1,17 +1,14 @@
 [
     {
-        "modid": "duckdueller",
-        "name": "DuckDueller",
-        "description": "Hypixel Duels Bot",
-        "version": "${version}",
-        "mcversion": "${mcversion}",
-        "url": "",
+        "modid": "wlr",
+        "name": "WLR",
+        "description": "Hypixel duels bot",
+        "version": "1.5",
+        "url": "https://www.youtube.com/watch?v=65CZOCKplGc",
         "updateUrl": "",
-        "authorList": [
-            "HumanDuck23"
-        ],
+        "authorList": ["7wlr"],
         "credits": "",
-        "logoFile": "",
+        "logoFile": "assets/wlr/textures/gui/logo.png",
         "screenshots": [],
         "dependencies": []
     }

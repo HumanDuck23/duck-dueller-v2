@@ -1,4 +1,4 @@
-rootProject.name = "DuckDueller"
+rootProject.name = "WLR"
 
 pluginManagement {
     repositories {
